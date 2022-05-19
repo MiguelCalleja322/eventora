@@ -1,3 +1,4 @@
+import '../Widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
 class Signup extends StatefulWidget {
@@ -8,7 +9,6 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-
   DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -24,117 +24,105 @@ class _SignupState extends State<Signup> {
     }
   }
 
+  TextEditingController miguel = TextEditingController();
+  String text = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      body: Container(
-        margin: const EdgeInsets.fromLTRB(15,50,15,0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Eventora',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Colors.grey[800],
-                fontSize: 40.0
-              ),
-            ),
-            const SizedBox(height: 70),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email'
-              ),
-            ),
-            const SizedBox(height: 15),
-            Row(
-              children: const [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Username'
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Mobile No.'
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            const TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password'
-              ),
-            ),
-            const SizedBox(height: 15),
-            const TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Confirm Password'
-              ),
-            ),
-            const SizedBox(height: 15),
-            
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _selectDate(context),
-                    child: const Text('Select date'),
-                  ),
-                ),
-                const SizedBox(width: 20.0,),               
-                Expanded(child: Text("${selectedDate.toLocal()}".split(' ')[0])),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Row(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 50,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        
-                      },
-                      style: OutlinedButton.styleFrom(
-                        primary: Colors.grey[900],
-                        backgroundColor: Colors.grey[100],
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                           Radius.circular(5.0)
-                          )
-                        )
-                      ), 
-                      child: const Text(
-                        'Signup',
-                        style: TextStyle(
-                          fontSize: 15.0
-                        ),
+                Text(
+                  'Eventora',
+                  style: TextStyle(color: Colors.grey[800], fontSize: 40.0),
+                ),
+                const SizedBox(height: 70),
+                CustomTextField(
+                  onChanged: (value) => text = value,
+                  label: 'Email',
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        onChanged: (value) => text = value,
+                        label: 'Username',
                       ),
                     ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                      child: CustomTextField(
+                        onChanged: (value) => text = value,
+                        label: 'Mobile',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                CustomTextField(
+                  obscureText: true,
+                  onChanged: (value) => text = value,
+                  label: 'Password',
+                ),
+                const SizedBox(height: 15),
+                CustomTextField(
+                  obscureText: true,
+                  onChanged: (value) => text = value,
+                  label: 'Confirm Password',
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => _selectDate(context),
+                        child: const Text('Select date'),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                    Expanded(
+                        child: Text("${selectedDate.toLocal()}".split(' ')[0])),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    style: OutlinedButton.styleFrom(
+                        primary: const Color(0xFFF7F8FB),
+                        backgroundColor: const Color(0xFF114F5A),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(5.0)))),
+                    child: const Text(
+                      'Signup',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Center(
+                  child: TextButton(
+                    onPressed: () =>
+                        Navigator.pushReplacementNamed(context, '/'),
+                    child: const Text('Click Here to Login'),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 15),
-           
-          ],
+          ),
         ),
       ),
     );
