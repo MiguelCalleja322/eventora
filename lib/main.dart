@@ -1,15 +1,30 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'Auth/login.dart';
-import 'Auth/signup.dart';
+import 'package:flutter/services.dart';
+import 'Pages/Auth/login.dart';
+import 'Pages/Auth/signup.dart';
 import 'Pages/feature_page.dart';
 
-void main() => runApp(MaterialApp(
-    // initialRoute: '/feature_page',
-    onGenerateRoute: Routes.generateRoutes,
-    theme: ThemeData(
-      useMaterial3: true,
-      scaffoldBackgroundColor: const Color(0xFFF7F8FB),
-    )));
+void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // ByteData data =
+  //     await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
+  // SecurityContext.defaultContext
+  //     .setTrustedCertificatesBytes(data.buffer.asUint8List());
+
+  HttpOverrides.global = MyHttpOverrides();
+
+  runApp(MaterialApp(
+      // initialRoute: '/feature_page',
+
+      onGenerateRoute: Routes.generateRoutes,
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFF7F8FB),
+      )));
+}
 
 class Routes {
   static Route<dynamic>? generateRoutes(RouteSettings routeSettings) {
@@ -42,5 +57,14 @@ class Routes {
         ),
       );
     });
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

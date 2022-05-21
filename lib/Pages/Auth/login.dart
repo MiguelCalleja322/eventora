@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../Widgets/custom_textfield.dart';
+import '../../Widgets/custom_textfield.dart';
+import '../../controllers/auth.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -9,7 +10,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController miguel = TextEditingController();
+  final FocusNode emailFocus = FocusNode();
+  final FocusNode passwordFocus = FocusNode();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   String text = '';
 
   @override
@@ -27,14 +31,18 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 70),
               CustomTextField(
+                focusNode: emailFocus,
                 onChanged: (value) => text = value,
                 label: 'Email',
+                controller: emailController,
               ),
               const SizedBox(height: 15),
               CustomTextField(
+                focusNode: passwordFocus,
                 obscureText: true,
                 onChanged: (value) => text = value,
                 label: 'Password',
+                controller: passwordController,
               ),
               const SizedBox(height: 15),
               Row(
@@ -43,7 +51,9 @@ class _LoginState extends State<Login> {
                     child: SizedBox(
                       height: 50,
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          login(context);
+                        },
                         style: OutlinedButton.styleFrom(
                             primary: Colors.grey[900],
                             backgroundColor: Colors.grey[100],
@@ -71,5 +81,21 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  void login(context) async {
+    if (emailController.text.isEmpty) {
+      return emailFocus.requestFocus();
+    }
+
+    if (passwordController.text.isEmpty) {
+      return emailFocus.requestFocus();
+    }
+    Map<String, String> loginCredentials = {
+      'email': emailController.text,
+      'password': passwordController.text,
+    };
+
+    AuthController().login(loginCredentials);
   }
 }
