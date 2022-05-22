@@ -1,3 +1,4 @@
+import 'package:eventora/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
@@ -11,6 +12,8 @@ class ApiService {
   ) async {
     await dotenv.load(fileName: ".env");
     String? baseUrl = dotenv.env['APP_URL'];
+    final String? storageKey = dotenv.env['STORAGE_KEY'];
+
     final Uri completeUri = Uri.parse('$baseUrl/$url');
 
     String? token;
@@ -38,6 +41,12 @@ class ApiService {
     if (response.body.isNotEmpty) {
       body = jsonDecode(response.body);
     }
+
+    if (body['access_token']) {
+      StorageSevice().write(storageKey!, body['access_token']);
+    }
+
+    print(body);
 
     return body;
   }

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
 import 'Pages/feature_page.dart';
+import 'Pages/example.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +18,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      // initialRoute: '/feature_page',
-
+      // initialRoute: '/example',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -40,6 +40,9 @@ class Routes {
       case '/feature_page':
         return MaterialPageRoute(
             builder: (_) => FeaturePage(), settings: routeSettings);
+      case '/example':
+        return MaterialPageRoute(
+            builder: (_) => const ItemsWidget(), settings: routeSettings);
       default:
         _errorRoute();
     }
