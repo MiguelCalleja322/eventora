@@ -42,7 +42,7 @@ class ApiService {
       body = jsonDecode(response.body);
     }
 
-    if (body['access_token']) {
+    if (body['access_token'] != null) {
       StorageSevice().write(storageKey!, body['access_token']);
     }
 
