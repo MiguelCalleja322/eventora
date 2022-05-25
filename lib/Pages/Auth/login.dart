@@ -1,7 +1,5 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
-import '../../Widgets/custom_textfield.dart';
 import '../../controllers/auth.dart';
 import '../../utils/email_validation.dart';
 
@@ -17,16 +15,10 @@ class _LoginState extends State<Login> {
   final FocusNode passwordFocus = FocusNode();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  String errorEmail = '';
+
   final _formKey = GlobalKey<FormState>();
-  // Timer? _debounce;
 
   @override
-  // void dispose() {
-  //   _debounce?.cancel();
-  //   super.dispose();
-  // }
-
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -52,15 +44,11 @@ class _LoginState extends State<Login> {
                 ),
                 const SizedBox(height: 15),
                 CustomTextFormField(
-                  focusNode: emailFocus,
+                  focusNode: passwordFocus,
                   obscureText: true,
-                  validator: (value) =>
-                      EmailServiceChecker().isEmailValid(value!),
                   label: 'Password',
                   controller: passwordController,
                 ),
-                const SizedBox(height: 15),
-                Text(errorEmail),
                 const SizedBox(height: 15),
                 Row(
                   children: [
@@ -104,10 +92,6 @@ class _LoginState extends State<Login> {
   }
 
   void login(context) async {
-    if (errorEmail != '') {
-      return emailFocus.requestFocus();
-    }
-
     if (emailController.text.isEmpty) {
       return emailFocus.requestFocus();
     }
@@ -120,6 +104,8 @@ class _LoginState extends State<Login> {
       'email': emailController.text,
       'password': passwordController.text,
     };
+
+    print(loginCredentials);
 
     // AuthController().login(loginCredentials);
   }

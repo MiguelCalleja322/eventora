@@ -1,8 +1,13 @@
-import '../../Widgets/custom_textfield.dart';
+import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import '../../Widgets/custom_textfield.dart';
+
 import '../../controllers/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+
+import '../../utils/email_validation.dart';
 
 class Signup extends StatefulWidget {
   Signup({Key? key}) : super(key: key);
@@ -13,11 +18,8 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   DateTime birthdate = DateTime.now();
-  late String formattedBirthDate;
+  late String formattedBirthDate = DateFormat('yyyy-MM-dd').format(birthdate);
   late int isAgeOver18 = 0;
-
-  // final difference = berlinWallFell.difference(dDay);
-  // print(difference.inDays); // 16592
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -37,21 +39,22 @@ class _SignupState extends State<Signup> {
 
   String roleValue = 'User';
 
-  final FocusNode nameFocus = FocusNode();
-  final FocusNode usernameFocus = FocusNode();
-  final FocusNode emailFocus = FocusNode();
-  final FocusNode mobileFocus = FocusNode();
-  final FocusNode passwordFocus = FocusNode();
-  final FocusNode passwordConfirmFocus = FocusNode();
+  final FocusNode _nameFocus = FocusNode();
+  final FocusNode _usernameFocus = FocusNode();
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _mobileFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+  final FocusNode _passwordConfirmFocus = FocusNode();
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController passwordConfirmController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _mobileController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController =
+      TextEditingController();
 
-  String text = '';
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,139 +63,158 @@ class _SignupState extends State<Signup> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Eventora',
-                  style: TextStyle(color: Colors.grey[800], fontSize: 40.0),
-                ),
-                const SizedBox(height: 70),
-                CustomTextField(
-                  onChanged: (value) => text = value,
-                  label: 'Name',
-                  controller: nameController,
-                  focusNode: nameFocus,
-                ),
-                const SizedBox(height: 15),
-                CustomTextField(
-                  onChanged: (value) => text = value,
-                  label: 'Email',
-                  controller: emailController,
-                  focusNode: emailFocus,
-                ),
-                const SizedBox(height: 15),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        onChanged: (value) => text = value,
-                        label: 'Username',
-                        controller: usernameController,
-                        focusNode: usernameFocus,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Eventora',
+                    style: TextStyle(color: Colors.grey[800], fontSize: 40.0),
+                  ),
+                  const SizedBox(height: 70),
+                  CustomTextField(
+                    onChanged: (value) => value,
+                    label: 'Name',
+                    controller: _nameController,
+                    focusNode: _nameFocus,
+                  ),
+                  const SizedBox(height: 15),
+                  CustomTextFormField(
+                    onChanged: (value) => value,
+                    label: 'Email',
+                    controller: _emailController,
+                    focusNode: _emailFocus,
+                    validator: (value) =>
+                        EmailServiceChecker().isEmailValid(value!),
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          onChanged: (value) => value,
+                          label: 'Username',
+                          controller: _usernameController,
+                          focusNode: _usernameFocus,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Expanded(
-                      child: CustomTextField(
-                          onChanged: (value) => text = value,
-                          label: 'Mobile',
-                          controller: mobileController,
-                          focusNode: mobileFocus),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                CustomTextField(
-                    obscureText: true,
-                    onChanged: (value) => text = value,
-                    label: 'Password',
-                    controller: passwordController,
-                    focusNode: passwordFocus),
-                const SizedBox(height: 15),
-                CustomTextField(
-                    obscureText: true,
-                    onChanged: (value) => text = value,
-                    label: 'Confirm Password',
-                    controller: passwordConfirmController,
-                    focusNode: passwordConfirmFocus),
-                const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Are you a / an?'),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    DropdownButton<String>(
-                      value: roleValue,
-                      elevation: 16,
-                      style: const TextStyle(color: Color(0xFF114F5A)),
-                      underline: Container(
-                        height: 2,
-                        color: const Color(0xFF114F5A),
+                      const SizedBox(
+                        width: 15,
                       ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          roleValue = newValue!;
-                        });
+                      Expanded(
+                        child: CustomTextField(
+                            onChanged: (value) => value,
+                            label: 'Mobile',
+                            controller: _mobileController,
+                            focusNode: _mobileFocus),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  CustomTextFormField(
+                      obscureText: true,
+                      onChanged: (value) => value,
+                      label: 'Password',
+                      controller: _passwordController,
+                      focusNode: _passwordFocus),
+                  const SizedBox(height: 15),
+                  CustomTextFormField(
+                      obscureText: true,
+                      onChanged: (value) => value,
+                      label: 'Password Confirmation',
+                      controller: _passwordConfirmController,
+                      focusNode: _passwordConfirmFocus),
+                  const SizedBox(height: 15),
+                  FlutterPwValidator(
+                    controller: _passwordController,
+                    minLength: 8,
+                    uppercaseCharCount: 1,
+                    numericCharCount: 1,
+                    specialCharCount: 1,
+                    width: 400,
+                    height: 150,
+                    onSuccess: () {},
+                    onFail: () {},
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Are you a / an?'),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      DropdownButton<String>(
+                        value: roleValue,
+                        elevation: 16,
+                        style: const TextStyle(color: Color(0xFF114F5A)),
+                        underline: Container(
+                          height: 2,
+                          color: const Color(0xFF114F5A),
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            roleValue = newValue!;
+                          });
+                        },
+                        items: <String>['User', 'Organizer']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => _selectDate(context),
+                          child: const Text('Birthdate'),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20.0,
+                      ),
+                      Expanded(
+                          child: Text("${birthdate.toLocal()}".split(' ')[0])),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          signup(context);
+                        }
                       },
-                      items: <String>['User', 'Organizer']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => _selectDate(context),
-                        child: const Text('Birthdate'),
+                      style: OutlinedButton.styleFrom(
+                          primary: const Color(0xFFF7F8FB),
+                          backgroundColor: const Color(0xFF114F5A),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)))),
+                      child: const Text(
+                        'Signup',
+                        style: TextStyle(fontSize: 15.0),
                       ),
                     ),
-                    const SizedBox(
-                      width: 20.0,
-                    ),
-                    Expanded(
-                        child: Text("${birthdate.toLocal()}".split(' ')[0])),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      signup(context);
-                    },
-                    style: OutlinedButton.styleFrom(
-                        primary: const Color(0xFFF7F8FB),
-                        backgroundColor: const Color(0xFF114F5A),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0)))),
-                    child: const Text(
-                      'Signup',
-                      style: TextStyle(fontSize: 15.0),
+                  ),
+                  const SizedBox(height: 15),
+                  Center(
+                    child: TextButton(
+                      onPressed: () =>
+                          Navigator.pushReplacementNamed(context, '/'),
+                      child: const Text('Click Here to Login'),
                     ),
                   ),
-                ),
-                const SizedBox(height: 15),
-                Center(
-                  child: TextButton(
-                    onPressed: () =>
-                        Navigator.pushReplacementNamed(context, '/'),
-                    child: const Text('Click Here to Login'),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -201,28 +223,28 @@ class _SignupState extends State<Signup> {
   }
 
   void signup(context) async {
-    if (nameController.text.isEmpty) {
-      return nameFocus.requestFocus();
+    print(birthdate);
+
+    if (_nameController.text.isEmpty) {
+      return _nameFocus.requestFocus();
     }
 
-    if (emailController.text.isEmpty) {
-      return emailFocus.requestFocus();
+    if (_emailController.text.isEmpty) {}
+
+    if (_passwordController.text.isEmpty) {
+      return _passwordFocus.requestFocus();
     }
 
-    if (passwordController.text.isEmpty) {
-      return passwordFocus.requestFocus();
+    if (_passwordConfirmController.text.isEmpty) {
+      return _passwordConfirmFocus.requestFocus();
     }
 
-    if (passwordConfirmController.text.isEmpty) {
-      return passwordConfirmFocus.requestFocus();
+    if (_usernameController.text.isEmpty) {
+      return _usernameFocus.requestFocus();
     }
 
-    if (usernameController.text.isEmpty) {
-      return usernameFocus.requestFocus();
-    }
-
-    if (mobileController.text.isEmpty) {
-      return mobileFocus.requestFocus();
+    if (_mobileController.text.isEmpty) {
+      return _mobileFocus.requestFocus();
     }
 
     if (isAgeOver18 < 18) {
@@ -244,7 +266,7 @@ class _SignupState extends State<Signup> {
       return;
     }
 
-    if (passwordController.text != passwordConfirmController.text) {
+    if (_passwordController.text != _passwordConfirmController.text) {
       Fluttertoast.showToast(
           msg: 'Password did not match!',
           gravity: ToastGravity.BOTTOM,
@@ -255,11 +277,11 @@ class _SignupState extends State<Signup> {
       return;
     }
     Map<String, String> signupCredentials = {
-      'name': nameController.text,
-      'email': emailController.text,
-      'password': passwordController.text,
-      'username': usernameController.text,
-      'mobile': mobileController.text,
+      'name': _nameController.text,
+      'email': _emailController.text,
+      'password': _passwordController.text,
+      'username': _usernameController.text,
+      'mobile': _mobileController.text,
       'birthdate': formattedBirthDate,
       'type': roleValue,
     };
