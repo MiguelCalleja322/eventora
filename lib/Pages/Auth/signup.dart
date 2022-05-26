@@ -1,5 +1,6 @@
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import '../../Widgets/custom_textfield.dart';
 
@@ -78,6 +79,9 @@ class _SignupState extends State<Signup> {
                     label: 'Name',
                     controller: _nameController,
                     focusNode: _nameFocus,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp('[a-z A-Z]')),
+                    ],
                   ),
                   const SizedBox(height: 15),
                   CustomTextFormField(
@@ -97,6 +101,10 @@ class _SignupState extends State<Signup> {
                           label: 'Username',
                           controller: _usernameController,
                           focusNode: _usernameFocus,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[a-zA-Z0-9]'))
+                          ],
                         ),
                       ),
                       const SizedBox(
@@ -107,6 +115,10 @@ class _SignupState extends State<Signup> {
                             onChanged: (value) => value,
                             label: 'Mobile',
                             controller: _mobileController,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9]'))
+                            ],
                             focusNode: _mobileFocus),
                       ),
                     ],
@@ -135,7 +147,9 @@ class _SignupState extends State<Signup> {
                     width: 400,
                     height: 150,
                     onSuccess: () {},
-                    onFail: () {},
+                    onFail: () {
+                      _passwordFocus.requestFocus();
+                    },
                   ),
                   const SizedBox(height: 15),
                   Row(
@@ -286,8 +300,6 @@ class _SignupState extends State<Signup> {
       'type': roleValue,
     };
 
-    print(signupCredentials);
-
-    // AuthController().signup(signupCredentials);
+    AuthController().signup(signupCredentials);
   }
 }

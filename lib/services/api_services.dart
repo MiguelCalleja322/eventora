@@ -25,11 +25,11 @@ class ApiService {
       'Content-Type': 'application/json',
     };
 
-    // if (withToken == true) {
-    //   token = await SecureStorage.readValue(key: SecureStorage.userTokenKey);
-    //   headers['Authorization'] = 'Bearer $token';
-    //   print(token);
-    //
+    if (withToken == true) {
+      token = await StorageSevice().read(storageKey!);
+      headers['Authorization'] = 'Bearer $token';
+    }
+
     request.headers.addAll(headers);
 
     request.body = jsonEncode(data);
@@ -46,7 +46,11 @@ class ApiService {
       StorageSevice().write(storageKey!, body['access_token']);
     }
 
-    print(body);
+    // print(body);
+
+    // token = await StorageSevice().read(storageKey!);
+    // print('access');
+    // print(token);
 
     return body;
   }

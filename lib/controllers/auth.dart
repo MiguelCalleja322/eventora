@@ -11,12 +11,15 @@ class AuthController {
     loginLoading = true;
     Map<String, dynamic> response =
         await ApiService().request('login', 'POST', loginData, false);
+
+    // print(response);
   }
 
   Future signup(Map<String, String?> signupData) async {
     loginLoading = true;
     Map<String, dynamic> response =
         await ApiService().request('signup', 'POST', signupData, false);
+    print(response);
   }
 
   // Future<bool> checkServer(String? apiUrl) async {

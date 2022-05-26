@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   CustomTextField(
@@ -7,7 +8,8 @@ class CustomTextField extends StatelessWidget {
       this.label,
       this.obscureText = false,
       this.controller,
-      this.focusNode})
+      this.focusNode,
+      this.inputFormatters})
       : super(key: key);
 
   late TextEditingController? controller = TextEditingController();
@@ -15,13 +17,14 @@ class CustomTextField extends StatelessWidget {
   final String? label;
   final bool obscureText;
   final FocusNode? focusNode;
-
+  final List<TextInputFormatter>? inputFormatters;
   @override
   Widget build(BuildContext context) {
     return TextField(
       focusNode: focusNode,
       obscureText: obscureText,
       controller: controller,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
           border: const OutlineInputBorder(
               borderSide: BorderSide(

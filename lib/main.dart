@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
 import 'Pages/feature_page.dart';
-import 'Pages/example.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -40,9 +39,7 @@ class Routes {
       case '/feature_page':
         return MaterialPageRoute(
             builder: (_) => FeaturePage(), settings: routeSettings);
-      case '/example':
-        return MaterialPageRoute(
-            builder: (_) => const ItemsWidget(), settings: routeSettings);
+
       default:
         _errorRoute();
     }

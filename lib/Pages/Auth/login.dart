@@ -48,6 +48,12 @@ class _LoginState extends State<Login> {
                   obscureText: true,
                   label: 'Password',
                   controller: passwordController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Password cannot be empty';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 15),
                 Row(
@@ -105,8 +111,6 @@ class _LoginState extends State<Login> {
       'password': passwordController.text,
     };
 
-    print(loginCredentials);
-
-    // AuthController().login(loginCredentials);
+    AuthController().login(loginCredentials);
   }
 }
