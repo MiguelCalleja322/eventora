@@ -9,6 +9,8 @@ class CustomTextField extends StatelessWidget {
       this.obscureText = false,
       this.controller,
       this.focusNode,
+      required this.textAlign,
+      required this.letterSpacing,
       this.inputFormatters})
       : super(key: key);
 
@@ -18,12 +20,15 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final FocusNode? focusNode;
   final List<TextInputFormatter>? inputFormatters;
+  final TextAlign textAlign;
+  final double letterSpacing;
   @override
   Widget build(BuildContext context) {
     return TextField(
       focusNode: focusNode,
       obscureText: obscureText,
       controller: controller,
+      textAlign: textAlign,
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
           border: const OutlineInputBorder(
@@ -40,6 +45,7 @@ class CustomTextField extends StatelessWidget {
             color: Color(0xFF114F5A),
           )),
       onChanged: onChanged,
+      style: TextStyle(letterSpacing: letterSpacing),
     );
   }
 }

@@ -76,6 +76,8 @@ class _SignupState extends State<Signup> {
                   const SizedBox(height: 70),
                   CustomTextField(
                     onChanged: (value) => value,
+                    textAlign: TextAlign.left,
+                    letterSpacing: 1.0,
                     label: 'Name',
                     controller: _nameController,
                     focusNode: _nameFocus,
@@ -98,6 +100,8 @@ class _SignupState extends State<Signup> {
                       Expanded(
                         child: CustomTextField(
                           onChanged: (value) => value,
+                          textAlign: TextAlign.left,
+                          letterSpacing: 1.0,
                           label: 'Username',
                           controller: _usernameController,
                           focusNode: _usernameFocus,
@@ -113,6 +117,8 @@ class _SignupState extends State<Signup> {
                       Expanded(
                         child: CustomTextField(
                             onChanged: (value) => value,
+                            textAlign: TextAlign.left,
+                            letterSpacing: 1.0,
                             label: 'Mobile',
                             controller: _mobileController,
                             inputFormatters: [
@@ -265,8 +271,10 @@ class _SignupState extends State<Signup> {
       Fluttertoast.showToast(
           msg: 'Age must be over 18',
           gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.red[500],
           textColor: Colors.white,
+          timeInSecForIosWeb: 3,
+          toastLength: Toast.LENGTH_LONG,
           fontSize: 16.0);
     }
 
@@ -274,8 +282,10 @@ class _SignupState extends State<Signup> {
       Fluttertoast.showToast(
           msg: 'You must have a role.',
           gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.red[500],
           textColor: Colors.white,
+          timeInSecForIosWeb: 3,
+          toastLength: Toast.LENGTH_LONG,
           fontSize: 16.0);
       return;
     }
@@ -284,8 +294,10 @@ class _SignupState extends State<Signup> {
       Fluttertoast.showToast(
           msg: 'Password did not match!',
           gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.red[500],
           textColor: Colors.white,
+          timeInSecForIosWeb: 3,
+          toastLength: Toast.LENGTH_LONG,
           fontSize: 16.0);
 
       return;
@@ -300,6 +312,7 @@ class _SignupState extends State<Signup> {
       'type': roleValue,
     };
 
-    AuthController().signup(signupCredentials);
+    Navigator.pushReplacementNamed(context, '/loading_page',
+        arguments: {'data': signupCredentials, 'function': 'signup'});
   }
 }

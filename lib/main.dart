@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'dart:typed_data';
-
+import 'package:eventora/Pages/Auth/otp.dart';
+import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Pages/Auth/login.dart';
@@ -17,7 +17,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      // initialRoute: '/example',
+      initialRoute: '/otp_page',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -31,15 +31,37 @@ class Routes {
 
     switch (routeSettings.name) {
       case '/':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => Login(
+                    isAuthenticated: args['isAuthenticated'],
+                  ),
+              settings: routeSettings);
+        }
         return MaterialPageRoute(
-            builder: (_) => Login(), settings: routeSettings);
+            builder: (_) => Login(
+                  isAuthenticated: '',
+                ),
+            settings: routeSettings);
       case '/signup':
         return MaterialPageRoute(
             builder: (_) => Signup(), settings: routeSettings);
       case '/feature_page':
         return MaterialPageRoute(
             builder: (_) => FeaturePage(), settings: routeSettings);
-
+      case '/otp_page':
+        return MaterialPageRoute(
+            builder: (_) => OTPPage(), settings: routeSettings);
+      case '/loading_page':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => LoadingPage(
+                    data: args['data'],
+                    function: args['function'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
       default:
         _errorRoute();
     }

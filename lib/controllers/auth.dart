@@ -5,21 +5,16 @@ class AuthController {
   // final TextEditingController passwordController = TextEditingController();
   // RxBool loginLoading = false.obs;
 
-  bool loginLoading = false;
-
   Future login(Map<String, String?> loginData) async {
-    loginLoading = true;
     Map<String, dynamic> response =
         await ApiService().request('login', 'POST', loginData, false);
-
-    // print(response);
+    return response;
   }
 
   Future signup(Map<String, String?> signupData) async {
-    loginLoading = true;
     Map<String, dynamic> response =
         await ApiService().request('signup', 'POST', signupData, false);
-    print(response);
+    return response;
   }
 
   // Future<bool> checkServer(String? apiUrl) async {

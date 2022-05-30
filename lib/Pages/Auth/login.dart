@@ -1,10 +1,13 @@
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../controllers/auth.dart';
 import '../../utils/email_validation.dart';
 
 class Login extends StatefulWidget {
-  Login({Key? key}) : super(key: key);
+  Login({Key? key, required this.isAuthenticated}) : super(key: key);
+
+  late String isAuthenticated = '';
 
   @override
   State<Login> createState() => _LoginState();
@@ -17,6 +20,29 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  void checkIfAuth() {
+    if (widget.isAuthenticated == '') {
+      return;
+    } else if (widget.isAuthenticated != null) {
+      Fluttertoast.showToast(
+          msg: widget.isAuthenticated,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red[500],
+          textColor: Colors.white,
+          timeInSecForIosWeb: 3,
+          toastLength: Toast.LENGTH_LONG,
+          fontSize: 16.0);
+
+      return;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfAuth();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +137,7 @@ class _LoginState extends State<Login> {
       'password': passwordController.text,
     };
 
-    AuthController().login(loginCredentials);
+    Navigator.pushReplacementNamed(context, '/loading_page',
+        arguments: {'data': loginCredentials, 'function': 'login'});
   }
 }
