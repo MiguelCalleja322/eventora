@@ -17,7 +17,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/otp_page',
+      // initialRoute: '/otp_page',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -31,18 +31,8 @@ class Routes {
 
     switch (routeSettings.name) {
       case '/':
-        if (args is Map<String, dynamic>) {
-          return MaterialPageRoute(
-              builder: (_) => Login(
-                    isAuthenticated: args['isAuthenticated'],
-                  ),
-              settings: routeSettings);
-        }
         return MaterialPageRoute(
-            builder: (_) => Login(
-                  isAuthenticated: '',
-                ),
-            settings: routeSettings);
+            builder: (_) => Login(), settings: routeSettings);
       case '/signup':
         return MaterialPageRoute(
             builder: (_) => Signup(), settings: routeSettings);
@@ -52,16 +42,7 @@ class Routes {
       case '/otp_page':
         return MaterialPageRoute(
             builder: (_) => OTPPage(), settings: routeSettings);
-      case '/loading_page':
-        if (args is Map<String, dynamic>) {
-          return MaterialPageRoute(
-              builder: (_) => LoadingPage(
-                    data: args['data'],
-                    function: args['function'],
-                  ),
-              settings: routeSettings);
-        }
-        return _errorRoute();
+
       default:
         _errorRoute();
     }

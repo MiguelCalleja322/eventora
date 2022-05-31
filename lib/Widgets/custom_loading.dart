@@ -1,46 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../controllers/auth.dart';
-
-class LoadingPage extends StatefulWidget {
-  LoadingPage({Key? key, required this.data, required this.function})
-      : super(key: key);
-
-  late Map<String, String>? data;
-  late String? function;
-  late Map<String, dynamic>? _isAuthenticated = {};
-
-  @override
-  State<LoadingPage> createState() => _LoadingPageState();
-}
-
-class _LoadingPageState extends State<LoadingPage> {
-  void processData() async {
-    if (widget.function == 'login') {
-      widget._isAuthenticated = await AuthController().login(widget.data!);
-      if (widget._isAuthenticated!['message'] != null) {
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, '/', arguments: {
-          'isAuthenticated': widget._isAuthenticated!['message']
-        });
-      } else {
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, '/feature_page');
-      }
-    } else if (widget.function == 'signup') {
-      await AuthController().signup(widget.data!);
-
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, '/feature_page');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    processData();
-  }
+class LoadingPage extends StatelessWidget {
+  LoadingPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,4 +27,30 @@ class _LoadingPageState extends State<LoadingPage> {
       ),
     );
   }
+
+  // void processData() async {
+  //   if (widget.function == 'login') {
+  //     widget._isAuthenticated = await AuthController().login(widget.data!);
+  //     if (widget._isAuthenticated!['is_verified'] == 0) {
+  //       // ignore: use_build_context_synchronously
+  //       await Navigator.pushReplacementNamed(context, '/otp_page');
+  //     } else {
+  //       if (widget._isAuthenticated!['message'] != null) {
+  //         // ignore: use_build_context_synchronously
+  //         await Navigator.pushReplacementNamed(context, '/', arguments: {
+  //           'isAuthenticated': widget._isAuthenticated!['message']
+  //         });
+  //       } else {
+  //         // ignore: use_build_context_synchronously
+  //         await Navigator.pushReplacementNamed(context, '/feature_page');
+  //       }
+  //     }
+  //   } else if (widget.function == 'otp') {
+  //
+  //   } else if (widget.function == 'signup') {
+  //     await AuthController().signup(widget.data!);
+  //     // ignore: use_build_context_synchronously
+  //     await Navigator.pushReplacementNamed(context, '/otp_page');
+  //   }
+  // }
 }
