@@ -10,6 +10,11 @@ class FeaturePage extends StatefulWidget {
 
 class _FeaturePageState extends State<FeaturePage> {
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
@@ -25,7 +30,13 @@ class _FeaturePageState extends State<FeaturePage> {
                 color: Colors.grey[600],
               ),
             ),
-            const Text('Most Followed Organizer'),
+            const Text(
+              'Most Followed Organizers',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 15),
             const CustomProfile(),
           ],

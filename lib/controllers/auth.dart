@@ -22,8 +22,17 @@ class AuthController {
   }
 
   Future signup(Map<String, String?> signupData) async {
+    await dotenv.load(fileName: ".env");
+    final String? storageKey = dotenv.env['STORAGE_KEY'];
+
     Map<String, dynamic> response =
         await ApiService().request('signup', 'POST', signupData, false);
+
+    if (response['access_token'] != null) {
+      await StorageSevice().write(storageKey!, response['access_token']);
+    }
+
+    print(response);
 
     return response;
   }

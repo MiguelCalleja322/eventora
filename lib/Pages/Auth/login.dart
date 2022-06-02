@@ -25,6 +25,11 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: screenLoading
@@ -107,43 +112,50 @@ class _LoginState extends State<Login> {
   }
 
   void login(context) async {
-    if (emailController.text.isEmpty) {
-      return emailFocus.requestFocus();
-    }
-
-    if (passwordController.text.isEmpty) {
-      return emailFocus.requestFocus();
-    }
-
-    setState(() {
-      screenLoading = true;
-    });
-
-    Map<String, String> loginCredentials = {
-      'email': emailController.text,
-      'password': passwordController.text,
-    };
-
-    widget._isAuthenticated = await AuthController().login(loginCredentials);
-
-    if (widget._isAuthenticated!['is_verified'] == 0) {
-      await Navigator.pushReplacementNamed(context, '/otp_page');
-    } else {
-      if (widget._isAuthenticated!['message'] != null) {
-        Fluttertoast.showToast(
-            msg: widget._isAuthenticated!['message'],
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
-      } else {
-        await Navigator.pushReplacementNamed(context, '/feature_page');
+    if (mounted) {
+      if (emailController.text.isEmpty) {
+        return emailFocus.requestFocus();
       }
+
+      if (passwordController.text.isEmpty) {
+        return emailFocus.requestFocus();
+      }
+
+      setState(() {
+        screenLoading = true;
+      });
+
+      Map<String, String> loginCredentials = {
+        'email': emailController.text,
+        'password': passwordController.text,
+      };
+
+      widget._isAuthenticated = await AuthController().login(loginCredentials);
+
+      setState(() {
+        screenLoading = false;
+      });
+
+      if (widget._isAuthenticated!['is_verified'] == 0) {
+        await Navigator.pushReplacementNamed(context, '/otp_page');
+      } else {
+        if (widget._isAuthenticated!['message'] != null) {
+          Fluttertoast.showToast(
+              msg: widget._isAuthenticated!['message'],
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red[500],
+              textColor: Colors.white,
+              timeInSecForIosWeb: 3,
+              toastLength: Toast.LENGTH_LONG,
+              fontSize: 16.0);
+        } else {
+          await Navigator.pushReplacementNamed(context, '/feature_page');
+        }
+      }
+
+      return;
+    } else {
+      return;
     }
-    setState(() {
-      screenLoading = false;
-    });
   }
 }

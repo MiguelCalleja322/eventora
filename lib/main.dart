@@ -38,7 +38,7 @@ class Routes {
             builder: (_) => Signup(), settings: routeSettings);
       case '/feature_page':
         return MaterialPageRoute(
-            builder: (_) => FeaturePage(), settings: routeSettings);
+            builder: (_) => const FeaturePage(), settings: routeSettings);
       case '/otp_page':
         return MaterialPageRoute(
             builder: (_) => OTPPage(), settings: routeSettings);

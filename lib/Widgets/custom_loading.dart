@@ -27,30 +27,4 @@ class LoadingPage extends StatelessWidget {
       ),
     );
   }
-
-  // void processData() async {
-  //   if (widget.function == 'login') {
-  //     widget._isAuthenticated = await AuthController().login(widget.data!);
-  //     if (widget._isAuthenticated!['is_verified'] == 0) {
-  //       // ignore: use_build_context_synchronously
-  //       await Navigator.pushReplacementNamed(context, '/otp_page');
-  //     } else {
-  //       if (widget._isAuthenticated!['message'] != null) {
-  //         // ignore: use_build_context_synchronously
-  //         await Navigator.pushReplacementNamed(context, '/', arguments: {
-  //           'isAuthenticated': widget._isAuthenticated!['message']
-  //         });
-  //       } else {
-  //         // ignore: use_build_context_synchronously
-  //         await Navigator.pushReplacementNamed(context, '/feature_page');
-  //       }
-  //     }
-  //   } else if (widget.function == 'otp') {
-  //
-  //   } else if (widget.function == 'signup') {
-  //     await AuthController().signup(widget.data!);
-  //     // ignore: use_build_context_synchronously
-  //     await Navigator.pushReplacementNamed(context, '/otp_page');
-  //   }
-  // }
 }
