@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,11 +25,14 @@ class _OTPPageState extends State<OTPPage> {
   @override
   void initState() {
     super.initState();
-    startTimer();
+    if (mounted) {
+      startTimer();
+    }
   }
 
   @override
   void dispose() {
+    _timer.cancel();
     super.dispose();
   }
 
@@ -37,12 +41,7 @@ class _OTPPageState extends State<OTPPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: screenLoading
-          ? const Center(
-              child: SpinKitCircle(
-                color: Colors.white,
-                size: 50.0,
-              ),
-            )
+          ? LoadingPage()
           : SafeArea(
               child: Center(
                 child: Padding(
@@ -95,7 +94,7 @@ class _OTPPageState extends State<OTPPage> {
                           onPressed: () {
                             // print('bayot si miguel');
                             // return;
-                            verifyAccount(context);
+                            verify();
                           },
                           style: OutlinedButton.styleFrom(
                               primary: const Color(0xFFF7F8FB),
@@ -119,15 +118,15 @@ class _OTPPageState extends State<OTPPage> {
                               startTimer();
                               return;
                             } else {
-                              Fluttertoast.showToast(
-                                  msg:
-                                      'Please wait for a minute to request for new OTP',
-                                  gravity: ToastGravity.BOTTOM,
-                                  backgroundColor: Colors.red[500],
-                                  textColor: Colors.white,
-                                  timeInSecForIosWeb: 3,
-                                  toastLength: Toast.LENGTH_LONG,
-                                  fontSize: 16.0);
+                              // Fluttertoast.showToast(
+                              //     msg:
+                              //         'Please wait for a minute to request for new OTP',
+                              //     gravity: ToastGravity.BOTTOM,
+                              //     backgroundColor: Colors.red[500],
+                              //     textColor: Colors.white,
+                              //     timeInSecForIosWeb: 3,
+                              //     toastLength: Toast.LENGTH_LONG,
+                              //     fontSize: 16.0);
                             }
                           },
                           child: Text(
@@ -145,19 +144,10 @@ class _OTPPageState extends State<OTPPage> {
 
   void requestNewOtp() async {
     await AuthController().requestNewOTP();
-
-    await Fluttertoast.showToast(
-        msg: 'New OTP was sent to your email.',
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[700],
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
-    Fluttertoast.cancel();
+    toast('New OTP was sent to your email.', Colors.grey[700]);
   }
 
-  void verifyAccount(context) async {
+  void verify() async {
     if (mounted) {
       setState(() {
         screenLoading = true;
@@ -166,45 +156,25 @@ class _OTPPageState extends State<OTPPage> {
       late Map<String, dynamic> isVerified;
 
       Map<String, String> otp = {'otp': _otpController.text};
-      if (!mounted) return;
 
       isVerified = await AuthController().verifyAccount(otp);
 
-      // print(widget._isVerified);
+      print(isVerified);
+
+      if (isVerified['error_otp'] != null) {
+        toast(isVerified['error_otp'], Colors.red[500]);
+      }
 
       if (isVerified['is_verified'] == true) {
-        await Fluttertoast.showToast(
-            msg: isVerified['message'],
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.grey[700],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
-        print('bayot miguel');
-        Future.delayed(Duration(seconds: 3), () {
-          Fluttertoast.cancel();
+        toast('New OTP was sent to your email.', Colors.grey[700]);
+        Future.delayed(const Duration(seconds: 3), () {
           Navigator.pushReplacementNamed(context, '/feature_page');
         });
-        // return;
       }
 
       setState(() {
         screenLoading = false;
       });
-
-      Fluttertoast.showToast(
-          msg: isVerified['message'],
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
-
-      return;
-    } else {
-      return;
     }
   }
 
@@ -221,5 +191,18 @@ class _OTPPageState extends State<OTPPage> {
                 _start = _start - 1;
               }
             }));
+  }
+
+  void toast(String message, Color? color) async {
+    await Fluttertoast.showToast(
+        msg: message,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: color,
+        textColor: Colors.white,
+        timeInSecForIosWeb: 2,
+        toastLength: Toast.LENGTH_LONG,
+        fontSize: 16.0);
+
+    Fluttertoast.cancel();
   }
 }
