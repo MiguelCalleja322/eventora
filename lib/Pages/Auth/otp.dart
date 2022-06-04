@@ -92,8 +92,6 @@ class _OTPPageState extends State<OTPPage> {
                         width: double.infinity,
                         child: OutlinedButton(
                           onPressed: () {
-                            // print('bayot si miguel');
-                            // return;
                             verify();
                           },
                           style: OutlinedButton.styleFrom(
@@ -118,15 +116,9 @@ class _OTPPageState extends State<OTPPage> {
                               startTimer();
                               return;
                             } else {
-                              // Fluttertoast.showToast(
-                              //     msg:
-                              //         'Please wait for a minute to request for new OTP',
-                              //     gravity: ToastGravity.BOTTOM,
-                              //     backgroundColor: Colors.red[500],
-                              //     textColor: Colors.white,
-                              //     timeInSecForIosWeb: 3,
-                              //     toastLength: Toast.LENGTH_LONG,
-                              //     fontSize: 16.0);
+                              toast(
+                                  'Please wait for a minute to request for new OTP',
+                                  Colors.red[700]);
                             }
                           },
                           child: Text(
@@ -148,34 +140,32 @@ class _OTPPageState extends State<OTPPage> {
   }
 
   void verify() async {
-    if (mounted) {
-      setState(() {
-        screenLoading = true;
-      });
+    setState(() {
+      screenLoading = true;
+    });
 
-      late Map<String, dynamic> isVerified;
+    late Map<String, dynamic> isVerified;
 
-      Map<String, String> otp = {'otp': _otpController.text};
+    Map<String, String> otp = {'otp': _otpController.text};
 
-      isVerified = await AuthController().verifyAccount(otp);
+    isVerified = await AuthController().verifyAccount(otp);
 
-      print(isVerified);
+    print(isVerified);
 
-      if (isVerified['error_otp'] != null) {
-        toast(isVerified['error_otp'], Colors.red[500]);
-      }
+    if (isVerified['error_otp'] != null) {
+      toast(isVerified['error_otp'], Colors.red[500]);
+    }
 
-      if (isVerified['is_verified'] == true) {
-        toast('New OTP was sent to your email.', Colors.grey[700]);
-        Future.delayed(const Duration(seconds: 3), () {
-          Navigator.pushReplacementNamed(context, '/feature_page');
-        });
-      }
-
-      setState(() {
-        screenLoading = false;
+    if (isVerified['is_verified'] == true) {
+      toast(isVerified['message'], Colors.grey[700]);
+      Future.delayed(const Duration(seconds: 3), () {
+        Navigator.pushReplacementNamed(context, '/feature_page');
       });
     }
+
+    setState(() {
+      screenLoading = false;
+    });
   }
 
   void startTimer() {

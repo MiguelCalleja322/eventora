@@ -16,7 +16,6 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/calendar',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
