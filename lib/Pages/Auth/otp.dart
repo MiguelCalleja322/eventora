@@ -159,7 +159,7 @@ class _OTPPageState extends State<OTPPage> {
     if (isVerified['is_verified'] == true) {
       toast(isVerified['message'], Colors.grey[700]);
       Future.delayed(const Duration(seconds: 3), () {
-        Navigator.pushReplacementNamed(context, '/feature_page');
+        Navigator.pushReplacementNamed(context, '/home');
       });
     }
 

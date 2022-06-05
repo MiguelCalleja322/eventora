@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:eventora/Pages/Auth/otp.dart';
+import 'package:eventora/Pages/home.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
 import 'Pages/calendar.dart';
-import 'Pages/feature_page.dart';
+import 'Pages/User/feature_page.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,9 @@ class Routes {
       case '/':
         return MaterialPageRoute(
             builder: (_) => Login(), settings: routeSettings);
+      case '/home':
+        return MaterialPageRoute(
+            builder: (_) => HomePage(), settings: routeSettings);
       case '/signup':
         return MaterialPageRoute(
             builder: (_) => Signup(), settings: routeSettings);
@@ -42,7 +46,7 @@ class Routes {
             builder: (_) => OTPPage(), settings: routeSettings);
       case '/calendar':
         return MaterialPageRoute(
-            builder: (_) => TableEventsExample(), settings: routeSettings);
+            builder: (_) => CalendarPage(), settings: routeSettings);
 
       default:
         _errorRoute();

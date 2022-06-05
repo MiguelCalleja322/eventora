@@ -10,30 +10,30 @@ class AuthController {
   Future login(Map<String, String?> loginData) async {
     await dotenv.load(fileName: ".env");
     final String? storageKey = dotenv.env['STORAGE_KEY'];
+    final String? roleKey = dotenv.env['ROLE_KEY'];
 
     Map<String, dynamic> response =
         await ApiService().request('login', 'POST', loginData, false);
 
-    if (response['access_token'] != null) {
+    if (response['access_token'] != null && response['role'] != null) {
       await StorageSevice().write(storageKey!, response['access_token']);
+      await StorageSevice().write(roleKey!, response['role']);
     }
-
     return response;
   }
 
   Future signup(Map<String, String?> signupData) async {
     await dotenv.load(fileName: ".env");
     final String? storageKey = dotenv.env['STORAGE_KEY'];
+    final String? roleKey = dotenv.env['ROLE_KEY'];
 
     Map<String, dynamic> response =
         await ApiService().request('signup', 'POST', signupData, false);
 
-    if (response['access_token'] != null) {
+    if (response['access_token'] != null && response['role'] != null) {
       await StorageSevice().write(storageKey!, response['access_token']);
+      await StorageSevice().write(roleKey!, response['role']);
     }
-
-    print(response);
-
     return response;
   }
 
