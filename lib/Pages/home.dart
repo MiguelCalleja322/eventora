@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   bool loading = false;
   String? role;
+
   void _getRole() async {
     setState(() {
       loading = true;
@@ -32,8 +33,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       loading = false;
     });
-
-    print(role);
   }
 
   void _onItemTapped(int index) {
@@ -59,35 +58,17 @@ class _HomePageState extends State<HomePage> {
                   index: _selectedIndex,
                   children: [
                     // Index = 0
-                    SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: role == 'user' ? const FeaturePage() : Dashboard(),
-                    ),
+                    role == 'user' ? const FeaturePage() : Dashboard(),
+
                     // Index = 1
-                    SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: role == 'user'
-                          ? const FeaturePage()
-                          : StatisticsPage(),
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: ProfilePage(),
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: CalendarPage(),
-                    ),
+                    role == 'user' ? const FeaturePage() : StatisticsPage(),
+
+                    ProfilePage(),
+
+                    CalendarPage(),
+
                     // Index = 2
-                    SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: SettingsPage(),
-                    )
+                    SettingsPage(),
                   ],
                 ),
               ),

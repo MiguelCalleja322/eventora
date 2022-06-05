@@ -41,8 +41,6 @@ class _CalendarPageState extends State<CalendarPage> {
   List<Event> _getEventsForDay(DateTime day) {
     // Implementation example
 
-    print(day);
-
     return kEvents[day] ?? [];
   }
 

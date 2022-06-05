@@ -47,7 +47,11 @@ class AuthController {
     await ApiService().request('user/requestNewOTP', 'POST', {}, true);
   }
 
-  verifyOTP(Map<String, String> otp) {}
+  Future getProfile() async {
+    Map<String, dynamic> response =
+        await ApiService().request('user/getProfile', 'GET', {}, true);
+    return response;
+  }
 
   // Future<bool> checkServer(String? apiUrl) async {
   //   Uri uri = Uri.parse('${apiUrl}ping');
