@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:eventora/Pages/Auth/otp.dart';
+import 'package:eventora/Pages/Organizer/create_events.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
@@ -17,7 +18,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/home',
+      initialRoute: '/create_events',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -45,9 +46,9 @@ class Routes {
       case '/otp_page':
         return MaterialPageRoute(
             builder: (_) => OTPPage(), settings: routeSettings);
-      case '/calendar':
+      case '/create_events':
         return MaterialPageRoute(
-            builder: (_) => CalendarPage(), settings: routeSettings);
+            builder: (_) => CreateEvents(), settings: routeSettings);
 
       default:
         _errorRoute();
