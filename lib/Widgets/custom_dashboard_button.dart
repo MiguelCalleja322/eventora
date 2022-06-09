@@ -16,6 +16,8 @@ class CustomDashboardButton extends StatelessWidget {
     this.fontWeight,
     required this.text,
     required this.fit,
+    required this.elevation,
+    required this.clipBehavior,
   }) : super(key: key);
 
   final double? height;
@@ -31,38 +33,45 @@ class CustomDashboardButton extends StatelessWidget {
   final FontWeight? fontWeight;
   final String text;
   final BoxFit fit;
+  final double elevation;
+  final Clip clipBehavior;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      width: width,
-      child: FittedBox(
-        fit: fit,
-        child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-                backgroundColor: backgroundColor,
-                shape: RoundedRectangleBorder(borderRadius: borderRadius)),
-            onPressed: onPressed,
-            child: Padding(
-              padding: padding,
-              child: Column(
-                children: [
-                  Align(
-                    alignment: alignment,
-                    child: Text(
-                      text,
-                      style: TextStyle(
-                        letterSpacing: letterSpacing,
-                        fontSize: fontSize,
-                        color: color,
-                        fontWeight: fontWeight,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )),
+    return Expanded(
+      child: SizedBox(
+        height: height,
+        width: width,
+        child: FittedBox(
+          fit: fit,
+          child: Material(
+            shape: RoundedRectangleBorder(borderRadius: borderRadius),
+            elevation: elevation,
+            color: backgroundColor,
+            clipBehavior: clipBehavior,
+            child: MaterialButton(
+                onPressed: onPressed,
+                child: Padding(
+                  padding: padding,
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: alignment,
+                        child: Text(
+                          text,
+                          style: TextStyle(
+                            letterSpacing: letterSpacing,
+                            fontSize: fontSize,
+                            color: color,
+                            fontWeight: fontWeight,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )),
+          ),
+        ),
       ),
     );
   }
