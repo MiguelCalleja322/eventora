@@ -153,6 +153,7 @@ class _CreateEventsState extends State<CreateEvents> {
                             onPressed: () {
                               setState(() {
                                 imageFileList!.clear();
+                                loading = false;
                               });
                             },
                             padding: const EdgeInsets.all(15.0),
