@@ -45,6 +45,10 @@ dependencies:
     table_calendar: ^3.0.6
     image_picker: ^0.8.3+1
     carousel_slider: ^4.1.1
+    flutter_datetime_picker:
+        git:
+            url: https://github.com/Realank/flutter_datetime_picker.git
+            ref: master
 
 dev_dependencies:
     flutter_test:
