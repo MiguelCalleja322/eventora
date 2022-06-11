@@ -474,11 +474,12 @@ class _CreateEventsState extends State<CreateEvents> {
     } else {
       print('test');
       String basename = '';
-      imageFileList!.map((e) => {
-            print(e.path),
-            basename = p.basename(e.name),
-            fileImages.add(basename)
-          });
+      imageFileList!.forEach((element) {
+        basename = p.basename(element.path);
+        fileImages.add('/images/${basename}');
+      });
+
+      print(fileImages);
     }
   }
 }
