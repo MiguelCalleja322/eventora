@@ -49,6 +49,8 @@ dependencies:
         git:
             url: https://github.com/Realank/flutter_datetime_picker.git
             ref: master
+    simple_s3: ^0.3.2
+    mime: ^1.0.2
 
 dev_dependencies:
     flutter_test:

@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../controllers/auth.dart';
+import '../../controllers/auth_controller.dart';
 
 class OTPPage extends StatefulWidget {
   OTPPage({Key? key}) : super(key: key);

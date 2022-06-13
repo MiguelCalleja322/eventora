@@ -5,7 +5,7 @@ import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import '../../Widgets/custom_loading.dart';
 import '../../Widgets/custom_textfield.dart';
 
-import '../../controllers/auth.dart';
+import '../../controllers/auth_controller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 

@@ -1,4 +1,9 @@
 PODS:
+  - AWSCognito (2.19.1):
+    - AWSCore (= 2.19.1)
+  - AWSCore (2.19.1)
+  - AWSS3 (2.19.1):
+    - AWSCore (= 2.19.1)
   - Flutter (1.0.0)
   - flutter_secure_storage (3.3.1):
     - Flutter
@@ -7,6 +12,11 @@ PODS:
     - Toast
   - image_picker_ios (0.0.1):
     - Flutter
+  - simple_s3 (0.0.1):
+    - AWSCognito
+    - AWSCore
+    - AWSS3
+    - Flutter
   - Toast (4.0.0)
 
 DEPENDENCIES:
@@ -14,9 +24,13 @@ DEPENDENCIES:
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - simple_s3 (from `.symlinks/plugins/simple_s3/ios`)
 
 SPEC REPOS:
   trunk:
+    - AWSCognito
+    - AWSCore
+    - AWSS3
     - Toast
 
 EXTERNAL SOURCES:
@@ -28,12 +42,18 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/fluttertoast/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  simple_s3:
+    :path: ".symlinks/plugins/simple_s3/ios"
 
 SPEC CHECKSUMS:
+  AWSCognito: f50de600804941d083af37a7568905f31a774727
+  AWSCore: 55c154ae27efc5c98bdc30a0eeea5a35d10a2ab5
+  AWSS3: 2272253b098d07803af8dd20ce6ce7302bcffb47
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
   image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
+  simple_s3: dc1e236435ab824abf10e6147110fe86ab32c51c
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c

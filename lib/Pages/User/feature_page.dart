@@ -1,4 +1,5 @@
 import 'package:eventora/Widgets/custom_profile.dart';
+import 'package:eventora/controllers/feature_page_controller.dart';
 import 'package:flutter/material.dart';
 
 class FeaturePage extends StatefulWidget {
@@ -9,6 +10,33 @@ class FeaturePage extends StatefulWidget {
 }
 
 class _FeaturePageState extends State<FeaturePage> {
+  late Map<String, dynamic>? features = {};
+  late bool loading = false;
+  late List? featuredUsers = [];
+  void fetchFeatures() async {
+    setState(() {
+      loading = true;
+    });
+
+    features = await FeaturePageController().getFeatures();
+
+    featuredUsers = features!['user'];
+
+    featuredUsers!.map((e) {
+      print(e['name']);
+    });
+
+    setState(() {
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchFeatures();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -29,11 +57,6 @@ class _FeaturePageState extends State<FeaturePage> {
                     Text('Features',
                         style:
                             TextStyle(color: Colors.grey[800], fontSize: 40.0)),
-                    TextButton(
-                      onPressed: () =>
-                          Navigator.pushReplacementNamed(context, '/calendar'),
-                      child: const Text('Skip'),
-                    ),
                   ],
                 ),
                 SizedBox(
@@ -50,9 +73,30 @@ class _FeaturePageState extends State<FeaturePage> {
                       fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 15),
-                const CustomProfile(),
+                // ListView(scrollDirection: Axis.horizontal, children: [
+                //   CustomProfile(
+                //     image: features!['user']['avatar'],
+                //     name: features!['user']['name'],
+                //     followers: features!['user']['followers_count'],
+                //     followings: features!['user']['following_count'],
+                //   )
+                // ]),
+                const Text(
+                  'Most Followed Users',
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 15),
-                const CustomProfile(),
+                // const CustomProfile(),
+                const Text(
+                  'Most Visited Events',
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ),

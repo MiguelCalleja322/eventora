@@ -1,8 +1,10 @@
 import 'package:eventora/Widgets/custom_textformfield.dart';
+import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../Widgets/custom_loading.dart';
-import '../../controllers/auth.dart';
+import '../../controllers/auth_controller.dart';
 import '../../utils/email_validation.dart';
 
 class Login extends StatefulWidget {
@@ -23,6 +25,22 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
   bool screenLoading = false;
   final _formKey = GlobalKey<FormState>();
+
+  // void _redirectIfUserIsLogged() async {
+  //   await dotenv.load(fileName: ".env");
+  //   final String? storageKey = dotenv.env['STORAGE_KEY'];
+  //   String? _bearerToken = await StorageSevice().read(storageKey!);
+
+  //   if (_bearerToken!.isNotEmpty && mounted) {
+  //     Navigator.pushReplacementNamed(context, '/home');
+  //   }
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _redirectIfUserIsLogged();
+  // }
 
   @override
   void dispose() {
