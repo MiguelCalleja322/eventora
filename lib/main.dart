@@ -5,7 +5,6 @@ import 'package:eventora/Pages/home.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
-import 'Pages/calendar.dart';
 import 'Pages/User/feature_page.dart';
 
 void main() async {

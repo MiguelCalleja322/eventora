@@ -71,7 +71,7 @@ class _SignupState extends State<Signup> {
         : Scaffold(
             body: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 0.0),
                 child: SingleChildScrollView(
                   child: Form(
                     key: _formKey,

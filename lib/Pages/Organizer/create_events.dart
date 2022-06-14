@@ -65,7 +65,7 @@ class _CreateEventsState extends State<CreateEvents> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 0.0),
             child: Column(
               children: <Widget>[
                 Text(

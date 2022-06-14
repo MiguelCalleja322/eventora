@@ -74,7 +74,7 @@ class _CalendarPageState extends State<CalendarPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+          padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 0.0),
           child: Column(
             children: [
               Text('Calendar',
