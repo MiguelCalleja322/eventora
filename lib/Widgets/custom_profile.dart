@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 
 class CustomProfile extends StatelessWidget {
-  CustomProfile({
-    Key? key,
-    this.image,
-    required this.name,
-    required this.followers,
-    required this.followings,
-    this.events,
-    required this.role,
-  }) : super(key: key);
+  CustomProfile(
+      {Key? key,
+      this.image,
+      required this.name,
+      required this.followers,
+      required this.followings,
+      this.events,
+      required this.role,
+      required this.follow,
+      required this.isFollowed})
+      : super(key: key);
   late String? image = '';
   late String? name = '';
   late String? followers = '';
   late String? followings = '';
   late String? events = '';
   late String? role = '';
+  late VoidCallback follow;
+  late int? isFollowed = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +35,10 @@ class CustomProfile extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () => null,
-                    child: const Text(
-                      'Follow',
-                      style: TextStyle(
+                    onPressed: follow,
+                    child: Text(
+                      isFollowed! == 1 ? 'Unfollow' : 'Follow',
+                      style: const TextStyle(
                           color: Color(0xFF114F5A),
                           letterSpacing: 1.0,
                           fontSize: 15.0,
@@ -43,13 +47,14 @@ class CustomProfile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                // Align(
-                //   alignment: Alignment.center,
-                //   child: CircleAvatar(
-                //     backgroundImage: NetworkImage(image!),
-                //     radius: 90.0,
-                //   ),
-                // ),
+                const Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826'),
+                    radius: 90.0,
+                  ),
+                ),
                 const SizedBox(height: 15),
                 Text(
                   name!,

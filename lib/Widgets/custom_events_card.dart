@@ -117,85 +117,99 @@ class CustomEventCard extends StatelessWidget {
 
             const SizedBox(height: 30.0),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text(
-                      'Likes',
-                      style: TextStyle(
-                          color: Colors.grey[600],
-                          letterSpacing: 2.0,
-                          fontSize: 14.0),
-                    ),
-                    Text(
-                      likes!,
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        letterSpacing: 2.0,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                likes == ''
+                    ? Container()
+                    : Column(
+                        children: <Widget>[
+                          Text(
+                            'Likes',
+                            style: TextStyle(
+                                color: Colors.grey[600],
+                                letterSpacing: 2.0,
+                                fontSize: 14.0),
+                          ),
+                          Text(
+                            likes!,
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              letterSpacing: 2.0,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      'Interested',
-                      style: TextStyle(
-                          color: Colors.grey[600],
-                          letterSpacing: 2.0,
-                          fontSize: 14.0),
-                    ),
-                    Text(
-                      interested!,
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        letterSpacing: 2.0,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                interested == ''
+                    ? const SizedBox()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Interested',
+                            style: TextStyle(
+                                color: Colors.grey[600],
+                                letterSpacing: 2.0,
+                                fontSize: 14.0),
+                          ),
+                          Text(
+                            interested!,
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              letterSpacing: 2.0,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      'Attendees',
-                      style: TextStyle(
-                          color: Colors.grey[600],
-                          letterSpacing: 2.0,
-                          fontSize: 14.0),
-                    ),
-                    Text(
-                      attendees!,
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        letterSpacing: 2.0,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                )
+                attendees == ''
+                    ? const SizedBox()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Attendees',
+                            style: TextStyle(
+                                color: Colors.grey[600],
+                                letterSpacing: 2.0,
+                                fontSize: 14.0),
+                          ),
+                          Text(
+                            attendees!,
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              letterSpacing: 2.0,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      )
               ],
             ),
             const SizedBox(height: 30.0),
-            Text(
-              'Organizer:',
-              style: TextStyle(
-                  color: Colors.grey[600], letterSpacing: 2.0, fontSize: 14.0),
-            ),
-            Text(
-              organizer!,
-              style: TextStyle(
-                color: Colors.grey[700],
-                letterSpacing: 2.0,
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            organizer == ''
+                ? const SizedBox()
+                : Text(
+                    'Organizer:',
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        letterSpacing: 2.0,
+                        fontSize: 14.0),
+                  ),
+            organizer == ''
+                ? const SizedBox()
+                : Text(
+                    organizer!,
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      letterSpacing: 2.0,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
             const SizedBox(height: 30.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
