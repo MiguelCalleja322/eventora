@@ -1,5 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, unnecessary_const, no_leading_underscores_for_local_identifiers
 
+import 'dart:math';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:async';
 import 'dart:io';
@@ -8,17 +10,27 @@ import 'package:flutter/services.dart';
 // ignore: depend_on_referenced_packages
 import 'package:mime_type/mime_type.dart';
 import 'package:simple_s3/simple_s3.dart';
+import 'package:path/path.dart' as p;
 
 class S3 {
-  static Future uploadFile(String path, Map<String, dynamic> data) async {
+  static Future uploadFile(String path, File file) async {
     await dotenv.load(fileName: ".env");
     final String? s3Bucket = dotenv.env['AWS_BUCKET'];
-    final String? s3Key = dotenv.env['AWS_ACCESS_KEY_ID'];
-
+    final String? poolID = dotenv.env['AWS_POOL_ID'];
+    String nameOfFile = randomString();
     SimpleS3 _simpleS3 = SimpleS3();
+
     return await _simpleS3.uploadFile(
-        data['file'], s3Bucket, s3Key, AWSRegions.apSouthEast1,
-        s3FolderPath: path, fileName: data['filename'], debugLog: false);
+        file, s3Bucket, poolID, AWSRegions.usEast1,
+        s3FolderPath: path, fileName: nameOfFile, debugLog: false);
+  }
+
+  static randomString() {
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+    return String.fromCharCodes(Iterable.generate(
+        32, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
   }
 }
 
@@ -49,45 +61,48 @@ class SimpleS3 {
     bool debugLog = false,
   }) async {
     Map<String, dynamic> args = <String, dynamic>{};
-    String result;
-    String contentType;
-
+    String result = '';
+    String contentType = '';
+    String originalFileName = '';
+    final fileExtension = p.extension(file.path);
     if (!await file.exists()) throw SimpleS3Errors.FileDoesNotExistsError;
 
-    if (!(fileName != null && fileName.isNotEmpty)) {
-      String originalFileName = file.path.split('/').last.replaceAll(" ", "");
+    if (!(fileName != null && fileName.length > 0)) {
+      originalFileName = file.path.split('/').last.replaceAll(" ", "");
 
       if (useTimeStamp) {
         int timestamp = DateTime.now().millisecondsSinceEpoch;
 
         if (timeStampLocation == TimestampLocation.prefix) {
-          // ignore: unnecessary_string_escapes
-          fileName = '$timestamp\_$originalFileName';
+          fileName = '$timestamp' '\'_$originalFileName';
         } else {
           fileName =
-              // ignore: unnecessary_string_escapes
               '${originalFileName.split(".").first}\_$timestamp\.${originalFileName.split(".").last}';
         }
       } else {
         fileName = originalFileName;
       }
     }
-    contentType = mime(fileName)!;
 
-    if (debugLog) {
-      debugPrint('S3 Upload Started <-----------------');
-      debugPrint(" ");
-      debugPrint("File Name: $fileName");
-      debugPrint(" ");
-      debugPrint("Content Type: $contentType");
-      debugPrint(" ");
-    }
+    String newFileName = '$fileName$fileExtension';
+
+    print('filename:$newFileName');
+    contentType = mime(newFileName)!;
+
+    // if (debugLog) {
+    //   debugPrint('S3 Upload Started <-----------------');
+    //   debugPrint(" ");
+    //   debugPrint("File Name: $fileName");
+    //   debugPrint(" ");
+    //   debugPrint("Content Type: $contentType");
+    //   debugPrint(" ");
+    // }
 
     args.putIfAbsent("filePath", () => file.path);
     args.putIfAbsent("poolID", () => poolID);
     args.putIfAbsent("region", () => region.region);
     args.putIfAbsent("bucketName", () => bucketName);
-    args.putIfAbsent("fileName", () => fileName);
+    args.putIfAbsent("fileName", () => newFileName);
     args.putIfAbsent("s3FolderPath", () => s3FolderPath);
     args.putIfAbsent("debugLog", () => debugLog);
     args.putIfAbsent("contentType", () => contentType);
@@ -95,34 +110,35 @@ class SimpleS3 {
         "subRegion", () => subRegion != null ? subRegion.region : "");
     args.putIfAbsent("accessControl", () => accessControl.index);
 
+    print(args);
+
     bool methodResult = await _methodChannel.invokeMethod('upload', args);
+    print(methodResult);
+    // if (methodResult == true) {
+    String? _region = subRegion != null ? subRegion.region : region.region;
+    String? _path = s3FolderPath != ""
+        ? "${bucketName!}/$s3FolderPath/$newFileName"
+        : "${bucketName!}/$newFileName";
 
-    if (methodResult) {
-      String? _region = subRegion != null ? subRegion.region : region.region;
-      String? _path = s3FolderPath != ""
-          ? "${bucketName!}/$s3FolderPath/$fileName"
-          : "${bucketName!}/$fileName";
+    result = "https://s3.$_region.amazonaws.com/$_path";
 
-      result = "https://s3-$_region.amazonaws.com/$_path";
-
-      if (debugLog) {
-        debugPrint("Status: Uploaded");
-        debugPrint(" ");
-        debugPrint("URL: $result");
-        debugPrint(" ");
-        debugPrint("Access Type: $accessControl");
-        debugPrint(" ");
-        debugPrint('S3 Upload Completed-------------->');
-        debugPrint(" ");
-      }
-    } else {
-      if (debugLog) {
-        debugPrint("Status: Error");
-        debugPrint(" ");
-        debugPrint('S3 Upload Error------------------>');
-      }
-      throw SimpleS3Errors.UploadError;
-    }
+    // if (debugLog) {
+    //   debugPrint("Status: Uploaded");
+    //   debugPrint(" ");
+    //   debugPrint("URL: $result");
+    //   debugPrint(" ");
+    //   debugPrint("Access Type: $accessControl");
+    //   debugPrint(" ");
+    //   debugPrint('S3 Upload Completed-------------->');
+    //   debugPrint(" ");
+    // } else {
+    //   if (debugLog) {
+    //     debugPrint("Status: Error");
+    //     debugPrint(" ");
+    //     debugPrint('S3 Upload Error------------------>');
+    //   }
+    //   throw SimpleS3Errors.UploadError;
+    // }
 
     return result;
   }
@@ -188,3 +204,14 @@ enum TimestampLocation { prefix, suffix }
 ///enum for Internal errors
 // ignore: constant_identifier_names
 enum SimpleS3Errors { FileDoesNotExistsError, UploadError, DeleteError }
+
+enum S3AccessControl {
+  unknown,
+  private,
+  publicRead,
+  publicReadWrite,
+  authenticatedRead,
+  awsExecRead,
+  bucketOwnerRead,
+  bucketOwnerFullControl
+}
