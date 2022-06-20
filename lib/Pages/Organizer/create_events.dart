@@ -16,6 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
+import 'dart:convert';
 
 class CreateEvents extends StatefulWidget {
   CreateEvents({Key? key}) : super(key: key);
@@ -35,8 +36,9 @@ class _CreateEventsState extends State<CreateEvents> {
   late bool isAvailable = true;
   late String schedule = '';
   late int timestamp = DateTime.now().millisecondsSinceEpoch;
-  late Map<String, dynamic>? eventCategories = {};
-  late String eventCategory = '';
+  late Map<String, dynamic>? fetchedCategories = {};
+  late List<dynamic>? eventCategories = [];
+  late String? selectedCategory = 'Corporate';
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -69,13 +71,19 @@ class _CreateEventsState extends State<CreateEvents> {
   }
 
   void getEventCategories() async {
-    eventCategories = await EventCategoriesController().index();
-  }
+    fetchedCategories = await EventCategoriesController().index();
 
-  @override
-  void initState() {
-    super.initState();
-    getEventCategories();
+    if (fetchedCategories!.isNotEmpty) {
+      setState(() {
+        eventCategories = fetchedCategories!['event_categories'] ?? [];
+      });
+    }
+
+    @override
+    void initState() {
+      super.initState();
+      getEventCategories();
+    }
   }
 
   @override
@@ -91,8 +99,35 @@ class _CreateEventsState extends State<CreateEvents> {
                   'Create Event',
                   style: TextStyle(color: Colors.grey[800], fontSize: 40.0),
                 ),
+                const Divider(
+                  height: 30.0,
+                  thickness: 1,
+                ),
                 const SizedBox(
                   height: 15.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Event Category:',
+                      style: TextStyle(color: Colors.grey[800], fontSize: 20.0),
+                    ),
+                    DropdownButton(
+                      value: selectedCategory,
+                      items: eventCategories!.map((eventCatedory) {
+                        return DropdownMenuItem(
+                          value: eventCatedory['type'],
+                          child: Text(eventCatedory['type']),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedCategory = newValue!.toString();
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 15.0,
@@ -551,7 +586,8 @@ class _CreateEventsState extends State<CreateEvents> {
       'is_private': isPrivate,
       'schedule': schedule,
       'event_type': eventType,
-      'type': 'photo'
+      'type': 'photo',
+      'event_category': selectedCategory,
     };
 
     print(eventData);
