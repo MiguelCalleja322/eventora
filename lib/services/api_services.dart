@@ -7,7 +7,7 @@ class ApiService {
   Future<dynamic> request(
     String url,
     String? type,
-    Map<String, String?> data,
+    Map<String, dynamic> data,
     bool? withToken,
   ) async {
     await dotenv.load(fileName: ".env");

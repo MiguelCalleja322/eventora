@@ -1,8 +1,14 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
 import 'dart:io';
+import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventora/Widgets/custom_dashboard_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
+import 'package:eventora/controllers/event_categories_controller.dart';
+import 'package:eventora/controllers/events_controller.dart';
+import 'package:eventora/utils/s3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,7 +33,10 @@ class _CreateEventsState extends State<CreateEvents> {
   late String eventType = '';
   late bool isPrivate = false;
   late bool isAvailable = true;
-  late String outputDate = '';
+  late String schedule = '';
+  late int timestamp = DateTime.now().millisecondsSinceEpoch;
+  late Map<String, dynamic>? eventCategories = {};
+  late String eventCategory = '';
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -59,6 +68,16 @@ class _CreateEventsState extends State<CreateEvents> {
     });
   }
 
+  void getEventCategories() async {
+    eventCategories = await EventCategoriesController().index();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEventCategories();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +90,9 @@ class _CreateEventsState extends State<CreateEvents> {
                 Text(
                   'Create Event',
                   style: TextStyle(color: Colors.grey[800], fontSize: 40.0),
+                ),
+                const SizedBox(
+                  height: 15.0,
                 ),
                 const SizedBox(
                   height: 15.0,
@@ -216,22 +238,33 @@ class _CreateEventsState extends State<CreateEvents> {
                   controller: _descriptionController,
                   focusNode: _descriptionfocusNode,
                 ),
-                TextButton(
-                    onPressed: () {
-                      DatePicker.showDateTimePicker(context,
-                          showTitleActions: true,
-                          minTime: DateTime(2022, 3, 5),
-                          maxTime: DateTime(2030, 6, 7), onConfirm: (date) {
-                        var inputFormat = DateFormat('yyyy/MM/dd HH:mm a');
-                        outputDate = inputFormat.format(date);
-                      }, currentTime: DateTime.now(), locale: LocaleType.en);
-                    },
-                    child: const Text(
-                      'Choose date for the event:',
-                      style: TextStyle(color: Colors.blue),
-                    )),
                 const SizedBox(
                   height: 10.0,
+                ),
+                CustomDashboardButton(
+                  height: 50.0,
+                  width: 200.0,
+                  backgroundColor: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(25.0),
+                  onPressed: () {
+                    DatePicker.showDateTimePicker(context,
+                        showTitleActions: true,
+                        minTime: DateTime(2022, 3, 5),
+                        maxTime: DateTime(2030, 6, 7), onConfirm: (date) {
+                      var inputFormat = DateFormat('yyyy/MM/dd HH:mm');
+                      setState(() {
+                        schedule = inputFormat.format(date);
+                      });
+                    }, currentTime: DateTime.now(), locale: LocaleType.en);
+                  },
+                  padding: const EdgeInsets.all(15.0),
+                  alignment: Alignment.center,
+                  text: schedule == '' ? 'Choose date for the event' : schedule,
+                  color: Colors.grey[100],
+                  letterSpacing: 2.0,
+                  fontSize: 12.0,
+                  fit: BoxFit.cover,
+                  elevation: 0,
                 ),
                 const SizedBox(
                   height: 10.0,
@@ -249,15 +282,23 @@ class _CreateEventsState extends State<CreateEvents> {
                           index < isEventAvailable.length;
                           index++) {
                         if (index == newIndex) {
-                          isEventAvailable[index] = true;
+                          setState(() {
+                            isEventAvailable[index] = true;
+                          });
                         } else {
-                          isEventAvailable[index] = false;
+                          setState(() {
+                            isEventAvailable[index] = false;
+                          });
                         }
 
                         if (newIndex == 0) {
-                          isAvailable = true;
+                          setState(() {
+                            isAvailable = true;
+                          });
                         } else {
-                          isAvailable = false;
+                          setState(() {
+                            isAvailable = false;
+                          });
                         }
                       }
                       print(isAvailable);
@@ -294,15 +335,23 @@ class _CreateEventsState extends State<CreateEvents> {
                           index < isEventPrivate.length;
                           index++) {
                         if (index == newIndex) {
-                          isEventPrivate[index] = true;
+                          setState(() {
+                            isEventPrivate[index] = true;
+                          });
                         } else {
-                          isEventPrivate[index] = false;
+                          setState(() {
+                            isEventPrivate[index] = false;
+                          });
                         }
 
                         if (newIndex == 0) {
-                          isPrivate = true;
+                          setState(() {
+                            isPrivate = true;
+                          });
                         } else {
-                          isPrivate = false;
+                          setState(() {
+                            isPrivate = false;
+                          });
                         }
                       }
                       print(isPrivate);
@@ -334,15 +383,23 @@ class _CreateEventsState extends State<CreateEvents> {
                     setState(() {
                       for (int index = 0; index < isSelected.length; index++) {
                         if (index == newIndex) {
-                          isSelected[index] = true;
+                          setState(() {
+                            isSelected[index] = true;
+                          });
                         } else {
-                          isSelected[index] = false;
+                          setState(() {
+                            isSelected[index] = false;
+                          });
                         }
 
                         if (newIndex == 0) {
-                          eventType = 'ticketed';
+                          setState(() {
+                            eventType = 'ticketed';
+                          });
                         } else {
-                          eventType = 'registration';
+                          setState(() {
+                            eventType = 'registration';
+                          });
                         }
                       }
                     });
@@ -415,7 +472,7 @@ class _CreateEventsState extends State<CreateEvents> {
         ),
       );
 
-  void store() {
+  void store() async {
     List<String> fileImages = [];
 
     if (_titleController.text.isEmpty) {
@@ -426,7 +483,7 @@ class _CreateEventsState extends State<CreateEvents> {
       return _descriptionfocusNode.requestFocus();
     }
 
-    if (outputDate.isEmpty) {
+    if (schedule.isEmpty) {
       Fluttertoast.showToast(
           msg: 'Please provide the date or schedule',
           gravity: ToastGravity.BOTTOM,
@@ -435,6 +492,8 @@ class _CreateEventsState extends State<CreateEvents> {
           timeInSecForIosWeb: 3,
           toastLength: Toast.LENGTH_LONG,
           fontSize: 16.0);
+
+      return;
     }
 
     if (eventType.isEmpty) {
@@ -471,15 +530,42 @@ class _CreateEventsState extends State<CreateEvents> {
           toastLength: Toast.LENGTH_LONG,
           fontSize: 16.0);
       return;
-    } else {
-      print('test');
-      String basename = '';
-      imageFileList!.forEach((element) {
-        basename = p.basename(element.path);
-        fileImages.add('/images/${basename}');
-      });
-
-      print(fileImages);
     }
+
+    String fileExtension = '';
+    imageFileList!.forEach((images) async {
+      fileExtension = p.extension(images.path);
+      String newFileName =
+          randomString() + '-' + timestamp.toString() + fileExtension;
+      fileImages.add('images/$newFileName');
+      File image = File(images.path);
+      // await S3.uploadFile(newFileName, image);
+    });
+
+    Map<String, dynamic> eventData = {
+      'title': _titleController.text,
+      'description': _descriptionController.text,
+      'is_available': isAvailable,
+      'fees': _feesController.text,
+      'images': fileImages,
+      'is_private': isPrivate,
+      'schedule': schedule,
+      'event_type': eventType,
+      'type': 'photo'
+    };
+
+    print(eventData);
+
+    var test = await EventController().store(eventData);
+
+    print(test);
+  }
+
+  static randomString() {
+    const chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random rnd = Random();
+    return String.fromCharCodes(Iterable.generate(
+        32, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
   }
 }

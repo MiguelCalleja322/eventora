@@ -24,13 +24,15 @@ class _StatisticsPageState extends State<StatisticsPage> {
   void fetchStatistics() async {
     statistics = await StatisticsController().getStatistics();
 
-    setState(() {
-      mostLiked = statistics!['most_liked'];
-      mostInteresting = statistics!['most_interesting'];
-      mostAttendees = statistics!['most_attendees'];
-    });
-
-    print(mostLiked);
+    if (statistics!.isNotEmpty) {
+      setState(() {
+        mostLiked = statistics!['most_liked'] ?? {};
+        mostInteresting = statistics!['most_interesting'] ?? {};
+        mostAttendees = statistics!['most_attendees'] ?? {};
+      });
+    } else {
+      return;
+    }
   }
 
   @override

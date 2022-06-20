@@ -27,11 +27,13 @@ class _FeaturePageState extends State<FeaturePage> {
   void fetchFeatures() async {
     features = await FeaturePageController().getFeatures();
 
-    setState(() {
-      featuredOrganizers = features!['organizer'];
-      featuredUsers = features!['user'];
-      featuredEvents = features!['events'];
-    });
+    if (features!.isNotEmpty) {
+      setState(() {
+        featuredOrganizers = features!['organizer'] ?? {};
+        featuredUsers = features!['user'] ?? {};
+        featuredEvents = features!['events'] ?? {};
+      });
+    }
 
     print(featuredUsers);
   }

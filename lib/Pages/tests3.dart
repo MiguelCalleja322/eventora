@@ -88,9 +88,8 @@ class SimpleS3TestState extends State<SimpleS3Test> {
         setState(() {
           isLoading = true;
         });
-        String path = await randomString();
+
         result = await S3.uploadFile('', selectedFile!);
-        print(result);
 
         // result = await _simpleS3.uploadFile(
         //   selectedFile!,
@@ -110,13 +109,5 @@ class SimpleS3TestState extends State<SimpleS3Test> {
       }
     }
     return result;
-  }
-
-  static randomString() {
-    const _chars =
-        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-    Random _rnd = Random();
-    return String.fromCharCodes(Iterable.generate(
-        32, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
   }
 }
