@@ -23,19 +23,15 @@ class S3 {
     );
 
     File compressedFile =
-        await S3().testCompressAndGetFile(file.absolute.path, newFileName);
+        await S3().compressFile(file.absolute.path, newFileName);
 
     print(compressedFile.path);
 
-    // await minio.fPutObject(
-    //     s3Bucket!, 'events/$newFileName', compressedFile.path);
-
-    // final url =
-    //     await minio.presignedGetObject(s3Bucket, newFileName, expires: 1000);
-    // print(url);
+    await minio.fPutObject(
+        s3Bucket!, 'events/$newFileName', compressedFile.path);
   }
 
-  Future<File> testCompressAndGetFile(String path, String newFileName) async {
+  Future<File> compressFile(String path, String newFileName) async {
     Directory tempDir = await getTemporaryDirectory();
 
     String sourceTmpPath = '${tempDir.path}/$newFileName';

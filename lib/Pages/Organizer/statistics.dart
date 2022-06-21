@@ -83,6 +83,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       : SizedBox(
                           height: 600,
                           child: CustomEventCard(
+                              images: mostLiked!['images'],
                               title: mostLiked!['title'].toString(),
                               description: mostLiked!['description'].toString(),
                               schedule: mostLiked!['schedule'].toString(),
@@ -110,6 +111,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       : SizedBox(
                           height: 600,
                           child: CustomEventCard(
+                              images: mostInteresting!['images'],
                               title: mostInteresting!['title'].toString(),
                               description:
                                   mostInteresting!['description'].toString(),
@@ -139,6 +141,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       : SizedBox(
                           height: 600,
                           child: CustomEventCard(
+                              images: mostAttendees!['images'],
                               title: mostAttendees!['title'].toString(),
                               description:
                                   mostAttendees!['description'].toString(),

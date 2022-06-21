@@ -45,7 +45,7 @@ class _SignupState extends State<Signup> {
     }
   }
 
-  String roleValue = 'User';
+  String roleValue = 'user';
 
   final FocusNode _nameFocus = FocusNode();
   final FocusNode _usernameFocus = FocusNode();
@@ -190,8 +190,8 @@ class _SignupState extends State<Signup> {
                                 });
                               },
                               items: <String>[
-                                'User',
-                                'Organizer'
+                                'user',
+                                'organizer'
                               ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,

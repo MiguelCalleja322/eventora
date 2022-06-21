@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventora/Widgets/custom_events_card.dart';
@@ -6,7 +7,9 @@ import 'package:eventora/Widgets/custom_profile.dart';
 import 'package:eventora/controllers/feature_page_controller.dart';
 import 'package:eventora/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FeaturePage extends StatefulWidget {
   const FeaturePage({Key? key}) : super(key: key);
@@ -22,26 +25,41 @@ class _FeaturePageState extends State<FeaturePage> {
   late List<dynamic>? featuredOrganizers = [];
   late List<dynamic>? featuredEvents = [];
   late Map<String, dynamic>? isFollowed = {};
-  late int? test = 0;
+  late int? followed = 0;
+  late List<String> featureEventsImages = [];
+  late String? cloudFrontUri = '';
+
+  void fetchCloudFrontUri() async {
+    await dotenv.load(fileName: ".env");
+    cloudFrontUri = dotenv.env['CLOUDFRONT_URI'];
+  }
 
   void fetchFeatures() async {
     features = await FeaturePageController().getFeatures();
 
     if (features!.isNotEmpty) {
       setState(() {
-        featuredOrganizers = features!['organizer'] ?? {};
-        featuredUsers = features!['user'] ?? {};
-        featuredEvents = features!['events'] ?? {};
+        featuredOrganizers = features!['organizer'] ?? [];
+        featuredUsers = features!['user'] ?? [];
+        featuredEvents = features!['events'] ?? [];
       });
     }
 
-    print(featuredUsers);
+    // featuredEvents!.forEach((element) {
+    //   List<dynamic> images = element['images'];
+    //   images.map((e) {
+    //     return featureEventsImages.add(cloudFrontUri! + e);
+    //   });
+    // });
+
+    // print(featureEventsImages);
   }
 
   @override
   void initState() {
     super.initState();
     fetchFeatures();
+    fetchCloudFrontUri();
   }
 
   @override
@@ -132,7 +150,7 @@ class _FeaturePageState extends State<FeaturePage> {
                         fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 15),
-                  featuredOrganizers!.isEmpty
+                  featuredUsers!.isEmpty
                       ? SpinKitCircle(
                           size: 50.0,
                           color: Colors.grey[700],
@@ -184,11 +202,12 @@ class _FeaturePageState extends State<FeaturePage> {
                           color: Colors.grey[700],
                         )
                       : SizedBox(
-                          height: 600,
+                          height: 700,
                           child: CarouselSlider.builder(
                               itemCount: featuredUsers!.length,
                               itemBuilder: (context, index, realIndex) {
                                 return CustomEventCard(
+                                    images: featuredEvents![index]['images'],
                                     title: featuredEvents![index]['title']
                                         .toString(),
                                     description: featuredEvents![index]
@@ -238,11 +257,11 @@ class _FeaturePageState extends State<FeaturePage> {
 
     if (isFollowed!['is_followed'] == true) {
       setState(() {
-        test = 1;
+        followed = 1;
       });
     } else {
       setState(() {
-        test = 0;
+        followed = 0;
       });
     }
   }

@@ -1,5 +1,7 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CustomEventCard extends StatelessWidget {
   CustomEventCard({
@@ -15,6 +17,7 @@ class CustomEventCard extends StatelessWidget {
     required this.onPressedAttend,
     required this.onPressedInterested,
     required this.onPressedSave,
+    required this.images,
   }) : super(key: key);
 
   late String? title = '';
@@ -25,6 +28,7 @@ class CustomEventCard extends StatelessWidget {
   late String? interested = '';
   late String? attendees = '';
   late String? organizer = '';
+  late List<dynamic>? images = [];
   final VoidCallback onPressedAttend;
   final VoidCallback onPressedInterested;
   final VoidCallback onPressedSave;
@@ -37,17 +41,21 @@ class CustomEventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // const Center(
-            //   child: CircleAvatar(
-            //     backgroundImage: AssetImage('assets/luffy.jpeg'),
-            //     radius: 80.0,
-            //   ),
-            // ),
-            Divider(
-              height: 60.0,
-              color: Colors.grey[800],
+            SizedBox(
+              width: double.infinity,
+              height: 200,
+              child: CarouselSlider.builder(
+                  itemCount: images!.length,
+                  itemBuilder: (context, index, realIndex) {
+                    return BuildImage(images![index], index);
+                  },
+                  options: CarouselOptions(
+                    height: 300,
+                    autoPlay: true,
+                    viewportFraction: 2,
+                    autoPlayInterval: const Duration(seconds: 5),
+                  )),
             ),
-
             const SizedBox(height: 10.0),
             Align(
               alignment: Alignment.center,
@@ -114,7 +122,6 @@ class CustomEventCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 30.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -141,6 +148,7 @@ class CustomEventCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                const SizedBox(width: 30.0),
                 interested == ''
                     ? const SizedBox()
                     : Column(
@@ -164,6 +172,7 @@ class CustomEventCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                const SizedBox(width: 30.0),
                 attendees == ''
                     ? const SizedBox()
                     : Column(
@@ -242,4 +251,12 @@ class CustomEventCard extends StatelessWidget {
       ),
     );
   }
+
+  Widget BuildImage(String networkImage, int index) => Container(
+        color: Colors.grey[500],
+        child: Image.network(
+          'https://d2aobpa1aevk77.cloudfront.net/$networkImage',
+          fit: BoxFit.cover,
+        ),
+      );
 }
