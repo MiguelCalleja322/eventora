@@ -213,7 +213,7 @@ class _CreateEventsState extends State<CreateEvents> {
                       Row(
                         children: [
                           Expanded(
-                            child: CustomDashboardButton(
+                            child: CustomButton(
                               height: 50.0,
                               width: double.infinity,
                               backgroundColor: Colors.grey[800],
@@ -235,7 +235,7 @@ class _CreateEventsState extends State<CreateEvents> {
                             width: 15.0,
                           ),
                           Expanded(
-                            child: CustomDashboardButton(
+                            child: CustomButton(
                               height: 50.0,
                               width: double.infinity,
                               backgroundColor: Colors.grey[800],
@@ -289,7 +289,7 @@ class _CreateEventsState extends State<CreateEvents> {
                       const SizedBox(
                         height: 15.0,
                       ),
-                      CustomDashboardButton(
+                      CustomButton(
                         height: 50.0,
                         width: 200.0,
                         backgroundColor: Colors.grey[800],
@@ -491,7 +491,7 @@ class _CreateEventsState extends State<CreateEvents> {
                       const SizedBox(
                         height: 15.0,
                       ),
-                      CustomDashboardButton(
+                      CustomButton(
                         height: 50.0,
                         width: 200.0,
                         backgroundColor: Colors.grey[800],

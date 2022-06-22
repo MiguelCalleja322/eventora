@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:eventora/Pages/Auth/otp.dart';
 import 'package:eventora/Pages/Organizer/create_events.dart';
 import 'package:eventora/Pages/Organizer/statistics.dart';
+import 'package:eventora/Pages/User/update_user_info.dart';
 import 'package:eventora/Pages/home.dart';
-import 'package:eventora/Pages/tests3.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
@@ -19,7 +19,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/home',
+      initialRoute: '/updateUserInfo',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -53,10 +53,9 @@ class Routes {
       case '/statistics':
         return MaterialPageRoute(
             builder: (_) => StatisticsPage(), settings: routeSettings);
-      case '/simpleS3test':
+      case '/updateUserInfo':
         return MaterialPageRoute(
-            builder: (_) => const SimpleS3Test(), settings: routeSettings);
-
+            builder: (_) => UpdateUserInfo(), settings: routeSettings);
       default:
         _errorRoute();
     }

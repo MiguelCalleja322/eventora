@@ -53,6 +53,19 @@ class AuthController {
     return response;
   }
 
+  Future userUpdate(Map<String, dynamic> userInfo) async {
+    Map<String, dynamic> response =
+        await ApiService().request('user/update', 'PUT', userInfo, true);
+
+    return response;
+  }
+
+  Future logout() async {
+    Map<String, dynamic> response =
+        await ApiService().request('user/logout', 'POST', {}, true);
+
+    return response;
+  }
   // Future<bool> checkServer(String? apiUrl) async {
   //   Uri uri = Uri.parse('${apiUrl}ping');
   //   try {

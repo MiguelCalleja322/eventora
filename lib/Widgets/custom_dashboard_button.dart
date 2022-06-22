@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomDashboardButton extends StatelessWidget {
-  CustomDashboardButton({
+class CustomButton extends StatelessWidget {
+  CustomButton({
     Key? key,
     required this.height,
     required this.width,
