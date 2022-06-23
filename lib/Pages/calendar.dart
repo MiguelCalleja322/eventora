@@ -2,8 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../Widgets/custom_dashboard_button.dart';
+import '../Widgets/custom_textformfield.dart';
 import '../utils.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -23,7 +28,10 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
-
+  final TextEditingController _taskTitleController = TextEditingController();
+  final TextEditingController _taskDescriptionController =
+      TextEditingController();
+  final TextEditingController _birthdateController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -106,6 +114,99 @@ class _CalendarPageState extends State<CalendarPage> {
                 onPageChanged: (focusedDay) {
                   _focusedDay = focusedDay;
                 },
+              ),
+              const SizedBox(height: 15.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  TextButton(
+                      onPressed: () {
+                        showMaterialModalBottomSheet(
+                          context: context,
+                          builder: (context) => SingleChildScrollView(
+                            controller: ModalScrollController.of(context),
+                            child: SizedBox(
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text('Tasks',
+                                          style: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontSize: 40.0)),
+                                    ),
+                                    SizedBox(
+                                      height: 40,
+                                      child: Divider(
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    CustomTextFormField(
+                                      label: 'Task Title:',
+                                      controller: _taskTitleController,
+                                    ),
+                                    const SizedBox(height: 15),
+                                    CustomTextFormField(
+                                      label: 'Task Description:',
+                                      controller: _taskDescriptionController,
+                                    ),
+                                    const SizedBox(height: 15),
+                                    TextButton(
+                                        onPressed: () {
+                                          DatePicker.showDateTimePicker(
+                                            context,
+                                            showTitleActions: true,
+                                            minTime: DateTime(1950, 1, 1),
+                                            maxTime: DateTime(2030, 12, 31),
+                                            onConfirm: (date) {
+                                              var inputFormat = DateFormat(
+                                                  'yyyy/MM/dd HH:mm');
+                                              setState(() {
+                                                _birthdateController.text =
+                                                    inputFormat.format(date);
+                                                print(
+                                                    _birthdateController.text);
+                                              });
+                                            },
+                                          );
+                                        },
+                                        child: Text(
+                                            _birthdateController.text == ''
+                                                ? 'Choose Date:'
+                                                : _birthdateController.text)),
+                                    const SizedBox(height: 15),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: const [
+                          Icon(Icons.task_alt_outlined),
+                          Text('Tasks'),
+                        ],
+                      )),
+                  TextButton(
+                      onPressed: () {},
+                      child: Column(
+                        children: const [
+                          Icon(Icons.calendar_month_outlined),
+                          Text('Appointments')
+                        ],
+                      )),
+                  TextButton(
+                      onPressed: () {},
+                      child: Column(
+                        children: const [
+                          Icon(Icons.note_add_outlined),
+                          Text('Notes')
+                        ],
+                      )),
+                ],
               ),
               const SizedBox(height: 15.0),
               Expanded(

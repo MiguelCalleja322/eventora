@@ -29,18 +29,18 @@ class _LoginState extends State<Login> {
   // void _redirectIfUserIsLogged() async {
   //   await dotenv.load(fileName: ".env");
   //   final String? storageKey = dotenv.env['STORAGE_KEY'];
-  //   String? _bearerToken = await StorageSevice().read(storageKey!);
+  //   String? bearerToken = await StorageSevice().read(storageKey!);
 
-  //   if (_bearerToken!.isNotEmpty && mounted) {
+  //   if (bearerToken!.isNotEmpty && mounted) {
   //     Navigator.pushReplacementNamed(context, '/home');
   //   }
   // }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _redirectIfUserIsLogged();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    // _redirectIfUserIsLogged();
+  }
 
   @override
   void dispose() {

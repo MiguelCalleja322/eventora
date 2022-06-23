@@ -1,4 +1,6 @@
 import 'package:eventora/utils/secure_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
@@ -41,6 +43,18 @@ class ApiService {
     if (response.body.isNotEmpty) {
       body = jsonDecode(response.body);
     }
+
+    // if (response.statusCode != 200 || response.statusCode != 201) {
+    //   Fluttertoast.showToast(
+    //       msg: response['message'].toString(),
+    //       gravity: ToastGravity.BOTTOM,
+    //       backgroundColor: Colors.grey[500],
+    //       textColor: Colors.white,
+    //       timeInSecForIosWeb: 3,
+    //       toastLength: Toast.LENGTH_LONG,
+    //       fontSize: 16.0);
+    //   return;
+    // }
 
     // if (body['access_token'] != null) {
     //   await StorageSevice().write(storageKey!, body['access_token']);

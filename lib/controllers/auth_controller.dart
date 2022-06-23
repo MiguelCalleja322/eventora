@@ -61,10 +61,13 @@ class AuthController {
   }
 
   Future logout() async {
-    Map<String, dynamic> response =
-        await ApiService().request('user/logout', 'POST', {}, true);
+    await dotenv.load(fileName: ".env");
+    final String? storageKey = dotenv.env['STORAGE_KEY'];
+    final String? roleKey = dotenv.env['ROLE_KEY'];
 
-    return response;
+    await ApiService().request('user/logout', 'POST', {}, true);
+    await StorageSevice().delete(roleKey!);
+    await StorageSevice().delete(storageKey!);
   }
   // Future<bool> checkServer(String? apiUrl) async {
   //   Uri uri = Uri.parse('${apiUrl}ping');

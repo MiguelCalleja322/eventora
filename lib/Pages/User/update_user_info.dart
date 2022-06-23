@@ -50,23 +50,37 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                 minWidth: (MediaQuery.of(context).size.width)),
             child: Column(
               children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('User Information',
-                      style:
-                          TextStyle(color: Colors.grey[800], fontSize: 40.0)),
-                ),
-                SizedBox(
-                  height: 40,
-                  child: Divider(
-                    color: Colors.grey[600],
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Basic Information:',
-                      style:
-                          TextStyle(color: Colors.grey[800], fontSize: 20.0)),
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Text('User Information',
+                //       style:
+                //           TextStyle(color: Colors.grey[800], fontSize: 40.0)),
+                // ),
+                // SizedBox(
+                //   height: 40,
+                //   child: Divider(
+                //     color: Colors.grey[600],
+                //   ),
+                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Basic Information:',
+                          style: TextStyle(
+                              color: Colors.grey[800], fontSize: 20.0)),
+                    ),
+                    TextButton(
+                        onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            '/settings',
+                            (Route<dynamic> route) => false),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.grey[700],
+                        ))
+                  ],
                 ),
                 const SizedBox(height: 15),
                 CustomTextFormField(
@@ -430,7 +444,7 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
     print(response!['message']);
 
     if (response!.isNotEmpty) {
-      if (response!['message'] != '') {
+      if (response!['message'] != null) {
         Fluttertoast.showToast(
             msg: response!['message'].toString(),
             gravity: ToastGravity.BOTTOM,
@@ -439,10 +453,30 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
             timeInSecForIosWeb: 3,
             toastLength: Toast.LENGTH_LONG,
             fontSize: 16.0);
+        setState(() {
+          _usernameController.clear();
+          _emailController.clear();
+          _oldPasswordController.clear();
+          _passwordController.clear();
+          _passwordConfirmationController.clear();
+          _birthdateController.text = 'Birthdate';
+          _unitNoController.clear();
+          _streetNoController.clear();
+          _streetNameController.clear();
+          _countryController.text = 'Select Country';
+          _stateController.clear();
+          _cityController.clear();
+          _zipcodeController.clear();
+          _mobileController.clear();
+          _socialController.clear();
+        });
+
         return;
-      } else {
+      }
+
+      if (response!['error'] != null) {
         Fluttertoast.showToast(
-            msg: response!['message'],
+            msg: response!['error'],
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.grey[500],
             textColor: Colors.white,
