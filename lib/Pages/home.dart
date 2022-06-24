@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
 
                     ProfilePage(),
 
-                    CalendarPage(),
+                    // CalendarPage(),
 
                     // Index = 2
                     SettingsPage(),

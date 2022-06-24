@@ -1,9 +1,4 @@
 PODS:
-  - AWSCognito (2.19.1):
-    - AWSCore (= 2.19.1)
-  - AWSCore (2.19.1)
-  - AWSS3 (2.19.1):
-    - AWSCore (= 2.19.1)
   - Flutter (1.0.0)
   - flutter_image_compress (0.0.1):
     - Flutter
@@ -37,11 +32,6 @@ PODS:
   - SDWebImageWebPCoder (0.8.4):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - simple_s3 (0.0.1):
-    - AWSCognito
-    - AWSCore
-    - AWSS3
-    - Flutter
   - Toast (4.0.0)
 
 DEPENDENCIES:
@@ -51,13 +41,9 @@ DEPENDENCIES:
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
-  - simple_s3 (from `.symlinks/plugins/simple_s3/ios`)
 
 SPEC REPOS:
   trunk:
-    - AWSCognito
-    - AWSCore
-    - AWSS3
     - libwebp
     - Mantle
     - SDWebImage
@@ -77,13 +63,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
-  simple_s3:
-    :path: ".symlinks/plugins/simple_s3/ios"
 
 SPEC CHECKSUMS:
-  AWSCognito: f50de600804941d083af37a7568905f31a774727
-  AWSCore: 55c154ae27efc5c98bdc30a0eeea5a35d10a2ab5
-  AWSS3: 2272253b098d07803af8dd20ce6ce7302bcffb47
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_image_compress: fd2b476345226e1a10ea352fa306af95704642c1
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
@@ -94,7 +75,6 @@ SPEC CHECKSUMS:
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   SDWebImage: a47aea9e3d8816015db4e523daff50cfd294499d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
-  simple_s3: dc1e236435ab824abf10e6147110fe86ab32c51c
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c

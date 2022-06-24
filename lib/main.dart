@@ -6,6 +6,7 @@ import 'package:eventora/Pages/User/update_user_info.dart';
 import 'package:eventora/Pages/calendar.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/settings.dart';
+import 'package:eventora/Pages/test.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
@@ -21,7 +22,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/calendar',
+      initialRoute: '/test',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -55,9 +56,13 @@ class Routes {
       case '/statistics':
         return MaterialPageRoute(
             builder: (_) => StatisticsPage(), settings: routeSettings);
-      case '/calendar':
+      // case '/calendar':
+      //   return MaterialPageRoute(
+      //       builder: (_) => CalendarPage(), settings: routeSettings);
+      case '/test':
         return MaterialPageRoute(
-            builder: (_) => CalendarPage(), settings: routeSettings);
+            builder: (_) => TestCalendar(), settings: routeSettings);
+
       case '/updateUserInfo':
         return MaterialPageRoute(
             builder: (_) => const UpdateUserInfo(), settings: routeSettings);
