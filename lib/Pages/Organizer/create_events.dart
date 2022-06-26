@@ -93,7 +93,7 @@ class _CreateEventsState extends State<CreateEvents> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 0.0),
+            padding: const EdgeInsets.all(15.0),
             child: creating == false
                 ? Column(
                     children: <Widget>[
@@ -605,7 +605,7 @@ class _CreateEventsState extends State<CreateEvents> {
           randomString() + '-' + timestamp.toString() + fileExtension;
       fileImages.add('events/$newFileName');
       File image = File(images.path);
-      await S3.uploadFile(newFileName, image);
+      await S3.uploadFile(newFileName, image, 'events');
 
       print(fileImages);
     });

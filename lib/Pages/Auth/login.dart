@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
           ? LoadingPage()
           : SafeArea(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 0.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Form(
                   key: _formKey,
                   child: Column(

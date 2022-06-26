@@ -7,7 +7,7 @@ import 'package:minio/minio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class S3 {
-  static Future uploadFile(String newFileName, File file) async {
+  static Future uploadFile(String newFileName, File file, String folder) async {
     await dotenv.load(fileName: ".env");
     final String? s3Bucket = dotenv.env['AWS_BUCKET'];
     final String? s3AccessId = dotenv.env['AWS_ACCESS_KEY_ID'];
@@ -28,7 +28,7 @@ class S3 {
     print(compressedFile.path);
 
     await minio.fPutObject(
-        s3Bucket!, 'events/$newFileName', compressedFile.path);
+        s3Bucket!, '$folder/$newFileName', compressedFile.path);
   }
 
   Future<File> compressFile(String path, String newFileName) async {

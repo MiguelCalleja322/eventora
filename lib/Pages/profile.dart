@@ -1,8 +1,15 @@
 // ignore_for_file: unnecessary_const
 
+import 'dart:io';
+import 'dart:math';
+
 import 'package:eventora/Widgets/custom_loading.dart';
+import 'package:eventora/utils/s3.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';
 import '../controllers/auth_controller.dart';
+import 'package:path/path.dart' as path;
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -13,13 +20,19 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late Map<String, dynamic>? profile = {};
+  final ImagePicker imagePicker = ImagePicker();
+  late int timestamp = DateTime.now().millisecondsSinceEpoch;
   late bool loading = false;
+  late String? cloudFrontURI = '';
   void fetchProfile() async {
+    // await dotenv.load(fileName: ".env");
+    // cloudFrontURI = dotenv.env['CLOUDFRONT_URI'];
+
     setState(() {
       loading = true;
     });
     profile = await AuthController().getProfile();
-    print(profile);
+    print(profile!['user']['avatar']);
     setState(() {
       loading = false;
     });
@@ -39,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
             body: SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 0.0),
+                  padding: const EdgeInsets.all(15.0),
                   child: Column(
                     children: <Widget>[
                       SizedBox(
@@ -54,13 +67,33 @@ class _ProfilePageState extends State<ProfilePage> {
                                 padding: const EdgeInsets.all(5.0),
                                 child: Column(
                                   children: [
-                                    const Align(
+                                    Align(
                                       alignment: Alignment.center,
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            'https://i.pinimg.com/280x280_RS/0c/59/d3/0c59d3e2b3a045c209c6517238df4e37.jpg'),
-                                        radius: 90.0,
-                                      ),
+                                      child: Stack(children: [
+                                        CircleAvatar(
+                                          backgroundImage: profile!['user']
+                                                      ['avatar'] ==
+                                                  null
+                                              ? const NetworkImage(
+                                                  'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826')
+                                              : NetworkImage(
+                                                  'https://d2aobpa1aevk77.cloudfront.net/${profile!['user']['avatar']}'),
+                                          radius: 90.0,
+                                        ),
+                                        Positioned(
+                                            right: -15,
+                                            top: 145,
+                                            child: IconButton(
+                                                icon: Icon(
+                                                  Icons.update_outlined,
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                  size: 20,
+                                                ),
+                                                onPressed: () {
+                                                  openImages();
+                                                })),
+                                      ]),
                                     ),
                                     const SizedBox(height: 15),
                                     Text(
@@ -197,5 +230,47 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           );
+  }
+
+  openImages() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      String fileExtension = '';
+      final XFile? selectedImage =
+          await imagePicker.pickImage(source: ImageSource.gallery);
+
+      fileExtension = path.extension(selectedImage!.path);
+      String newFileName =
+          randomString() + '-' + timestamp.toString() + fileExtension;
+      File image = File(selectedImage.path);
+
+      await S3.uploadFile(newFileName, image, 'avatars');
+
+      Map<String, dynamic> avatar = {'avatar': 'avatars/$newFileName'};
+
+      await AuthController().userUpdate(avatar);
+
+      setState(() {
+        profile!['user']['avatar'] = 'avatars/$newFileName';
+      });
+
+      print(newFileName);
+    } catch (e) {
+      print('No images were picked. ${e}');
+    }
+
+    setState(() {
+      loading = false;
+    });
+  }
+
+  static randomString() {
+    const chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random rnd = Random();
+    return String.fromCharCodes(Iterable.generate(
+        32, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
   }
 }
