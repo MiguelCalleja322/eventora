@@ -5,6 +5,7 @@ import 'package:eventora/Pages/Organizer/statistics.dart';
 import 'package:eventora/Pages/User/update_user_info.dart';
 import 'package:eventora/Pages/calendar.dart';
 import 'package:eventora/Pages/home.dart';
+import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/profile.dart';
 import 'package:eventora/Pages/settings.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/home',
+      initialRoute: '/otherProfile',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -68,6 +69,10 @@ class Routes {
       case '/settings':
         return MaterialPageRoute(
             builder: (_) => SettingsPage(), settings: routeSettings);
+      case '/otherProfile':
+        return MaterialPageRoute(
+            builder: (_) => OtherProfilePage(), settings: routeSettings);
+
       default:
         _errorRoute();
     }

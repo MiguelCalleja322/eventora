@@ -241,24 +241,30 @@ class _ProfilePageState extends State<ProfilePage> {
       final XFile? selectedImage =
           await imagePicker.pickImage(source: ImageSource.gallery);
 
-      fileExtension = path.extension(selectedImage!.path);
-      String newFileName =
-          randomString() + '-' + timestamp.toString() + fileExtension;
-      File image = File(selectedImage.path);
+      if (selectedImage != null) {
+        fileExtension = path.extension(selectedImage.path);
+        String newFileName =
+            randomString() + '-' + timestamp.toString() + fileExtension;
+        File image = File(selectedImage.path);
 
-      await S3.uploadFile(newFileName, image, 'avatars');
+        await S3.uploadFile(newFileName, image, 'avatars');
 
-      Map<String, dynamic> avatar = {'avatar': 'avatars/$newFileName'};
+        Map<String, dynamic> avatar = {'avatar': 'avatars/$newFileName'};
 
-      await AuthController().userUpdate(avatar);
+        await AuthController().userUpdate(avatar);
 
-      setState(() {
-        profile!['user']['avatar'] = 'avatars/$newFileName';
-      });
+        setState(() {
+          profile!['user']['avatar'] = 'avatars/$newFileName';
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
 
-      print(newFileName);
+        return;
+      }
     } catch (e) {
-      print('No images were picked. ${e}');
+      return;
     }
 
     setState(() {

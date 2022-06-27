@@ -7,4 +7,11 @@ class UserController {
 
     return response;
   }
+
+  Future show(String username) async {
+    Map<String, dynamic> response =
+        await ApiService().request('user/show/$username', 'GET', {}, true);
+
+    return response;
+  }
 }

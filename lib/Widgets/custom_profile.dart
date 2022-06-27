@@ -30,7 +30,7 @@ class CustomProfile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Align(
                   alignment: Alignment.centerRight,
@@ -47,10 +47,10 @@ class CustomProfile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                const Align(
+                Align(
                   alignment: Alignment.center,
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(
+                    backgroundImage: NetworkImage(image ??
                         'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826'),
                     radius: 90.0,
                   ),
@@ -66,73 +66,79 @@ class CustomProfile extends StatelessWidget {
                 ),
                 const SizedBox(height: 15),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Column(
-                      children: [
-                        const Text(
-                          'Followers',
-                          style: TextStyle(
-                              color: Color(0xFF114F5A),
-                              letterSpacing: 1.0,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Text(
-                          followers!,
-                          style: const TextStyle(
-                              color: Color(0xFF114F5A),
-                              letterSpacing: 1.0,
-                              fontSize: 26.0,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Followers',
+                            style: TextStyle(
+                                color: Color(0xFF114F5A),
+                                letterSpacing: 1.0,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            followers!,
+                            style: const TextStyle(
+                                color: Color(0xFF114F5A),
+                                letterSpacing: 1.0,
+                                fontSize: 26.0,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: [
-                        const Text(
-                          'Following',
-                          style: TextStyle(
-                              color: Color(0xFF114F5A),
-                              letterSpacing: 1.0,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Text(
-                          followings!,
-                          style: const TextStyle(
-                              color: Color(0xFF114F5A),
-                              letterSpacing: 1.0,
-                              fontSize: 26.0,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Following',
+                            style: TextStyle(
+                                color: Color(0xFF114F5A),
+                                letterSpacing: 1.0,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            followings!,
+                            style: const TextStyle(
+                                color: Color(0xFF114F5A),
+                                letterSpacing: 1.0,
+                                fontSize: 26.0,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ),
                     role == 'organizer'
-                        ? Column(
-                            children: [
-                              const Text(
-                                'No. Events',
-                                style: TextStyle(
-                                    color: Color(0xFF114F5A),
-                                    letterSpacing: 1.0,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                events!,
-                                style: const TextStyle(
-                                    color: Color(0xFF114F5A),
-                                    letterSpacing: 1.0,
-                                    fontSize: 26.0,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
+                        ? Expanded(
+                            child: Column(
+                              children: [
+                                const Text(
+                                  'No. Events',
+                                  style: TextStyle(
+                                      color: Color(0xFF114F5A),
+                                      letterSpacing: 1.0,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  events!,
+                                  style: const TextStyle(
+                                      color: Color(0xFF114F5A),
+                                      letterSpacing: 1.0,
+                                      fontSize: 26.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
                           )
                         : const SizedBox(
                             width: 0,
                             height: 0,
-                          ),
+                          )
                   ],
                 )
               ],
