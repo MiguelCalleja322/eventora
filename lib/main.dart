@@ -7,7 +7,6 @@ import 'package:eventora/Pages/calendar.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/profile.dart';
-import 'package:eventora/Pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
@@ -23,7 +22,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/otherProfile',
+      initialRoute: '/home',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -41,7 +40,7 @@ class Routes {
             builder: (_) => Login(), settings: routeSettings);
       case '/home':
         return MaterialPageRoute(
-            builder: (_) => HomePage(), settings: routeSettings);
+            builder: (_) => const HomePage(), settings: routeSettings);
       case '/signup':
         return MaterialPageRoute(
             builder: (_) => Signup(), settings: routeSettings);
@@ -50,28 +49,32 @@ class Routes {
             builder: (_) => const FeaturePage(), settings: routeSettings);
       case '/otp_page':
         return MaterialPageRoute(
-            builder: (_) => OTPPage(), settings: routeSettings);
+            builder: (_) => const OTPPage(), settings: routeSettings);
       case '/create_events':
         return MaterialPageRoute(
-            builder: (_) => CreateEvents(), settings: routeSettings);
+            builder: (_) => const CreateEvents(), settings: routeSettings);
       case '/statistics':
         return MaterialPageRoute(
-            builder: (_) => StatisticsPage(), settings: routeSettings);
+            builder: (_) => const StatisticsPage(), settings: routeSettings);
       case '/calendar':
         return MaterialPageRoute(
             builder: (_) => const CalendarPage(), settings: routeSettings);
       case '/profile':
         return MaterialPageRoute(
-            builder: (_) => ProfilePage(), settings: routeSettings);
+            builder: (_) => const ProfilePage(), settings: routeSettings);
       case '/updateUserInfo':
         return MaterialPageRoute(
             builder: (_) => const UpdateUserInfo(), settings: routeSettings);
-      case '/settings':
-        return MaterialPageRoute(
-            builder: (_) => SettingsPage(), settings: routeSettings);
+
       case '/otherProfile':
-        return MaterialPageRoute(
-            builder: (_) => OtherProfilePage(), settings: routeSettings);
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => OtherProfilePage(
+                    username: args['username'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
 
       default:
         _errorRoute();

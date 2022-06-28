@@ -11,7 +11,7 @@ import '../utils/secure_storage.dart';
 import 'calendar.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return loading == true
-        ? LoadingPage()
+        ? const LoadingPage()
         : Scaffold(
             body: SafeArea(
               child: Center(
@@ -58,17 +58,19 @@ class _HomePageState extends State<HomePage> {
                   index: _selectedIndex,
                   children: [
                     // Index = 0
-                    role == 'user' ? const FeaturePage() : Dashboard(),
+                    role == 'user' ? const FeaturePage() : const Dashboard(),
 
                     // Index = 1
-                    role == 'user' ? const FeaturePage() : StatisticsPage(),
+                    role == 'user'
+                        ? const FeaturePage()
+                        : const StatisticsPage(),
 
-                    ProfilePage(),
+                    const ProfilePage(),
 
                     const CalendarPage(),
 
                     // Index = 2
-                    SettingsPage(),
+                    const SettingsPage(),
                   ],
                 ),
               ),

@@ -611,8 +611,6 @@ class _CalendarPageState extends State<CalendarPage> {
       });
     });
 
-    print(selectedEvents);
-
     selectedEvents = LinkedHashMap<DateTime, List<Calendar>>(
       equals: isSameDay,
       hashCode: getHashCode,
@@ -620,16 +618,12 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void store(context, model) async {
-    print(model);
-
     Map<String, dynamic> modelData = {};
     Map<String, dynamic>? response = {};
 
     DateFormat actualDateAndTimeOfAT = DateFormat('yyyy/MM/dd HH:mm');
 
     if (_titleController.text.isEmpty) {
-      print(_titleController.text);
-
       Fluttertoast.showToast(
           msg: 'Title is required.',
           gravity: ToastGravity.BOTTOM,

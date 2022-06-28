@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io';
@@ -24,8 +23,6 @@ class S3 {
 
     File compressedFile =
         await S3().compressFile(file.absolute.path, newFileName);
-
-    print(compressedFile.path);
 
     await minio.fPutObject(
         s3Bucket!, '$folder/$newFileName', compressedFile.path);

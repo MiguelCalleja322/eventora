@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
-  Dashboard({Key? key}) : super(key: key);
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -52,7 +52,7 @@ class _DashboardState extends State<Dashboard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Align(
+                const Align(
                     alignment: Alignment.centerLeft, child: Text('My Events')),
                 SizedBox(
                   height: 50,

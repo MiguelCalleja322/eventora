@@ -441,8 +441,6 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
 
     response = await AuthController().userUpdate(userInfo);
 
-    print(response!['message']);
-
     if (response!.isNotEmpty) {
       if (response!['message'] != null) {
         Fluttertoast.showToast(

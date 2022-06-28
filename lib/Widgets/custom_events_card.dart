@@ -1,8 +1,9 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+// ignore_for_file: non_constant_identifier_names
 
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
+
+// ignore: must_be_immutable
 class CustomEventCard extends StatelessWidget {
   CustomEventCard({
     Key? key,
@@ -14,9 +15,10 @@ class CustomEventCard extends StatelessWidget {
     required this.interested,
     required this.attendees,
     required this.organizer,
-    required this.onPressedAttend,
+    required this.onPressedShare,
     required this.onPressedInterested,
     required this.onPressedSave,
+    required this.onPressedLike,
     required this.images,
   }) : super(key: key);
 
@@ -29,188 +31,195 @@ class CustomEventCard extends StatelessWidget {
   late String? attendees = '';
   late String? organizer = '';
   late List<dynamic>? images = [];
-  final VoidCallback onPressedAttend;
+  final VoidCallback onPressedShare;
   final VoidCallback onPressedInterested;
   final VoidCallback onPressedSave;
+  final VoidCallback onPressedLike;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              width: double.infinity,
-              height: 200,
-              child: CarouselSlider.builder(
-                  itemCount: images!.length,
-                  itemBuilder: (context, index, realIndex) {
-                    return BuildImage(images![index], index);
-                  },
-                  options: CarouselOptions(
-                    height: 300,
-                    autoPlay: true,
-                    viewportFraction: 2,
-                    autoPlayInterval: const Duration(seconds: 5),
-                  )),
-            ),
-            const SizedBox(height: 10.0),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                title!,
-                style: TextStyle(
-                  color: Colors.amber[800],
-                  letterSpacing: 2.0,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            width: double.infinity,
+            height: 200,
+            child: CarouselSlider.builder(
+                itemCount: images!.length,
+                itemBuilder: (context, index, realIndex) {
+                  return BuildImage(images![index], index);
+                },
+                options: CarouselOptions(
+                  height: 300,
+                  autoPlay: true,
+                  viewportFraction: 2,
+                  autoPlayInterval: const Duration(seconds: 5),
+                )),
+          ),
+          const SizedBox(height: 10.0),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              title!,
+              style: TextStyle(
+                color: Colors.amber[800],
+                letterSpacing: 2.0,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 30.0),
-            Text(
-              'Description:',
-              style: TextStyle(
-                  color: Colors.grey[600], letterSpacing: 2.0, fontSize: 14.0),
-            ),
-            const SizedBox(height: 10.0),
-            Text(
-              description!,
-              style: TextStyle(
-                  color: Colors.grey[700],
-                  letterSpacing: 2.0,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                  overflow: TextOverflow.fade),
-            ),
-            const SizedBox(height: 30.0),
-            Text(
-              'Schedule:',
-              style: TextStyle(
-                  color: Colors.grey[600], letterSpacing: 2.0, fontSize: 14.0),
-            ),
-            const SizedBox(width: 10.0),
-            Text(
-              schedule!,
-              style: TextStyle(
+          ),
+          const SizedBox(height: 30.0),
+          Text(
+            'Description:',
+            style: TextStyle(
+                color: Colors.grey[600], letterSpacing: 2.0, fontSize: 14.0),
+          ),
+          const SizedBox(height: 10.0),
+          Text(
+            description!,
+            style: TextStyle(
                 color: Colors.grey[700],
                 letterSpacing: 2.0,
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
-              ),
+                overflow: TextOverflow.fade),
+          ),
+          const SizedBox(height: 30.0),
+          Text(
+            'Schedule:',
+            style: TextStyle(
+                color: Colors.grey[600], letterSpacing: 2.0, fontSize: 14.0),
+          ),
+          const SizedBox(width: 10.0),
+          Text(
+            schedule!,
+            style: TextStyle(
+              color: Colors.grey[700],
+              letterSpacing: 2.0,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
             ),
-            Row(
-              children: [
-                Text(
-                  'fees:',
+          ),
+          Row(
+            children: [
+              Text(
+                'fees:',
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    letterSpacing: 2.0,
+                    fontSize: 14.0),
+              ),
+              const SizedBox(width: 10.0),
+              Text(
+                fees!,
+                style: TextStyle(
+                    color: Colors.grey[700],
+                    letterSpacing: 2.0,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.fade),
+              ),
+            ],
+          ),
+          const SizedBox(height: 30.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              likes == ''
+                  ? Container()
+                  : Column(
+                      children: <Widget>[
+                        Text(
+                          'Likes',
+                          style: TextStyle(
+                              color: Colors.grey[600],
+                              letterSpacing: 2.0,
+                              fontSize: 14.0),
+                        ),
+                        Text(
+                          likes!,
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            letterSpacing: 2.0,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+              const SizedBox(width: 30.0),
+              interested == ''
+                  ? const SizedBox()
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Interested',
+                          style: TextStyle(
+                              color: Colors.grey[600],
+                              letterSpacing: 2.0,
+                              fontSize: 14.0),
+                        ),
+                        Text(
+                          interested!,
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            letterSpacing: 2.0,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+              const SizedBox(width: 30.0),
+              attendees == ''
+                  ? const SizedBox()
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Attendees',
+                          style: TextStyle(
+                              color: Colors.grey[600],
+                              letterSpacing: 2.0,
+                              fontSize: 14.0),
+                        ),
+                        Text(
+                          attendees!,
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            letterSpacing: 2.0,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    )
+            ],
+          ),
+          const SizedBox(height: 30.0),
+          organizer == ''
+              ? const SizedBox()
+              : Text(
+                  'Organizer:',
                   style: TextStyle(
                       color: Colors.grey[600],
                       letterSpacing: 2.0,
                       fontSize: 14.0),
                 ),
-                const SizedBox(width: 10.0),
-                Text(
-                  fees!,
-                  style: TextStyle(
-                      color: Colors.grey[700],
-                      letterSpacing: 2.0,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.fade),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                likes == ''
-                    ? Container()
-                    : Column(
-                        children: <Widget>[
-                          Text(
-                            'Likes',
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                letterSpacing: 2.0,
-                                fontSize: 14.0),
-                          ),
-                          Text(
-                            likes!,
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              letterSpacing: 2.0,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                const SizedBox(width: 30.0),
-                interested == ''
-                    ? const SizedBox()
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Interested',
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                letterSpacing: 2.0,
-                                fontSize: 14.0),
-                          ),
-                          Text(
-                            interested!,
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              letterSpacing: 2.0,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                const SizedBox(width: 30.0),
-                attendees == ''
-                    ? const SizedBox()
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Attendees',
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                letterSpacing: 2.0,
-                                fontSize: 14.0),
-                          ),
-                          Text(
-                            attendees!,
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              letterSpacing: 2.0,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      )
-              ],
-            ),
-            const SizedBox(height: 30.0),
-            organizer == ''
-                ? const SizedBox()
-                : Text(
-                    'Organizer:',
-                    style: TextStyle(
-                        color: Colors.grey[600],
-                        letterSpacing: 2.0,
-                        fontSize: 14.0),
-                  ),
-            organizer == ''
-                ? const SizedBox()
-                : Text(
+          organizer == ''
+              ? const SizedBox()
+              : TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/otherProfile',
+                        arguments: {
+                          'username': organizer!,
+                        });
+                  },
+                  child: Text(
                     organizer!,
                     style: TextStyle(
                       color: Colors.grey[700],
@@ -219,35 +228,94 @@ class CustomEventCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-            const SizedBox(height: 30.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                MaterialButton(
-                  onPressed: () => onPressedAttend,
-                  color: Colors.green,
-                  textColor: Colors.white,
-                  elevation: 0,
-                  child: const Text('Attend'),
                 ),
-                MaterialButton(
-                  onPressed: () => onPressedInterested,
-                  color: Colors.blue,
+          const SizedBox(height: 30.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: MaterialButton(
+                    onPressed: onPressedLike,
+                    textColor: Colors.white,
+                    elevation: 0,
+                    child: Column(
+                      children: [
+                        Icon(Icons.thumb_up_sharp, color: Colors.grey[700]),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Like',
+                          style:
+                              TextStyle(color: Colors.grey[700], fontSize: 12),
+                        )
+                      ],
+                    )),
+              ),
+              Expanded(
+                child: MaterialButton(
+                  onPressed: onPressedShare,
                   textColor: Colors.white,
                   elevation: 0,
-                  child: const Text('Interested'),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.share,
+                        color: Colors.grey[700],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Share',
+                        style: TextStyle(color: Colors.grey[700], fontSize: 12),
+                      )
+                    ],
+                  ),
                 ),
-                MaterialButton(
-                  onPressed: () => onPressedSave,
-                  color: Colors.amber[800],
+              ),
+              Expanded(
+                child: MaterialButton(
+                  onPressed: onPressedInterested,
                   textColor: Colors.white,
                   elevation: 0,
-                  child: const Text('Save'),
-                )
-              ],
-            )
-          ],
-        ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.interests,
+                        color: Colors.grey[700],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Attend',
+                        style: TextStyle(color: Colors.grey[700], fontSize: 12),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: MaterialButton(
+                  onPressed: onPressedSave,
+                  textColor: Colors.white,
+                  elevation: 0,
+                  child: Column(children: [
+                    Icon(Icons.save_as_outlined, color: Colors.grey[700]),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Save',
+                      style: TextStyle(color: Colors.grey[700], fontSize: 12),
+                    )
+                  ]),
+                ),
+              )
+            ],
+          )
+        ],
       ),
     );
   }

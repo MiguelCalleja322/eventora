@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_const, depend_on_referenced_packages
 
 import 'dart:io';
 import 'dart:math';
@@ -6,13 +6,14 @@ import 'dart:math';
 import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:eventora/utils/s3.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import '../controllers/auth_controller.dart';
 import 'package:path/path.dart' as path;
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -24,15 +25,18 @@ class _ProfilePageState extends State<ProfilePage> {
   late int timestamp = DateTime.now().millisecondsSinceEpoch;
   late bool loading = false;
   late String? cloudFrontURI = '';
-  void fetchProfile() async {
-    // await dotenv.load(fileName: ".env");
-    // cloudFrontURI = dotenv.env['CLOUDFRONT_URI'];
 
+  void fetchCloudFrontUri() async {
+    await dotenv.load(fileName: ".env");
+    cloudFrontURI = dotenv.env['CLOUDFRONT_URI'];
+  }
+
+  void fetchProfile() async {
     setState(() {
       loading = true;
     });
     profile = await AuthController().getProfile();
-    print(profile!['user']['avatar']);
+
     setState(() {
       loading = false;
     });
@@ -42,12 +46,13 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     fetchProfile();
+    fetchCloudFrontUri();
   }
 
   @override
   Widget build(BuildContext context) {
     return loading == true
-        ? LoadingPage()
+        ? const LoadingPage()
         : Scaffold(
             body: SafeArea(
               child: SingleChildScrollView(
@@ -77,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               ? const NetworkImage(
                                                   'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826')
                                               : NetworkImage(
-                                                  'https://d2aobpa1aevk77.cloudfront.net/${profile!['user']['avatar']}'),
+                                                  '$cloudFrontURI${profile!['user']['avatar']}'),
                                           radius: 90.0,
                                         ),
                                         Positioned(

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_function_literals_in_foreach_calls
+// ignore_for_file: avoid_function_literals_in_foreach_calls, non_constant_identifier_names, avoid_print
 
 import 'dart:io';
 import 'dart:math';
@@ -15,11 +15,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
-import 'dart:convert';
 
 class CreateEvents extends StatefulWidget {
-  CreateEvents({Key? key}) : super(key: key);
+  const CreateEvents({Key? key}) : super(key: key);
 
   @override
   State<CreateEvents> createState() => _CreateEventsState();
@@ -63,7 +63,7 @@ class _CreateEventsState extends State<CreateEvents> {
         imageFileList!.addAll(selectedImages!);
       });
     } catch (e) {
-      print('No images were picked. ${e}');
+      print('No images were picked. $e');
     }
 
     setState(() {
@@ -354,7 +354,6 @@ class _CreateEventsState extends State<CreateEvents> {
                                 });
                               }
                             }
-                            print(isAvailable);
                           });
                         },
                         isSelected: isEventAvailable,
@@ -404,7 +403,6 @@ class _CreateEventsState extends State<CreateEvents> {
                                 });
                               }
                             }
-                            print(isPrivate);
                           });
                         },
                         isSelected: isEventPrivate,

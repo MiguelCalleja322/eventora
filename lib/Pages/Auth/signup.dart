@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,7 +69,7 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return screenLoading
-        ? LoadingPage()
+        ? const LoadingPage()
         : Scaffold(
             body: SafeArea(
               child: Padding(

@@ -6,7 +6,7 @@ import 'package:eventora/controllers/user_controller.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class StatisticsPage extends StatefulWidget {
-  StatisticsPage({Key? key}) : super(key: key);
+  const StatisticsPage({Key? key}) : super(key: key);
 
   @override
   State<StatisticsPage> createState() => _StatisticsPageState();
@@ -96,7 +96,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                                 interested: '',
                                 attendees: '',
                                 organizer: '',
-                                onPressedAttend: onPressedAttend,
+                                onPressedLike: onPressedAttend,
+                                onPressedShare: onPressedAttend,
                                 onPressedInterested: onPressedInterested,
                                 onPressedSave: onPressedSave)),
                     const Text(
@@ -126,7 +127,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                                     .toString(),
                                 attendees: '',
                                 organizer: '',
-                                onPressedAttend: onPressedAttend,
+                                onPressedLike: onPressedAttend,
+                                onPressedShare: onPressedAttend,
                                 onPressedInterested: onPressedInterested,
                                 onPressedSave: onPressedSave)),
                     const Text(
@@ -156,7 +158,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                                 attendees: mostAttendees!['attendees_count']
                                     .toString(),
                                 organizer: '',
-                                onPressedAttend: onPressedAttend,
+                                onPressedLike: onPressedAttend,
+                                onPressedShare: onPressedAttend,
                                 onPressedInterested: onPressedInterested,
                                 onPressedSave: onPressedSave)),
                   ],

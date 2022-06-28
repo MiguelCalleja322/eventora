@@ -1,7 +1,7 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:eventora/Widgets/custom_textformfield.dart';
-import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../Widgets/custom_loading.dart';
 import '../../controllers/auth_controller.dart';
@@ -51,7 +51,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screenLoading
-          ? LoadingPage()
+          ? const LoadingPage()
           : SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(15.0),

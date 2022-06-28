@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 class CustomProfile extends StatelessWidget {
@@ -10,7 +12,9 @@ class CustomProfile extends StatelessWidget {
       this.events,
       required this.role,
       required this.follow,
-      required this.isFollowed})
+      required this.isFollowed,
+      required this.page,
+      this.navigate})
       : super(key: key);
   late String? image = '';
   late String? name = '';
@@ -20,6 +24,8 @@ class CustomProfile extends StatelessWidget {
   late String? role = '';
   late VoidCallback follow;
   late int? isFollowed = 0;
+  late String page = '';
+  late VoidCallback? navigate;
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +38,36 @@ class CustomProfile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: follow,
-                    child: Text(
-                      isFollowed! == 1 ? 'Unfollow' : 'Follow',
-                      style: const TextStyle(
-                          color: Color(0xFF114F5A),
-                          letterSpacing: 1.0,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w500),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    page == 'otherProfile'
+                        ? Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                  onPressed: navigate,
+                                  child: const Icon(Icons.chevron_left_sharp)),
+                            ),
+                          )
+                        : const SizedBox(),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: follow,
+                          child: Text(
+                            isFollowed! == 1 ? 'Unfollow' : 'Follow',
+                            style: const TextStyle(
+                                color: Color(0xFF114F5A),
+                                letterSpacing: 1.0,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 15),
                 Align(

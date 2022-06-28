@@ -3,13 +3,13 @@ import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../controllers/auth_controller.dart';
 
 class OTPPage extends StatefulWidget {
-  OTPPage({Key? key}) : super(key: key);
+  const OTPPage({Key? key}) : super(key: key);
 
   @override
   State<OTPPage> createState() => _OTPPageState();
@@ -41,7 +41,7 @@ class _OTPPageState extends State<OTPPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: screenLoading
-          ? LoadingPage()
+          ? const LoadingPage()
           : SafeArea(
               child: Center(
                 child: Padding(
@@ -149,8 +149,6 @@ class _OTPPageState extends State<OTPPage> {
     Map<String, String> otp = {'otp': _otpController.text};
 
     isVerified = await AuthController().verifyAccount(otp);
-
-    print(isVerified);
 
     if (isVerified['error_otp'] != null) {
       toast(isVerified['error_otp'], Colors.red[500]);
