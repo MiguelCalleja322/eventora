@@ -7,10 +7,14 @@ import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:eventora/utils/s3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
+import '../Widgets/custom_events_card.dart';
 import '../controllers/auth_controller.dart';
 import 'package:path/path.dart' as path;
+
+import '../controllers/events_controller.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -25,13 +29,15 @@ class _ProfilePageState extends State<ProfilePage> {
   late int timestamp = DateTime.now().millisecondsSinceEpoch;
   late bool loading = false;
   late String? cloudFrontURI = '';
+  late String? model = 'save_event';
+  late String? message = '';
 
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
     cloudFrontURI = dotenv.env['CLOUDFRONT_URI'];
   }
 
-  void fetchProfile() async {
+  Future<void> fetchProfile() async {
     setState(() {
       loading = true;
     });
@@ -44,9 +50,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    if (mounted) {
+      fetchProfile();
+      fetchCloudFrontUri();
+    }
     super.initState();
-    fetchProfile();
-    fetchCloudFrontUri();
+  }
+
+  @override
+  void dispose() {
+    model = '';
+    loading = false;
+    timestamp = DateTime.now().millisecondsSinceEpoch;
+    profile = {};
+    cloudFrontURI = '';
+    message = '';
+    super.dispose();
   }
 
   @override
@@ -54,182 +73,295 @@ class _ProfilePageState extends State<ProfilePage> {
     return loading == true
         ? const LoadingPage()
         : Scaffold(
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        width: double.infinity,
-                        height: 500.0,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Column(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Stack(children: [
-                                        CircleAvatar(
-                                          backgroundImage: profile!['user']
-                                                      ['avatar'] ==
-                                                  null
-                                              ? const NetworkImage(
-                                                  'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826')
-                                              : NetworkImage(
-                                                  '$cloudFrontURI${profile!['user']['avatar']}'),
-                                          radius: 90.0,
-                                        ),
-                                        Positioned(
-                                            right: -15,
-                                            top: 145,
-                                            child: IconButton(
-                                                icon: Icon(
-                                                  Icons.update_outlined,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                  size: 20,
-                                                ),
-                                                onPressed: () {
-                                                  openImages();
-                                                })),
-                                      ]),
+            body: RefreshIndicator(
+              onRefresh: () => fetchProfile(),
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.center,
+                          child: Stack(children: [
+                            CircleAvatar(
+                              backgroundImage: profile!['user']['avatar'] ==
+                                      null
+                                  ? const NetworkImage(
+                                      'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826')
+                                  : NetworkImage(
+                                      '$cloudFrontURI${profile!['user']['avatar']}'),
+                              radius: 90.0,
+                            ),
+                            Positioned(
+                                right: -15,
+                                top: 145,
+                                child: IconButton(
+                                    icon: Icon(
+                                      Icons.update_outlined,
+                                      color: Colors.black.withOpacity(0.5),
+                                      size: 20,
                                     ),
-                                    const SizedBox(height: 15),
-                                    Text(
-                                      profile!['user']['name'],
-                                      style: const TextStyle(
-                                          color: Color(0xFF114F5A),
-                                          letterSpacing: 2.0,
-                                          fontSize: 24.0,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    const SizedBox(height: 15),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: <Widget>[
-                                        Column(
-                                          children: const [
-                                            Text(
-                                              'Followers',
-                                              style: TextStyle(
-                                                  color: Color(0xFF114F5A),
-                                                  letterSpacing: 1.0,
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              '0',
-                                              style: TextStyle(
-                                                  color: Color(0xFF114F5A),
-                                                  letterSpacing: 1.0,
-                                                  fontSize: 26.0,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: const [
-                                            Text(
-                                              'Following',
-                                              style: TextStyle(
-                                                  color: Color(0xFF114F5A),
-                                                  letterSpacing: 1.0,
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              '0',
-                                              style: TextStyle(
-                                                  color: Color(0xFF114F5A),
-                                                  letterSpacing: 1.0,
-                                                  fontSize: 26.0,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: const [
-                                            Text(
-                                              'No. Events',
-                                              style: TextStyle(
-                                                  color: Color(0xFF114F5A),
-                                                  letterSpacing: 1.0,
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              '0',
-                                              style: TextStyle(
-                                                  color: Color(0xFF114F5A),
-                                                  letterSpacing: 1.0,
-                                                  fontSize: 26.0,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 15.0),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: SizedBox(
-                                      height: 40,
-                                      // width: double.infinity,
-                                      child: OutlinedButton(
-                                        onPressed: () {},
-                                        style: OutlinedButton.styleFrom(
-                                            primary: const Color(0xFFF7F8FB),
-                                            backgroundColor:
-                                                const Color(0xFF114F5A),
-                                            shape: const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5.0)))),
-                                        child: const Text(
-                                          'Follow',
-                                          style: TextStyle(fontSize: 15.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10.0),
-                                  Expanded(
-                                    child: SizedBox(
-                                      height: 40,
-                                      // width: double.infinity,
-                                      child: OutlinedButton(
-                                        onPressed: () {},
-                                        style: OutlinedButton.styleFrom(
-                                            primary: const Color(0xFFF7F8FB),
-                                            backgroundColor:
-                                                const Color(0xFF114F5A),
-                                            shape: const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5.0)))),
-                                        child: const Text(
-                                          'Message',
-                                          style: TextStyle(fontSize: 15.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
+                                    onPressed: () {
+                                      openImages();
+                                    })),
+                          ]),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 15),
+                        Text(
+                          profile!['user']['name'],
+                          style: const TextStyle(
+                              color: Color(0xFF114F5A),
+                              letterSpacing: 2.0,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Column(
+                              children: [
+                                const Text(
+                                  'Followers',
+                                  style: TextStyle(
+                                      color: Color(0xFF114F5A),
+                                      letterSpacing: 1.0,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  profile!['user']['followers_count']
+                                      .toString()
+                                      .toString(),
+                                  style: const TextStyle(
+                                      color: Color(0xFF114F5A),
+                                      letterSpacing: 1.0,
+                                      fontSize: 26.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                const Text(
+                                  'Following',
+                                  style: TextStyle(
+                                      color: Color(0xFF114F5A),
+                                      letterSpacing: 1.0,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  profile!['user']['following_count']
+                                      .toString(),
+                                  style: const TextStyle(
+                                      color: Color(0xFF114F5A),
+                                      letterSpacing: 1.0,
+                                      fontSize: 26.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                const Text(
+                                  'No. Events',
+                                  style: TextStyle(
+                                      color: Color(0xFF114F5A),
+                                      letterSpacing: 1.0,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  profile!['user']['events_count']
+                                      .toString()
+                                      .toString(),
+                                  style: const TextStyle(
+                                      color: Color(0xFF114F5A),
+                                      letterSpacing: 1.0,
+                                      fontSize: 26.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 15.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            profile!['user']['role']['type'] == 'organizer'
+                                ? Expanded(
+                                    child: TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            model = 'events';
+                                          });
+                                        },
+                                        child: Column(
+                                          children: const [
+                                            Icon(Icons.event),
+                                            Text('Events'),
+                                          ],
+                                        )),
+                                  )
+                                : const SizedBox(),
+                            Expanded(
+                              child: TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      model = 'share_event';
+                                    });
+                                  },
+                                  child: Column(
+                                    children: const [
+                                      Icon(Icons.calendar_month_outlined),
+                                      Text('Shared Events')
+                                    ],
+                                  )),
+                            ),
+                            Expanded(
+                              child: TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      setState(() {
+                                        model = 'save_event';
+                                      });
+                                    });
+                                  },
+                                  child: Column(
+                                    children: const [
+                                      Icon(Icons.note_add_outlined),
+                                      Text('Saved Events')
+                                    ],
+                                  )),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 15.0),
+                        profile!['user']['role']['type'] == 'organizer'
+                            ? OutlinedButton(
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/create_events');
+                                },
+                                child: const Text('Create Event'))
+                            : const SizedBox(),
+                        const SizedBox(height: 15.0),
+                        profile!['user'][model].length != 0 ||
+                                profile!['user'][model].length != 0 ||
+                                profile!['user'][model].length != 0
+                            ? ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: profile!['user'][model].length,
+                                itemBuilder: (context, index) {
+                                  return CustomEventCard(
+                                    venue: model == 'events'
+                                        ? '${profile!['user'][model][index]['venue']['unit_no']} ${profile!['user'][model][index]['venue']['street_no']} ${profile!['user'][model][index]['venue']['street_name']} ${profile!['user'][model][index]['venue']['country']} ${profile!['user'][model][index]['venue']['state']} ${profile!['user'][model][index]['venue']['city']} ${profile!['user'][model][index]['venue']['zipcode']}'
+                                        : '${profile!['user'][model][index]['event']['venue']['unit_no']} ${profile!['user'][model][index]['event']['venue']['street_no']} ${profile!['user'][model][index]['event']['venue']['street_name']} ${profile!['user'][model][index]['event']['venue']['country']} ${profile!['user'][model][index]['event']['venue']['state']} ${profile!['user'][model][index]['event']['venue']['city']} ${profile!['user'][model][index]['event']['venue']['zipcode']} ',
+                                    registrationLink: model == 'events'
+                                        ? profile!['user'][model][index]
+                                            ['registration_link']
+                                        : profile!['user'][model][index]
+                                            ['event']['registration_link'],
+                                    eventType: model == 'events'
+                                        ? profile!['user'][model][index]
+                                            ['event_type']
+                                        : profile!['user'][model][index]
+                                            ['event']['event_type'],
+                                    title: model == 'events'
+                                        ? profile!['user'][model][index]
+                                            ['title']
+                                        : profile!['user'][model][index]
+                                            ['event']['title'],
+                                    description: model == 'events'
+                                        ? profile!['user'][model][index]
+                                            ['description']
+                                        : profile!['user'][model][index]
+                                            ['event']['description'],
+                                    schedule: model == 'events'
+                                        ? profile!['user'][model][index]
+                                            ['schedule']
+                                        : profile!['user'][model][index]
+                                            ['event']['schedule'],
+                                    images: model == 'events'
+                                        ? profile!['user'][model][index]
+                                            ['images']
+                                        : profile!['user'][model][index]
+                                            ['event']['images'],
+                                    fees: model == 'events'
+                                        ? profile!['user'][model][index]['fees']
+                                            .toString()
+                                        : profile!['user'][model][index]
+                                                ['event']['fees']
+                                            .toString(),
+                                    likes: model == 'events'
+                                        ? profile!['user'][model][index]
+                                                ['event_likes_count']
+                                            .toString()
+                                        : profile!['user'][model][index]
+                                                ['event']['event_likes_count']
+                                            .toString(),
+                                    interested: model == 'events'
+                                        ? profile!['user'][model][index]
+                                                ['interests_count']
+                                            .toString()
+                                        : profile!['user'][model][index]
+                                                ['event']['interests_count']
+                                            .toString(),
+                                    attendees: model == 'events'
+                                        ? profile!['user'][model][index]
+                                                ['attendees_count']
+                                            .toString()
+                                        : profile!['user'][model][index]
+                                                ['event']['attendees_count']
+                                            .toString(),
+                                    organizer: model == 'events'
+                                        ? profile!['user'][model][index]['user']
+                                            ['username']
+                                        : profile!['user'][model][index]
+                                            ['event']['user']['username'],
+                                    onPressedLike: () => onPressedLike(model ==
+                                            'events'
+                                        ? profile!['user'][model][index]['slug']
+                                        : profile!['user'][model][index]
+                                            ['event']['slug']),
+                                    onPressedShare: () => onPressedShareEvent(
+                                        model == 'events'
+                                            ? profile!['user'][model][index]
+                                                ['slug']
+                                            : profile!['user'][model][index]
+                                                ['event']['slug']),
+                                    onPressedInterested: () =>
+                                        onPressedInterested(model == 'events'
+                                            ? profile!['user'][model][index]
+                                                ['slug']
+                                            : profile!['user'][model][index]
+                                                ['event']['slug']),
+                                    onPressedSave: () => onPressedSave(model ==
+                                            'events'
+                                        ? profile!['user'][model][index]['slug']
+                                        : profile!['user'][model][index]
+                                            ['event']['slug']),
+                                  );
+                                })
+                            : SizedBox(
+                                width: (MediaQuery.of(context).size.width),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Text(
+                                    profile!['user'][model].length == 0
+                                        ? 'There are no saved/shared events'
+                                        : 'There are no events',
+                                    style: const TextStyle(fontSize: 20),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -283,5 +415,85 @@ class _ProfilePageState extends State<ProfilePage> {
     Random rnd = Random();
     return String.fromCharCodes(Iterable.generate(
         32, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+  }
+
+  void onPressedShareEvent(String? slug) async {
+    Map<String, dynamic> eventSlug = {'slug': slug!};
+
+    Map<String, dynamic> response =
+        await EventController().shareEvent(eventSlug);
+
+    if (response['events'].isNotEmpty) {
+      message = response['events'];
+    } else {
+      message = 'Something went wrong...';
+    }
+
+    Fluttertoast.showToast(
+        msg: message!,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[500],
+        textColor: Colors.white,
+        timeInSecForIosWeb: 3,
+        toastLength: Toast.LENGTH_LONG,
+        fontSize: 16.0);
+    return;
+  }
+
+  void onPressedInterested(String? slug) async {
+    Color? toastColor = Colors.grey[700];
+    Map<String, dynamic> eventSlug = {'slug': slug!};
+
+    Map<String, dynamic> response =
+        await EventController().interested(eventSlug);
+
+    if (response['interested'] != null) {
+      message = response['interested'];
+      toastColor = Colors.grey[700];
+    } else {
+      message = 'Something went wrong...';
+      toastColor = Colors.red[500];
+    }
+
+    Fluttertoast.showToast(
+        msg: message!,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: toastColor,
+        textColor: Colors.white,
+        timeInSecForIosWeb: 3,
+        toastLength: Toast.LENGTH_LONG,
+        fontSize: 16.0);
+  }
+
+  void onPressedSave(String? slug) async {
+    Color? toastColor = Colors.grey[700];
+    Map<String, dynamic> eventSlug = {'slug': slug!};
+
+    Map<String, dynamic> response =
+        await EventController().saveEvent(eventSlug);
+
+    if (response['message'] != null) {
+      message = response['message'];
+      toastColor = Colors.red[700];
+    } else {
+      message = response['events'];
+      toastColor = Colors.grey[700];
+    }
+
+    Fluttertoast.showToast(
+        msg: message!,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: toastColor,
+        textColor: Colors.white,
+        timeInSecForIosWeb: 3,
+        toastLength: Toast.LENGTH_LONG,
+        fontSize: 16.0);
+    return;
+  }
+
+  void onPressedLike(String? slug) async {
+    Map<String, dynamic> eventSlug = {'slug': slug!};
+
+    await EventController().like(eventSlug);
   }
 }

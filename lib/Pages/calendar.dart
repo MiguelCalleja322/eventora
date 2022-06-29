@@ -41,22 +41,34 @@ class _CalendarPageState extends State<CalendarPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+
+  void generateCalendarData() async {
+    if (mounted) {
+      setState(() {
+        loading = true;
+      });
+
+      Future.delayed(const Duration(milliseconds: 3000), () {
+        getCalendarData();
+      });
+
+      _selectedDay = _focusedDay;
+    }
+  }
+
   @override
   void initState() {
+    generateCalendarData();
     super.initState();
-    setState(() {
-      loading = true;
-    });
-
-    Future.delayed(const Duration(milliseconds: 3000), () {
-      getCalendarData();
-    });
-
-    _selectedDay = _focusedDay;
   }
 
   @override
   void dispose() {
+    loading = false;
+    _selectedDay = DateTime.now();
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
 

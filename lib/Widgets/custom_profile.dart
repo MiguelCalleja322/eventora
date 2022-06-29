@@ -14,8 +14,12 @@ class CustomProfile extends StatelessWidget {
       required this.follow,
       required this.isFollowed,
       required this.page,
-      this.navigate})
+      this.navigate,
+      this.userId = 0,
+      this.roleId = 0})
       : super(key: key);
+  late int userId = 0;
+  late int roleId = 0;
   late String? image = '';
   late String? name = '';
   late String? followers = '';
@@ -47,26 +51,31 @@ class CustomProfile extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               child: TextButton(
                                   onPressed: navigate,
-                                  child: const Icon(Icons.chevron_left_sharp)),
+                                  child: Icon(
+                                    Icons.chevron_left_sharp,
+                                    color: Colors.grey[700],
+                                  )),
                             ),
                           )
                         : const SizedBox(),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: follow,
-                          child: Text(
-                            isFollowed! == 1 ? 'Unfollow' : 'Follow',
-                            style: const TextStyle(
-                                color: Color(0xFF114F5A),
-                                letterSpacing: 1.0,
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
-                    ),
+                    userId != roleId
+                        ? Expanded(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: follow,
+                                child: Text(
+                                  isFollowed! == 1 ? 'Unfollow' : 'Follow',
+                                  style: const TextStyle(
+                                      color: Color(0xFF114F5A),
+                                      letterSpacing: 1.0,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
                   ],
                 ),
                 const SizedBox(height: 15),

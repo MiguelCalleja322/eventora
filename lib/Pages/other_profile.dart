@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../Widgets/custom_events_card.dart';
 import '../controllers/events_controller.dart';
 
+// ignore: must_be_immutable
 class OtherProfilePage extends StatefulWidget {
   OtherProfilePage({Key? key, required this.username}) : super(key: key);
   late String? username;
@@ -32,15 +33,25 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
     setState(() {
       userProfile = user!['user'] ?? {};
     });
-
-    print(userProfile!['share_event'].length);
   }
 
   @override
   void initState() {
     super.initState();
-    fetchUser(widget.username!);
-    fetchCloudFrontUri();
+    if (mounted) {
+      fetchUser(widget.username!);
+      fetchCloudFrontUri();
+    }
+  }
+
+  @override
+  void dispose() {
+    user = {};
+    userProfile = {};
+    message = '';
+    cloudFrontUri = '';
+    model = '';
+    super.dispose();
   }
 
   @override
@@ -69,6 +80,8 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                       children: <Widget>[
                         SizedBox(
                           child: CustomProfile(
+                              userId: userProfile!['id'],
+                              roleId: userProfile!['role']['id'],
                               navigate: () => Navigator.pushReplacementNamed(
                                   context, '/home'),
                               page: 'otherProfile',
@@ -151,6 +164,16 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                 itemBuilder: (context, index) {
                                   return SizedBox(
                                       child: CustomEventCard(
+                                    registrationLink: model == 'events'
+                                        ? userProfile![model][index]
+                                            ['registration_link']
+                                        : userProfile![model][index]['event']
+                                            ['registration_link'],
+                                    eventType: model == 'events'
+                                        ? userProfile![model][index]
+                                            ['event_type']
+                                        : userProfile![model][index]['event']
+                                            ['event_type'],
                                     title: model == 'events'
                                         ? userProfile![model][index]['title']
                                         : userProfile![model][index]['event']

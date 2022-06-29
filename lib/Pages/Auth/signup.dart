@@ -22,11 +22,6 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   DateTime birthdate = DateTime.now();
   late String formattedBirthDate = DateFormat('yyyy-MM-dd').format(birthdate);
   late int isAgeOver18 = 0;
@@ -65,6 +60,18 @@ class _SignupState extends State<Signup> {
       TextEditingController();
   bool screenLoading = false;
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
+    _mobileController.dispose();
+    _passwordController.dispose();
+    _passwordConfirmController.dispose();
+    screenLoading = false;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

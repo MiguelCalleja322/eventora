@@ -18,25 +18,11 @@ class _SettingsPageState extends State<SettingsPage> {
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Settings',
-                            style: TextStyle(
-                                color: Colors.grey[800], fontSize: 40.0)),
-                      ),
-                      TextButton(
-                          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              '/home',
-                              (Route<dynamic> route) => false),
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: Colors.grey[700],
-                          ))
-                    ],
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Settings',
+                        style:
+                            TextStyle(color: Colors.grey[800], fontSize: 40.0)),
                   ),
                   SizedBox(
                     height: 40,
@@ -52,10 +38,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         tiles: <SettingsTile>[
                           SettingsTile.navigation(
                             onPressed: (context) =>
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    '/updateUserInfo',
-                                    (Route<dynamic> route) => false),
+                                Navigator.pushReplacementNamed(
+                              context,
+                              '/updateUserInfo',
+                            ),
                             leading: const Icon(Icons.update),
                             title: const Text('Update User Information'),
                           ),

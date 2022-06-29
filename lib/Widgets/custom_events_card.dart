@@ -2,6 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
 
 // ignore: must_be_immutable
 class CustomEventCard extends StatelessWidget {
@@ -20,6 +21,9 @@ class CustomEventCard extends StatelessWidget {
     required this.onPressedSave,
     required this.onPressedLike,
     required this.images,
+    required this.eventType,
+    this.registrationLink,
+    this.venue,
   }) : super(key: key);
 
   late String? title = '';
@@ -30,6 +34,9 @@ class CustomEventCard extends StatelessWidget {
   late String? interested = '';
   late String? attendees = '';
   late String? organizer = '';
+  late String? eventType = '';
+  late String? registrationLink = '';
+  late String? venue = '';
   late List<dynamic>? images = [];
   final VoidCallback onPressedShare;
   final VoidCallback onPressedInterested;
@@ -71,7 +78,7 @@ class CustomEventCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 30.0),
+          const SizedBox(height: 15.0),
           Text(
             'Description:',
             style: TextStyle(
@@ -87,7 +94,7 @@ class CustomEventCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 overflow: TextOverflow.fade),
           ),
-          const SizedBox(height: 30.0),
+          const SizedBox(height: 15.0),
           Text(
             'Schedule:',
             style: TextStyle(
@@ -103,71 +110,93 @@ class CustomEventCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Row(
-            children: [
-              Text(
-                'fees:',
-                style: TextStyle(
-                    color: Colors.grey[600],
-                    letterSpacing: 2.0,
-                    fontSize: 14.0),
-              ),
-              const SizedBox(width: 10.0),
-              Text(
-                fees!,
-                style: TextStyle(
-                    color: Colors.grey[700],
-                    letterSpacing: 2.0,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    overflow: TextOverflow.fade),
-              ),
-            ],
+          const SizedBox(height: 15.0),
+          Text(
+            eventType == 'ticketed' ? 'Fees:' : 'Registration Link:',
+            style: TextStyle(
+                color: Colors.grey[600], letterSpacing: 1.0, fontSize: 14.0),
           ),
-          const SizedBox(height: 30.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              likes == ''
-                  ? Container()
-                  : Column(
-                      children: <Widget>[
-                        Text(
-                          'Likes',
-                          style: TextStyle(
-                              color: Colors.grey[600],
-                              letterSpacing: 2.0,
-                              fontSize: 14.0),
-                        ),
-                        Text(
-                          likes!,
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                            letterSpacing: 2.0,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+          const SizedBox(width: 10.0),
+          Text(
+            eventType == 'ticketed' ? fees! : registrationLink!,
+            style: TextStyle(
+                color: Colors.grey[700],
+                letterSpacing: 1.0,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                overflow: TextOverflow.fade),
+          ),
+          const SizedBox(height: 15.0),
+          Text(
+            'Venue:',
+            style: TextStyle(
+                color: Colors.grey[600], letterSpacing: 1.0, fontSize: 14.0),
+          ),
+          const SizedBox(width: 10.0),
+          Text(
+            venue != '' ? venue! : 'To be posted',
+            style: TextStyle(
+                color: Colors.grey[700],
+                letterSpacing: 1.0,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                overflow: TextOverflow.clip),
+          ),
+          const SizedBox(height: 15.0),
+          organizer == ''
+              ? const SizedBox()
+              : Text(
+                  'Organizer:',
+                  style: TextStyle(
+                      color: Colors.grey[600],
+                      letterSpacing: 2.0,
+                      fontSize: 14.0),
+                ),
+          organizer == ''
+              ? const SizedBox()
+              : TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/otherProfile',
+                        arguments: {
+                          'username': organizer!,
+                        });
+                  },
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                     ),
+                  ),
+                  child: Text(
+                    organizer!,
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      letterSpacing: 2.0,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+          const SizedBox(height: 15.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
               const SizedBox(width: 30.0),
               interested == ''
                   ? const SizedBox()
                   : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'Interested',
                           style: TextStyle(
                               color: Colors.grey[600],
-                              letterSpacing: 2.0,
+                              letterSpacing: 1.0,
                               fontSize: 14.0),
                         ),
                         Text(
                           interested!,
                           style: TextStyle(
                             color: Colors.grey[700],
-                            letterSpacing: 2.0,
+                            letterSpacing: 1.0,
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,
                           ),
@@ -178,7 +207,6 @@ class CustomEventCard extends StatelessWidget {
               attendees == ''
                   ? const SizedBox()
                   : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'Attendees',
@@ -200,36 +228,7 @@ class CustomEventCard extends StatelessWidget {
                     )
             ],
           ),
-          const SizedBox(height: 30.0),
-          organizer == ''
-              ? const SizedBox()
-              : Text(
-                  'Organizer:',
-                  style: TextStyle(
-                      color: Colors.grey[600],
-                      letterSpacing: 2.0,
-                      fontSize: 14.0),
-                ),
-          organizer == ''
-              ? const SizedBox()
-              : TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/otherProfile',
-                        arguments: {
-                          'username': organizer!,
-                        });
-                  },
-                  child: Text(
-                    organizer!,
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                      letterSpacing: 2.0,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-          const SizedBox(height: 30.0),
+          const SizedBox(height: 15.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -240,7 +239,12 @@ class CustomEventCard extends StatelessWidget {
                     elevation: 0,
                     child: Column(
                       children: [
-                        Icon(Icons.thumb_up_sharp, color: Colors.grey[700]),
+                        Badge(
+                          position: BadgePosition.topEnd(top: -16, end: -16),
+                          badgeContent: Text(likes!),
+                          child: Icon(Icons.thumb_up_sharp,
+                              color: Colors.grey[700]),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),

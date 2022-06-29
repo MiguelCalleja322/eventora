@@ -2,10 +2,12 @@
 
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../Widgets/custom_loading.dart';
 import '../../controllers/auth_controller.dart';
 import '../../utils/email_validation.dart';
+import '../../utils/secure_storage.dart';
 
 class Login extends StatefulWidget {
   Login({
@@ -26,24 +28,27 @@ class _LoginState extends State<Login> {
   bool screenLoading = false;
   final _formKey = GlobalKey<FormState>();
 
-  // void _redirectIfUserIsLogged() async {
-  //   await dotenv.load(fileName: ".env");
-  //   final String? storageKey = dotenv.env['STORAGE_KEY'];
-  //   String? bearerToken = await StorageSevice().read(storageKey!);
+  void _redirectIfUserIsLogged() async {
+    await dotenv.load(fileName: ".env");
+    final String storageKey = dotenv.env['STORAGE_KEY'] ?? '';
 
-  //   if (bearerToken!.isNotEmpty && mounted) {
-  //     Navigator.pushReplacementNamed(context, '/home');
-  //   }
-  // }
+    String? bearerToken = await StorageSevice().read(storageKey) ?? '';
+
+    if (bearerToken.isNotEmpty && mounted) {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // _redirectIfUserIsLogged();
+    _redirectIfUserIsLogged();
   }
 
   @override
   void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 

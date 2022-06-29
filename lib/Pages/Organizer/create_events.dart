@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:eventora/Widgets/custom_dashboard_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/event_categories_controller.dart';
@@ -47,6 +48,15 @@ class _CreateEventsState extends State<CreateEvents> {
   final TextEditingController _registrationLinkController =
       TextEditingController();
 
+  final TextEditingController _unitNoController = TextEditingController();
+  final TextEditingController _streetNoController = TextEditingController();
+  final TextEditingController _streetNameController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _zipcodeController = TextEditingController();
+  // final TextEditingController _locationController = TextEditingController();
+
   final FocusNode _titlefocusNode = FocusNode();
   final FocusNode _descriptionfocusNode = FocusNode();
   final FocusNode _registrationLinkfocusNode = FocusNode();
@@ -76,6 +86,8 @@ class _CreateEventsState extends State<CreateEvents> {
 
     if (fetchedCategories!.isNotEmpty) {
       setState(() {
+        _feesController.text = '0';
+        _registrationLinkController.text = '';
         eventCategories = fetchedCategories!['event_categories'] ?? [];
       });
     }
@@ -88,6 +100,23 @@ class _CreateEventsState extends State<CreateEvents> {
   }
 
   @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _feesController.dispose();
+    _registrationLinkController.dispose();
+    _unitNoController.dispose();
+    _streetNoController.dispose();
+    _streetNameController.dispose();
+    _countryController.dispose();
+    _stateController.dispose();
+    _cityController.dispose();
+    _zipcodeController.dispose();
+    // _locationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -97,10 +126,22 @@ class _CreateEventsState extends State<CreateEvents> {
             child: creating == false
                 ? Column(
                     children: <Widget>[
-                      Text(
-                        'Create Event',
-                        style:
-                            TextStyle(color: Colors.grey[800], fontSize: 40.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Create Event',
+                            style: TextStyle(
+                                color: Colors.grey[800], fontSize: 40.0),
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                    context, '/home');
+                              },
+                              child: Icon(Icons.chevron_left,
+                                  color: Colors.grey[700]))
+                        ],
                       ),
                       const Divider(
                         height: 30.0,
@@ -261,10 +302,13 @@ class _CreateEventsState extends State<CreateEvents> {
                       const SizedBox(
                         height: 15.0,
                       ),
-                      Text(
-                        'Details',
-                        style:
-                            TextStyle(color: Colors.grey[800], fontSize: 20.0),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Details:',
+                          style: TextStyle(
+                              color: Colors.grey[800], fontSize: 30.0),
+                        ),
                       ),
                       const SizedBox(
                         height: 15.0,
@@ -445,10 +489,12 @@ class _CreateEventsState extends State<CreateEvents> {
                               if (newIndex == 0) {
                                 setState(() {
                                   eventType = 'ticketed';
+                                  _registrationLinkController.text = '';
                                 });
                               } else {
                                 setState(() {
                                   eventType = 'registration';
+                                  _feesController.text = '0';
                                 });
                               }
                             }
@@ -486,6 +532,137 @@ class _CreateEventsState extends State<CreateEvents> {
                                   focusNode: _feesfocusNode,
                                 )
                               : Container(),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Venue:',
+                          style: TextStyle(
+                              color: Colors.grey[800], fontSize: 30.0),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      CustomButton(
+                        height: 50.0,
+                        width: (MediaQuery.of(context).size.width),
+                        backgroundColor: Colors.grey[800],
+                        borderRadius: BorderRadius.circular(10.0),
+                        onPressed: () {
+                          showCountryPicker(
+                            context: context,
+                            onSelect: (Country country) {
+                              setState(() {
+                                _countryController.text = country.name;
+                              });
+                            },
+                            countryListTheme: CountryListThemeData(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(40.0),
+                                topRight: Radius.circular(40.0),
+                              ),
+                              inputDecoration: InputDecoration(
+                                labelText: 'Search',
+                                hintText: 'Start typing to search',
+                                prefixIcon: const Icon(Icons.search),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: const Color(0xFF8C98A8)
+                                        .withOpacity(0.2),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        padding: const EdgeInsets.all(15.0),
+                        alignment: Alignment.center,
+                        text: _countryController.text == ''
+                            ? 'Select Country'
+                            : _countryController.text,
+                        color: Colors.grey[100],
+                        letterSpacing: 2.0,
+                        fontSize: 15.0,
+                        fit: BoxFit.contain,
+                        elevation: 0.0,
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextField(
+                              onChanged: (value) => value,
+                              textAlign: TextAlign.left,
+                              letterSpacing: 1.0,
+                              label: 'State',
+                              controller: _stateController,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: CustomTextField(
+                              onChanged: (value) => value,
+                              textAlign: TextAlign.left,
+                              letterSpacing: 1.0,
+                              label: 'City',
+                              controller: _cityController,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      CustomTextField(
+                        onChanged: (value) => value,
+                        textAlign: TextAlign.left,
+                        letterSpacing: 1.0,
+                        label: 'Zip Code',
+                        controller: _zipcodeController,
+                      ),
+                      const SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextField(
+                              onChanged: (value) => value,
+                              textAlign: TextAlign.left,
+                              letterSpacing: 1.0,
+                              label: 'Street No.',
+                              controller: _streetNoController,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: CustomTextField(
+                              onChanged: (value) => value,
+                              textAlign: TextAlign.left,
+                              letterSpacing: 1.0,
+                              label: 'Street Name:',
+                              controller: _streetNameController,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      CustomTextField(
+                        onChanged: (value) => value,
+                        textAlign: TextAlign.left,
+                        letterSpacing: 1.0,
+                        label: 'Unit No.',
+                        controller: _unitNoController,
+                      ),
                       const SizedBox(
                         height: 15.0,
                       ),
@@ -586,7 +763,7 @@ class _CreateEventsState extends State<CreateEvents> {
 
     if (imageFileList!.isEmpty) {
       Fluttertoast.showToast(
-          msg: 'Please pick atleast a single picture',
+          msg: 'Please pick at least one picture',
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red[500],
           textColor: Colors.white,
@@ -604,8 +781,6 @@ class _CreateEventsState extends State<CreateEvents> {
       fileImages.add('events/$newFileName');
       File image = File(images.path);
       await S3.uploadFile(newFileName, image, 'events');
-
-      print(fileImages);
     });
 
     setState(() {
@@ -623,17 +798,52 @@ class _CreateEventsState extends State<CreateEvents> {
       'event_type': eventType,
       'type': 'photo',
       'event_category': selectedCategory,
+      'unit_no': _unitNoController.text,
+      'street_no': _streetNoController.text,
+      'street_name': _streetNameController.text,
+      'country': _countryController.text,
+      'state': _stateController.text,
+      'city': _cityController.text,
+      'zipcode': _zipcodeController.text,
+      // 'location': _locationController.text,
+      'registration_link': _registrationLinkController.text
     };
 
     print(eventData);
 
     var test = await EventController().store(eventData);
 
-    print(test);
+    if (test['message'] != '') {
+      Fluttertoast.showToast(
+          msg: test['message'],
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red[500],
+          textColor: Colors.white,
+          timeInSecForIosWeb: 3,
+          toastLength: Toast.LENGTH_LONG,
+          fontSize: 16.0);
+      setState(() {
+        creating = false;
+      });
+      return;
+    }
 
+    print(test);
     setState(() {
       creating = false;
     });
+
+    // _titleController.clear();
+    // _descriptionController.clear();
+    // _feesController.clear();
+    // _registrationLinkController.clear();
+    // _unitNoController.clear();
+    // _streetNoController.clear();
+    // _streetNameController.clear();
+    // _countryController.clear();
+    // _stateController.clear();
+    // _cityController.clear();
+    // _zipcodeController.clear();
   }
 
   static randomString() {

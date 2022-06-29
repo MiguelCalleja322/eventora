@@ -37,6 +37,27 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
   final TextEditingController _zipcodeController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _socialController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _oldPasswordController.dispose();
+    _passwordController.dispose();
+    _passwordConfirmationController.dispose();
+    _birthdateController.dispose();
+    _unitNoController.dispose();
+    _streetNoController.dispose();
+    _streetNameController.dispose();
+    _countryController.dispose();
+    _stateController.dispose();
+    _cityController.dispose();
+    _zipcodeController.dispose();
+    _mobileController.dispose();
+    _socialController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,10 +93,10 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                               color: Colors.grey[800], fontSize: 20.0)),
                     ),
                     TextButton(
-                        onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            '/settings',
-                            (Route<dynamic> route) => false),
+                        onPressed: () => Navigator.pushReplacementNamed(
+                              context,
+                              '/home',
+                            ),
                         child: Icon(
                           Icons.arrow_back,
                           color: Colors.grey[700],

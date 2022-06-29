@@ -1,6 +1,6 @@
-import 'package:eventora/Pages/Organizer/dashboard.dart';
 import 'package:eventora/Pages/Organizer/statistics.dart';
 import 'package:eventora/Pages/User/feature_page.dart';
+import 'package:eventora/Pages/wall.dart';
 import 'package:eventora/Pages/profile.dart';
 import 'package:eventora/Pages/settings.dart';
 import 'package:eventora/Widgets/custom_loading.dart';
@@ -36,15 +36,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (mounted) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
   void initState() {
+    if (mounted) {
+      _getRole();
+    }
+
     super.initState();
-    _getRole();
+  }
+
+  @override
+  void dispose() {
+    _selectedIndex = 0;
+    loading = false;
+    role = '';
+    super.dispose();
   }
 
   @override
@@ -58,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                   index: _selectedIndex,
                   children: [
                     // Index = 0
-                    role == 'user' ? const FeaturePage() : const Dashboard(),
+                    const WallPage(),
 
                     // Index = 1
                     role == 'user'
@@ -88,15 +101,10 @@ class _HomePageState extends State<HomePage> {
               unselectedItemColor: Colors.grey[800],
               type: BottomNavigationBarType.fixed,
               items: <BottomNavigationBarItem>[
-                role == 'user'
-                    ? const BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      )
-                    : const BottomNavigationBarItem(
-                        icon: Icon(Icons.dashboard),
-                        label: 'Dashboard',
-                      ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
                 role == 'user'
                     ? const BottomNavigationBarItem(
                         icon: Icon(Icons.trending_up),

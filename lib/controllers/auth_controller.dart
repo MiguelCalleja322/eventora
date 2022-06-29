@@ -3,10 +3,6 @@ import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthController {
-  // final TextEditingController emailController = TextEditingController();
-  // final TextEditingController passwordController = TextEditingController();
-  // RxBool loginLoading = false.obs;
-
   Future login(Map<String, String?> loginData) async {
     await dotenv.load(fileName: ".env");
     final String? storageKey = dotenv.env['STORAGE_KEY'];

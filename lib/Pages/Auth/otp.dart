@@ -33,6 +33,7 @@ class _OTPPageState extends State<OTPPage> {
   @override
   void dispose() {
     _timer.cancel();
+    _otpController.dispose();
     super.dispose();
   }
 

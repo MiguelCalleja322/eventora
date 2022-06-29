@@ -36,7 +36,6 @@ class _FeaturePageState extends State<FeaturePage> {
 
   Future<void> fetchFeatures() async {
     features = await FeaturePageController().getFeatures();
-
     if (features!.isNotEmpty) {
       setState(() {
         featuredOrganizers = features!['organizer'] ?? [];
@@ -48,13 +47,25 @@ class _FeaturePageState extends State<FeaturePage> {
 
   @override
   void initState() {
+    if (mounted) {
+      fetchFeatures();
+      fetchCloudFrontUri();
+    }
     super.initState();
-    fetchFeatures();
-    fetchCloudFrontUri();
   }
 
   @override
   void dispose() {
+    features = {};
+    loading = false;
+    isFollowed = {};
+    followed = 0;
+    featureEventsImages = [];
+    cloudFrontUri = '';
+    message = '';
+    featuredOrganizers = [];
+    featuredUsers = [];
+    featuredEvents = [];
     super.dispose();
   }
 
@@ -105,7 +116,7 @@ class _FeaturePageState extends State<FeaturePage> {
                               itemCount: featuredOrganizers!.length,
                               itemBuilder: (context, index, realIndex) {
                                 return CustomProfile(
-                                  page: 'features',
+                                    page: 'features',
                                     isFollowed: featuredOrganizers![index]
                                                 ['followers']
                                             .isEmpty
@@ -206,6 +217,12 @@ class _FeaturePageState extends State<FeaturePage> {
                               itemCount: featuredUsers!.length,
                               itemBuilder: (context, index, realIndex) {
                                 return CustomEventCard(
+                                    venue:
+                                        '${featuredEvents![index]['venue']['unit_no']} ${featuredEvents![index]['venue']['street_no']} ${featuredEvents![index]['venue']['street_name']} ${featuredEvents![index]['venue']['country']} ${featuredEvents![index]['venue']['state']} ${featuredEvents![index]['venue']['city']} ${featuredEvents![index]['venue']['zipcode']} ',
+                                    eventType: featuredEvents![index]
+                                        ['event_type'],
+                                    registrationLink: featuredEvents![index]
+                                        ['registration_link'],
                                     images: featuredEvents![index]['images'],
                                     title: featuredEvents![index]['title']
                                         .toString(),
@@ -215,8 +232,7 @@ class _FeaturePageState extends State<FeaturePage> {
                                         .toString(),
                                     fees: featuredEvents![index]['fees']
                                         .toString(),
-                                    likes: featuredEvents![index]
-                                            ['event_likes_count']
+                                    likes: featuredEvents![index]['event_likes_count']
                                         .toString(),
                                     interested: featuredEvents![index]
                                             ['interests_count']
@@ -258,13 +274,17 @@ class _FeaturePageState extends State<FeaturePage> {
     isFollowed = await UserController().follow(followUser);
 
     if (isFollowed!['is_followed'] == true) {
-      setState(() {
-        followed = 1;
-      });
+      if (mounted) {
+        setState(() {
+          followed = 1;
+        });
+      }
     } else {
-      setState(() {
-        followed = 0;
-      });
+      if (mounted) {
+        setState(() {
+          followed = 0;
+        });
+      }
     }
   }
 
