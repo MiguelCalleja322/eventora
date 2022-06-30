@@ -28,7 +28,7 @@ class CreateEvents extends StatefulWidget {
 
 class _CreateEventsState extends State<CreateEvents> {
   final ImagePicker imagePicker = ImagePicker();
-  List<XFile>? imageFileList = [];
+  List<File>? imageFileList = [];
   late List<bool> isSelected = [true, false];
   late List<bool> isEventPrivate = [true, false];
   late List<bool> isEventAvailable = [true, false];
@@ -70,7 +70,9 @@ class _CreateEventsState extends State<CreateEvents> {
     try {
       final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
       setState(() {
-        imageFileList!.addAll(selectedImages!);
+        selectedImages!.forEach((element) {
+          imageFileList!.add(File(element.path));
+        });
       });
     } catch (e) {
       print('No images were picked. $e');
@@ -705,10 +707,10 @@ class _CreateEventsState extends State<CreateEvents> {
     );
   }
 
-  Widget BuildImage(XFile assetImage, int index) => Container(
+  Widget BuildImage(File assetImage, int index) => Container(
         color: Colors.grey[500],
-        child: Image.asset(
-          assetImage.path,
+        child: Image.file(
+          assetImage,
           fit: BoxFit.cover,
         ),
       );

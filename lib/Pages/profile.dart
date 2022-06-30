@@ -34,10 +34,6 @@ class _ProfilePageState extends State<ProfilePage> {
   late String? model = 'save_event';
   late String? message = '';
   late String? role = '';
-  void fetchCloudFrontUri() async {
-    await dotenv.load(fileName: ".env");
-    cloudFrontURI = dotenv.env['CLOUDFRONT_URI'];
-  }
 
   void getRole() async {
     await dotenv.load(fileName: ".env");
@@ -46,6 +42,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> fetchProfile() async {
+    await dotenv.load(fileName: ".env");
+    setState(() {
+      cloudFrontURI = dotenv.env['CLOUDFRONT_URI'];
+    });
     setState(() {
       loading = true;
     });
@@ -58,11 +58,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    if (mounted) {
-      getRole();
-      fetchProfile();
-      fetchCloudFrontUri();
-    }
+    getRole();
+    fetchProfile();
     super.initState();
   }
 
@@ -79,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return loading == true
+    return profile!.isEmpty
         ? const LoadingPage()
         : Scaffold(
             body: RefreshIndicator(
@@ -94,15 +91,23 @@ class _ProfilePageState extends State<ProfilePage> {
                         Align(
                           alignment: Alignment.center,
                           child: Stack(children: [
-                            CircleAvatar(
-                              backgroundImage: profile!['user']['avatar'] ==
-                                      null
-                                  ? const NetworkImage(
-                                      'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826')
-                                  : NetworkImage(
-                                      '$cloudFrontURI${profile!['user']['avatar']}'),
-                              radius: 90.0,
-                            ),
+                            cloudFrontURI != '' || cloudFrontURI != null
+                                ? CircleAvatar(
+                                    backgroundImage: profile!['user']
+                                                    ['avatar'] ==
+                                                null ||
+                                            profile!['user']['avatar'] == ''
+                                        ? const NetworkImage(
+                                            'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826')
+                                        : NetworkImage(
+                                            '$cloudFrontURI${profile!['user']['avatar']}'),
+                                    radius: 90.0,
+                                  )
+                                : const CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826'),
+                                    radius: 90.0,
+                                  ),
                             Positioned(
                                 right: -15,
                                 top: 145,
@@ -406,7 +411,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (selectedImage != null) {
         fileExtension = path.extension(selectedImage.path);
         String newFileName =
-            randomString() + '-' + timestamp.toString() + fileExtension;
+            randomString() + timestamp.toString() + fileExtension;
         File image = File(selectedImage.path);
 
         await S3.uploadFile(newFileName, image, 'avatars');
@@ -439,7 +444,7 @@ class _ProfilePageState extends State<ProfilePage> {
         'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
     Random rnd = Random();
     return String.fromCharCodes(Iterable.generate(
-        32, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+        10, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
   }
 
   void onPressedShareEvent(String? slug) async {

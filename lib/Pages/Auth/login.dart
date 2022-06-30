@@ -57,76 +57,82 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: screenLoading
           ? const LoadingPage()
-          : SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Eventora',
-                        style:
-                            TextStyle(color: Colors.grey[800], fontSize: 40.0),
-                      ),
-                      const SizedBox(height: 70),
-                      CustomTextFormField(
-                        focusNode: emailFocus,
-                        obscureText: false,
-                        validator: (value) =>
-                            EmailServiceChecker().isEmailValid(value!),
-                        label: 'Email',
-                        controller: emailController,
-                      ),
-                      const SizedBox(height: 15),
-                      CustomTextFormField(
-                        focusNode: passwordFocus,
-                        obscureText: true,
-                        label: 'Password',
-                        controller: passwordController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Password cannot be empty';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 15),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: 50,
-                              child: OutlinedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    login(context);
-                                  }
-                                },
-                                style: OutlinedButton.styleFrom(
-                                    primary: Colors.grey[900],
-                                    backgroundColor: Colors.grey[100],
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)))),
-                                child: const Text(
-                                  'Login',
-                                  style: TextStyle(fontSize: 15.0),
+          : SingleChildScrollView(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SizedBox(
+                    height: (MediaQuery.of(context).size.height),
+                    width: (MediaQuery.of(context).size.width),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Eventora',
+                            style: TextStyle(
+                                color: Colors.grey[800], fontSize: 40.0),
+                          ),
+                          const SizedBox(height: 70),
+                          CustomTextFormField(
+                            focusNode: emailFocus,
+                            obscureText: false,
+                            validator: (value) =>
+                                EmailServiceChecker().isEmailValid(value!),
+                            label: 'Email',
+                            controller: emailController,
+                          ),
+                          const SizedBox(height: 15),
+                          CustomTextFormField(
+                            focusNode: passwordFocus,
+                            obscureText: true,
+                            label: 'Password',
+                            controller: passwordController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Password cannot be empty';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: SizedBox(
+                                  height: 50,
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        login(context);
+                                      }
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                        primary: Colors.grey[900],
+                                        backgroundColor: Colors.grey[100],
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0)))),
+                                    child: const Text(
+                                      'Login',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          const Text("Don't have an account?"),
+                          TextButton(
+                            onPressed: () => Navigator.pushReplacementNamed(
+                                context, '/signup'),
+                            child: const Text('Click Here to Signup'),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 15),
-                      const Text("Don't have an account?"),
-                      TextButton(
-                        onPressed: () =>
-                            Navigator.pushReplacementNamed(context, '/signup'),
-                        child: const Text('Click Here to Signup'),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
