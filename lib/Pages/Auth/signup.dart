@@ -298,6 +298,7 @@ class _SignupState extends State<Signup> {
             timeInSecForIosWeb: 3,
             toastLength: Toast.LENGTH_LONG,
             fontSize: 16.0);
+        return;
       }
 
       // ignore: unnecessary_null_comparison

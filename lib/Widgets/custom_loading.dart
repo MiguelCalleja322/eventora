@@ -8,20 +8,19 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Column(
+    return Scaffold(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           SpinKitCircle(
-            color: Colors.white,
+            color: Colors.grey[700],
             size: 50.0,
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Text(
             'Loading...',
             style: TextStyle(
-                color: Colors.white, fontSize: 16.0, letterSpacing: 2.0),
+                color: Colors.grey[700], fontSize: 16.0, letterSpacing: 2.0),
           )
         ],
       ),

@@ -815,7 +815,7 @@ class _CreateEventsState extends State<CreateEvents> {
 
     if (test['message'] != '') {
       Fluttertoast.showToast(
-          msg: test['message'],
+          msg: test['message'] ?? 'Done',
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red[500],
           textColor: Colors.white,

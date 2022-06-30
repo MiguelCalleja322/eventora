@@ -1,8 +1,10 @@
 import 'package:eventora/controllers/feature_page_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../Widgets/custom_events_card.dart';
 import '../controllers/events_controller.dart';
+import '../utils/secure_storage.dart';
 
 class WallPage extends StatefulWidget {
   const WallPage({Key? key}) : super(key: key);
@@ -16,6 +18,14 @@ class _WallPageState extends State<WallPage> {
   late String? message = '';
   late bool? loading = false;
   late List<dynamic>? listOfFeeds = [];
+  late String role = '';
+
+  void getRole() async {
+    await dotenv.load(fileName: ".env");
+    final String? roleKey = dotenv.env['ROLE_KEY'];
+    role = await StorageSevice().read(roleKey!) ?? '';
+  }
+
   Future<void> fetchFeed() async {
     if (mounted) {
       feeds = await FeaturePageController().getFeed() ?? {};
@@ -31,6 +41,7 @@ class _WallPageState extends State<WallPage> {
   @override
   void initState() {
     if (mounted) {
+      getRole();
       fetchFeed();
     }
 
@@ -62,6 +73,8 @@ class _WallPageState extends State<WallPage> {
                   itemBuilder: (context, index) {
                     return SizedBox(
                         child: CustomEventCard(
+                      role: role,
+                      slug: listOfFeeds![index]['slug'],
                       venue:
                           '${listOfFeeds![index]['venue']['unit_no']} ${listOfFeeds![index]['venue']['street_no']} ${listOfFeeds![index]['venue']['street_name']} ${listOfFeeds![index]['venue']['country']} ${listOfFeeds![index]['venue']['state']} ${listOfFeeds![index]['venue']['city']} ${listOfFeeds![index]['venue']['zipcode']}',
                       registrationLink: listOfFeeds![index]

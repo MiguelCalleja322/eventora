@@ -6,6 +6,7 @@ import 'package:eventora/Pages/User/update_user_info.dart';
 import 'package:eventora/Pages/calendar.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
+import 'package:eventora/Pages/payment.dart';
 import 'package:eventora/Pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
@@ -52,24 +53,28 @@ class Routes {
       case '/create_events':
         return MaterialPageRoute(
             builder: (_) => const CreateEvents(), settings: routeSettings);
-      case '/statistics':
-        return MaterialPageRoute(
-            builder: (_) => const StatisticsPage(), settings: routeSettings);
-      case '/calendar':
-        return MaterialPageRoute(
-            builder: (_) => const CalendarPage(), settings: routeSettings);
-      case '/profile':
-        return MaterialPageRoute(
-            builder: (_) => const ProfilePage(), settings: routeSettings);
       case '/updateUserInfo':
         return MaterialPageRoute(
             builder: (_) => const UpdateUserInfo(), settings: routeSettings);
-
       case '/otherProfile':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
               builder: (_) => OtherProfilePage(
                     username: args['username'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+      case '/payment':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => PaymentPage(
+                    description: args['description'],
+                    title: args['title'],
+                    schedule: args['schedule'],
+                    fees: args['fees'],
+                    venue: args['venue'],
+                    slug: args['slug'],
                   ),
               settings: routeSettings);
         }

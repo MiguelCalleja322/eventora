@@ -47,10 +47,10 @@ android {
         applicationId "com.eventora.eventora"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 19
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionName 'Alpha'
     }
 
     buildTypes {
@@ -58,6 +58,8 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+            shrinkResources false
+            minifyEnabled false
         }
     }
 }
@@ -67,22 +69,5 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
-// add these lines in your app/build.gradle
-
-		minifyEnabled true  
-		useProguard true  
-		proguardFiles getDefaultProguardFile('proguard-android.txt'),  
-		        'proguard-aws-2.1.5.pro'
-
-//EXAMPLE
-		buildTypes {  
-		release {  
-		signingConfig signingConfigs.release  
-		minifyEnabled true  
-		useProguard true  
-		proguardFiles getDefaultProguardFile('proguard-android.txt'),  
-            'proguard-aws-2.1.5.pro'  
-		}  
-		}

@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:eventora/utils/s3.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,6 +16,7 @@ import '../controllers/auth_controller.dart';
 import 'package:path/path.dart' as path;
 
 import '../controllers/events_controller.dart';
+import '../utils/secure_storage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -31,10 +33,16 @@ class _ProfilePageState extends State<ProfilePage> {
   late String? cloudFrontURI = '';
   late String? model = 'save_event';
   late String? message = '';
-
+  late String? role = '';
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
     cloudFrontURI = dotenv.env['CLOUDFRONT_URI'];
+  }
+
+  void getRole() async {
+    await dotenv.load(fileName: ".env");
+    final String? roleKey = dotenv.env['ROLE_KEY'];
+    role = await StorageSevice().read(roleKey!) ?? '';
   }
 
   Future<void> fetchProfile() async {
@@ -51,6 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     if (mounted) {
+      getRole();
       fetchProfile();
       fetchCloudFrontUri();
     }
@@ -77,6 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
               onRefresh: () => fetchProfile(),
               child: SafeArea(
                 child: SingleChildScrollView(
+                  dragStartBehavior: DragStartBehavior.down,
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
@@ -258,6 +268,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 itemCount: profile!['user'][model].length,
                                 itemBuilder: (context, index) {
                                   return CustomEventCard(
+                                    role: role,
                                     venue: model == 'events'
                                         ? '${profile!['user'][model][index]['venue']['unit_no']} ${profile!['user'][model][index]['venue']['street_no']} ${profile!['user'][model][index]['venue']['street_name']} ${profile!['user'][model][index]['venue']['country']} ${profile!['user'][model][index]['venue']['state']} ${profile!['user'][model][index]['venue']['city']} ${profile!['user'][model][index]['venue']['zipcode']}'
                                         : '${profile!['user'][model][index]['event']['venue']['unit_no']} ${profile!['user'][model][index]['event']['venue']['street_no']} ${profile!['user'][model][index]['event']['venue']['street_name']} ${profile!['user'][model][index]['event']['venue']['country']} ${profile!['user'][model][index]['event']['venue']['state']} ${profile!['user'][model][index]['event']['venue']['city']} ${profile!['user'][model][index]['event']['venue']['zipcode']} ',
@@ -266,6 +277,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ['registration_link']
                                         : profile!['user'][model][index]
                                             ['event']['registration_link'],
+                                    slug: model == 'events'
+                                        ? profile!['user'][model][index]['slug']
+                                        : profile!['user'][model][index]
+                                            ['event']['slug'],
                                     eventType: model == 'events'
                                         ? profile!['user'][model][index]
                                             ['event_type']
@@ -347,18 +362,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ['event']['slug']),
                                   );
                                 })
-                            : SizedBox(
-                                width: (MediaQuery.of(context).size.width),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Text(
-                                    profile!['user'][model].length == 0
-                                        ? 'There are no saved/shared events'
-                                        : 'There are no events',
-                                    style: const TextStyle(fontSize: 20),
-                                    textAlign: TextAlign.center,
+                            : Column(
+                                children: [
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Text(
+                                        profile!['user'][model].length == 0
+                                            ? 'There are no saved/shared events'
+                                            : 'There are no events',
+                                        style: const TextStyle(fontSize: 20),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(height: 15.0),
+                                  TextButton(
+                                      onPressed: () {
+                                        fetchProfile();
+                                      },
+                                      child: const Icon(Icons.refresh))
+                                ],
                               )
                       ],
                     ),

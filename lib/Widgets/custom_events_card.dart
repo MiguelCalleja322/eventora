@@ -3,6 +3,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
+import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
 class CustomEventCard extends StatelessWidget {
@@ -24,6 +25,8 @@ class CustomEventCard extends StatelessWidget {
     required this.eventType,
     this.registrationLink,
     this.venue,
+    this.role,
+    this.slug,
   }) : super(key: key);
 
   late String? title = '';
@@ -37,6 +40,8 @@ class CustomEventCard extends StatelessWidget {
   late String? eventType = '';
   late String? registrationLink = '';
   late String? venue = '';
+  late String? role = '';
+  late String? slug = '';
   late List<dynamic>? images = [];
   final VoidCallback onPressedShare;
   final VoidCallback onPressedInterested;
@@ -66,121 +71,258 @@ class CustomEventCard extends StatelessWidget {
                 )),
           ),
           const SizedBox(height: 10.0),
-          Align(
-            alignment: Alignment.center,
-            child: Text(
-              title!,
-              style: TextStyle(
-                color: Colors.amber[800],
-                letterSpacing: 2.0,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(height: 15.0),
-          Text(
-            'Description:',
-            style: TextStyle(
-                color: Colors.grey[600], letterSpacing: 2.0, fontSize: 14.0),
-          ),
-          const SizedBox(height: 10.0),
-          Text(
-            description!,
-            style: TextStyle(
-                color: Colors.grey[700],
-                letterSpacing: 2.0,
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                overflow: TextOverflow.fade),
-          ),
-          const SizedBox(height: 15.0),
-          Text(
-            'Schedule:',
-            style: TextStyle(
-                color: Colors.grey[600], letterSpacing: 2.0, fontSize: 14.0),
-          ),
-          const SizedBox(width: 10.0),
-          Text(
-            schedule!,
-            style: TextStyle(
-              color: Colors.grey[700],
-              letterSpacing: 2.0,
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 15.0),
-          Text(
-            eventType == 'ticketed' ? 'Fees:' : 'Registration Link:',
-            style: TextStyle(
-                color: Colors.grey[600], letterSpacing: 1.0, fontSize: 14.0),
-          ),
-          const SizedBox(width: 10.0),
-          Text(
-            eventType == 'ticketed' ? fees! : registrationLink!,
-            style: TextStyle(
-                color: Colors.grey[700],
-                letterSpacing: 1.0,
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                overflow: TextOverflow.fade),
-          ),
-          const SizedBox(height: 15.0),
-          Text(
-            'Venue:',
-            style: TextStyle(
-                color: Colors.grey[600], letterSpacing: 1.0, fontSize: 14.0),
-          ),
-          const SizedBox(width: 10.0),
-          Text(
-            venue != '' ? venue! : 'To be posted',
-            style: TextStyle(
-                color: Colors.grey[700],
-                letterSpacing: 1.0,
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                overflow: TextOverflow.clip),
-          ),
-          const SizedBox(height: 15.0),
-          organizer == ''
-              ? const SizedBox()
-              : Text(
-                  'Organizer:',
-                  style: TextStyle(
-                      color: Colors.grey[600],
-                      letterSpacing: 2.0,
-                      fontSize: 14.0),
-                ),
-          organizer == ''
-              ? const SizedBox()
-              : TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/otherProfile',
-                        arguments: {
-                          'username': organizer!,
-                        });
+          OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero)),
+              onPressed: () {
+                showDialog(
+                  context: context, // <<----
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Icon(
+                                  Icons.chevron_left,
+                                  color: Colors.blue,
+                                )),
+                          ),
+                          const SizedBox(height: 15.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Description:',
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  letterSpacing: 2.0,
+                                  fontSize: 14.0),
+                            ),
+                          ),
+                          const SizedBox(height: 10.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              description!,
+                              style: TextStyle(
+                                  color: Colors.grey[700],
+                                  letterSpacing: 2.0,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.fade),
+                            ),
+                          ),
+                          const SizedBox(height: 15.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Schedule:',
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  letterSpacing: 2.0,
+                                  fontSize: 14.0),
+                            ),
+                          ),
+                          const SizedBox(width: 10.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              schedule!,
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                letterSpacing: 2.0,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 15.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              eventType == 'ticketed'
+                                  ? 'Fees:'
+                                  : 'Registration Link:',
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  letterSpacing: 1.0,
+                                  fontSize: 14.0),
+                            ),
+                          ),
+                          const SizedBox(width: 10.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  eventType == 'ticketed'
+                                      ? fees!
+                                      : registrationLink!,
+                                  style: TextStyle(
+                                      color: Colors.grey[700],
+                                      letterSpacing: 1.0,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.fade),
+                                ),
+                              ),
+                              role != 'organizer' && eventType == 'ticketed'
+                                  ? const SizedBox()
+                                  : TextButton(
+                                      onPressed: () {
+                                        Clipboard.setData(ClipboardData(
+                                            text: registrationLink!));
+                                      },
+                                      child: const Icon(Icons.copy))
+                            ],
+                          ),
+                          const SizedBox(height: 15.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Venue:',
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  letterSpacing: 1.0,
+                                  fontSize: 14.0),
+                            ),
+                          ),
+                          const SizedBox(width: 10.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              venue != '' ? venue! : 'To be posted',
+                              style: TextStyle(
+                                  color: Colors.grey[700],
+                                  letterSpacing: 1.0,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.clip),
+                            ),
+                          ),
+                          const SizedBox(height: 15.0),
+                          eventType == 'ticketed'
+                              ? Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                      onPressed: () {
+                                        Navigator.pushReplacementNamed(
+                                            context, '/payment',
+                                            arguments: {
+                                              'title': title!,
+                                              'description': description!,
+                                              'fees': fees!,
+                                              'venue': venue!,
+                                              'schedule': schedule!,
+                                              'slug': slug!,
+                                            });
+                                      },
+                                      child: const Icon(
+                                        Icons.playlist_add_sharp,
+                                        color: Colors.blue,
+                                      )),
+                                )
+                              : const SizedBox(),
+                        ],
+                      ),
+                    );
                   },
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all(
-                      EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                );
+              },
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      title!,
+                      style: TextStyle(
+                        color: Colors.amber[800],
+                        letterSpacing: 2.0,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    organizer!,
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                      letterSpacing: 2.0,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(height: 15.0),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Description:',
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          letterSpacing: 2.0,
+                          fontSize: 14.0),
                     ),
                   ),
-                ),
-          const SizedBox(height: 15.0),
+                  const SizedBox(height: 10.0),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      description!.length > 50
+                          ? '${description!.substring(0, 50)}...'
+                          : description!,
+                      style: TextStyle(
+                          color: Colors.grey[700],
+                          letterSpacing: 2.0,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.fade),
+                    ),
+                  ),
+                  const SizedBox(height: 15.0),
+                  organizer == ''
+                      ? const SizedBox()
+                      : Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Organizer:',
+                            style: TextStyle(
+                                color: Colors.grey[600],
+                                letterSpacing: 2.0,
+                                fontSize: 14.0),
+                          ),
+                        ),
+                  organizer == ''
+                      ? const SizedBox()
+                      : Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, '/otherProfile',
+                                  arguments: {
+                                    'username': organizer!,
+                                  });
+                            },
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                const EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 0),
+                              ),
+                            ),
+                            child: Text(
+                              organizer!,
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                letterSpacing: 2.0,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                  const SizedBox(height: 15.0),
+                ],
+              )),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              const SizedBox(width: 30.0),
               interested == ''
                   ? const SizedBox()
                   : Column(
@@ -228,7 +370,7 @@ class CustomEventCard extends StatelessWidget {
                     )
             ],
           ),
-          const SizedBox(height: 15.0),
+          const SizedBox(height: 30.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -240,8 +382,11 @@ class CustomEventCard extends StatelessWidget {
                     child: Column(
                       children: [
                         Badge(
-                          position: BadgePosition.topEnd(top: -16, end: -16),
-                          badgeContent: Text(likes!),
+                          position: BadgePosition.topEnd(top: -17, end: -17),
+                          badgeContent: Text(
+                            likes!,
+                            style: const TextStyle(color: Colors.white),
+                          ),
                           child: Icon(Icons.thumb_up_sharp,
                               color: Colors.grey[700]),
                         ),
@@ -278,28 +423,31 @@ class CustomEventCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: MaterialButton(
-                  onPressed: onPressedInterested,
-                  textColor: Colors.white,
-                  elevation: 0,
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.interests,
-                        color: Colors.grey[700],
+              role != 'organizer' && eventType == 'ticketed'
+                  ? Expanded(
+                      child: MaterialButton(
+                        onPressed: onPressedInterested,
+                        textColor: Colors.white,
+                        elevation: 0,
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.interests,
+                              color: Colors.grey[700],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Attend',
+                              style: TextStyle(
+                                  color: Colors.grey[700], fontSize: 12),
+                            )
+                          ],
+                        ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Attend',
-                        style: TextStyle(color: Colors.grey[700], fontSize: 12),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                    )
+                  : const SizedBox(),
               Expanded(
                 child: MaterialButton(
                   onPressed: onPressedSave,
@@ -318,7 +466,13 @@ class CustomEventCard extends StatelessWidget {
                 ),
               )
             ],
-          )
+          ),
+          SizedBox(
+            height: 40,
+            child: Divider(
+              color: Colors.grey[600],
+            ),
+          ),
         ],
       ),
     );

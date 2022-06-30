@@ -2,8 +2,11 @@ import 'package:eventora/controllers/statistics_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:eventora/Widgets/custom_events_card.dart';
 import 'package:eventora/controllers/user_controller.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../../utils/secure_storage.dart';
 
 class StatisticsPage extends StatefulWidget {
   const StatisticsPage({Key? key}) : super(key: key);
@@ -19,6 +22,13 @@ class _StatisticsPageState extends State<StatisticsPage> {
   late Map<String, dynamic>? mostAttendees = {};
   late Map<String, dynamic>? mostInteresting = {};
   late Map<String, dynamic>? isFollowed = {};
+  late String? role = '';
+
+  void getRole() async {
+    await dotenv.load(fileName: ".env");
+    final String? roleKey = dotenv.env['ROLE_KEY'];
+    role = await StorageSevice().read(roleKey!) ?? '';
+  }
 
   Future<void> fetchStatistics() async {
     statistics = await StatisticsController().getStatistics();
@@ -37,6 +47,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
   @override
   void initState() {
     if (mounted) {
+      getRole();
       fetchStatistics();
     }
     super.initState();
@@ -59,7 +70,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
         child: RefreshIndicator(
           onRefresh: () => fetchStatistics(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.all(15.0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -94,6 +105,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                               maxHeight: double.infinity,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CustomEventCard(
+                              role: role,
+                              slug: mostLiked!['slug'],
                               venue: mostLiked!['venue'].isEmpty
                                   ? 'To be posted'
                                   : '${mostLiked!['venue']['unit_no']} ${mostLiked!['venue']['street_no']} ${mostLiked!['venue']['street_name']} ${mostLiked!['venue']['street_name']} ${mostLiked!['venue']['country']} ${mostLiked!['venue']['state']} ${mostLiked!['venue']['city']} ${mostLiked!['venue']['zipcode']}',
@@ -137,6 +150,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                               maxHeight: double.infinity,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CustomEventCard(
+                              role: role,
+                              slug: mostInteresting!['slug'],
                               venue: mostInteresting!['venue'].isEmpty
                                   ? 'To be posted'
                                   : '${mostInteresting!['venue']['unit_no']} ${mostInteresting!['venue']['street_no']} ${mostInteresting!['venue']['street_name']} ${mostInteresting!['venue']['street_name']} ${mostInteresting!['venue']['country']} ${mostInteresting!['venue']['state']} ${mostInteresting!['venue']['city']} ${mostInteresting!['venue']['zipcode']}',
@@ -183,6 +198,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                               maxHeight: double.infinity,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CustomEventCard(
+                              role: role,
+                              slug: mostAttendees!['slug'],
                               venue: mostAttendees!['venue'].isEmpty
                                   ? 'To be posted'
                                   : '${mostAttendees!['venue']['unit_no']} ${mostAttendees!['venue']['street_no']} ${mostAttendees!['venue']['street_name']} ${mostAttendees!['venue']['street_name']} ${mostAttendees!['venue']['country']} ${mostAttendees!['venue']['state']} ${mostAttendees!['venue']['city']} ${mostAttendees!['venue']['zipcode']}',

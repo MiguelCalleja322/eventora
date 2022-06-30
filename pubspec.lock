@@ -29,13 +29,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
-  calendar_view:
-    dependency: "direct main"
-    description:
-      name: calendar_view
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.5"
   carousel_slider:
     dependency: "direct main"
     description:

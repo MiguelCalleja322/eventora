@@ -33,32 +33,34 @@ class _CalendarPageState extends State<CalendarPage> {
   late Map<String, dynamic>? calendarData = {};
   late List<dynamic>? listOfAppointments = [];
   late List<dynamic>? listOfTasks = [];
+  late List<dynamic>? listOfNotes = [];
   late DateTime _selectedDay = DateTime.now();
   late DateTime _focusedDay = DateTime.now();
   late String? model = '';
   late bool loading = false;
   late bool saving = false;
+  late CalendarFormat _calendarFormat = CalendarFormat.month;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
   void generateCalendarData() async {
-    if (mounted) {
-      setState(() {
-        loading = true;
-      });
+    setState(() {
+      loading = true;
+    });
 
-      Future.delayed(const Duration(milliseconds: 3000), () {
-        getCalendarData();
-      });
+    Future.delayed(const Duration(milliseconds: 3000), () {
+      getCalendarData();
+    });
 
-      _selectedDay = _focusedDay;
-    }
+    _selectedDay = _focusedDay;
   }
 
   @override
   void initState() {
-    generateCalendarData();
+    if (mounted) {
+      generateCalendarData();
+    }
     super.initState();
   }
 
@@ -100,6 +102,12 @@ class _CalendarPageState extends State<CalendarPage> {
                                 color: Colors.grey[800], fontSize: 40.0)),
                         const SizedBox(height: 15.0),
                         TableCalendar(
+                          calendarFormat: _calendarFormat,
+                          onFormatChanged: (format) {
+                            setState(() {
+                              _calendarFormat = format;
+                            });
+                          },
                           firstDay: DateTime.utc(2010, 10, 16),
                           lastDay: DateTime.utc(2030, 3, 14),
                           focusedDay: _focusedDay,
@@ -564,6 +572,7 @@ class _CalendarPageState extends State<CalendarPage> {
     calendarData = await CalendarController().index() ?? {};
     listOfAppointments = calendarData!['appointments'] ?? [];
     listOfTasks = calendarData!['tasks'] ?? [];
+    listOfNotes = calendarData!['notes'] ?? [];
     DateFormat actualDateAndTimeOfATFormat = DateFormat('yyyy-MM-dd HH:mm');
     DateFormat actualDateFormat = DateFormat('yyyy-MM-dd');
     String? actualDateString = '';
@@ -574,6 +583,26 @@ class _CalendarPageState extends State<CalendarPage> {
     }
 
     setState(() {
+      listOfNotes!.map((notes) {
+        DateTime date = DateTime.parse(notes['created_at']);
+        actualDateString = actualDateFormat.format(date);
+        actualDate = DateTime.parse(actualDateString!);
+
+        if (selectedEvents[actualDate] != null) {
+          selectedEvents[actualDate]?.add(Calendar(
+              notes['id'],
+              'Note',
+              notes['title'],
+              notes['description'],
+              actualDateAndTimeOfATFormat.format(date).toString()));
+        } else {
+          selectedEvents[actualDate] = [
+            Calendar(notes['id'], 'Note', notes['title'], notes['description'],
+                actualDateAndTimeOfATFormat.format(date).toString()),
+          ];
+        }
+      }).toList();
+
       listOfAppointments!.map((appointments) {
         DateTime date = DateTime.parse(appointments['date_time']);
         actualDateString = actualDateFormat.format(date);

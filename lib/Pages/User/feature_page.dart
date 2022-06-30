@@ -5,6 +5,7 @@ import 'package:eventora/Widgets/custom_profile.dart';
 import 'package:eventora/controllers/events_controller.dart';
 import 'package:eventora/controllers/feature_page_controller.dart';
 import 'package:eventora/controllers/user_controller.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -78,8 +79,9 @@ class _FeaturePageState extends State<FeaturePage> {
             return fetchFeatures();
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.all(15.0),
             child: SingleChildScrollView(
+              dragStartBehavior: DragStartBehavior.down,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -116,6 +118,7 @@ class _FeaturePageState extends State<FeaturePage> {
                               itemCount: featuredOrganizers!.length,
                               itemBuilder: (context, index, realIndex) {
                                 return CustomProfile(
+                                    userId: featuredOrganizers![index]['id'],
                                     page: 'features',
                                     isFollowed: featuredOrganizers![index]
                                                 ['followers']
@@ -147,6 +150,12 @@ class _FeaturePageState extends State<FeaturePage> {
                                 pauseAutoPlayOnTouch: true,
                               )),
                         ),
+                  SizedBox(
+                    height: 40,
+                    child: Divider(
+                      color: Colors.grey[600],
+                    ),
+                  ),
                   const Text(
                     'Most Followed Users',
                     style: TextStyle(
@@ -168,6 +177,7 @@ class _FeaturePageState extends State<FeaturePage> {
                               itemCount: featuredUsers!.length,
                               itemBuilder: (context, index, realIndex) {
                                 return CustomProfile(
+                                  userId: featuredUsers![index]['id'],
                                   page: 'features',
                                   isFollowed:
                                       featuredUsers![index]['followers'].isEmpty
@@ -197,6 +207,12 @@ class _FeaturePageState extends State<FeaturePage> {
                                 pauseAutoPlayOnTouch: true,
                               )),
                         ),
+                  SizedBox(
+                    height: 40,
+                    child: Divider(
+                      color: Colors.grey[600],
+                    ),
+                  ),
                   const Text(
                     'Most Liked Events',
                     style: TextStyle(
@@ -211,12 +227,13 @@ class _FeaturePageState extends State<FeaturePage> {
                         )
                       : ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxHeight: (MediaQuery.of(context).size.height),
+                              maxHeight: double.infinity,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CarouselSlider.builder(
-                              itemCount: featuredUsers!.length,
+                              itemCount: featuredEvents!.length,
                               itemBuilder: (context, index, realIndex) {
                                 return CustomEventCard(
+                                    slug: featuredEvents![index]['slug'],
                                     venue:
                                         '${featuredEvents![index]['venue']['unit_no']} ${featuredEvents![index]['venue']['street_no']} ${featuredEvents![index]['venue']['street_name']} ${featuredEvents![index]['venue']['country']} ${featuredEvents![index]['venue']['state']} ${featuredEvents![index]['venue']['city']} ${featuredEvents![index]['venue']['zipcode']} ',
                                     eventType: featuredEvents![index]
@@ -252,7 +269,7 @@ class _FeaturePageState extends State<FeaturePage> {
                                     onPressedSave: () => onPressedSave(featuredEvents![index]['slug'].toString()));
                               },
                               options: CarouselOptions(
-                                height: double.infinity,
+                                height: 650,
                                 autoPlay: false,
                                 viewportFraction: 1,
                               )),
