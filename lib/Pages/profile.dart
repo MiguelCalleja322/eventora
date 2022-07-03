@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:eventora/Widgets/custom_featured_events.dart';
 import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:eventora/utils/s3.dart';
 import 'package:flutter/gestures.dart';
@@ -88,6 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
                       children: <Widget>[
+                        CustomFeaturedEvents(),
                         Align(
                           alignment: Alignment.center,
                           child: Stack(children: [

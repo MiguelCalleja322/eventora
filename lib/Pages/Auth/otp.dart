@@ -93,7 +93,7 @@ class _OTPPageState extends State<OTPPage> {
                         width: double.infinity,
                         child: OutlinedButton(
                           onPressed: () {
-                            verify();
+                            verify(context);
                           },
                           style: OutlinedButton.styleFrom(
                               primary: const Color(0xFFF7F8FB),
@@ -140,7 +140,7 @@ class _OTPPageState extends State<OTPPage> {
     toast('New OTP was sent to your email.', Colors.grey[700]);
   }
 
-  void verify() async {
+  void verify(context) async {
     setState(() {
       screenLoading = true;
     });
@@ -157,9 +157,7 @@ class _OTPPageState extends State<OTPPage> {
 
     if (isVerified['is_verified'] == true) {
       toast(isVerified['message'], Colors.grey[700]);
-      Future.delayed(const Duration(seconds: 3), () {
-        Navigator.pushReplacementNamed(context, '/home');
-      });
+      Navigator.pushReplacementNamed(context, '/home');
     }
 
     setState(() {

@@ -8,6 +8,8 @@ import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
 import 'package:eventora/Pages/profile.dart';
+import 'package:eventora/Widgets/custom_event_fullpage.dart';
+import 'package:eventora/Widgets/custom_featured_events.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
@@ -23,6 +25,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
+      initialRoute: '/customevent',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -56,6 +59,9 @@ class Routes {
       case '/updateUserInfo':
         return MaterialPageRoute(
             builder: (_) => const UpdateUserInfo(), settings: routeSettings);
+      case '/customevent':
+        return MaterialPageRoute(
+            builder: (_) => CustomEventFullPage(), settings: routeSettings);
       case '/otherProfile':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
