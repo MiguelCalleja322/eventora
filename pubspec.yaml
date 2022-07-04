@@ -58,6 +58,10 @@ dependencies:
     settings_ui: ^2.0.2
     modal_bottom_sheet: ^2.0.1
     badges: ^2.0.3
+    flutter_feather_icons: ^2.0.0+1
+    google_maps_flutter: ^2.1.8
+    flutter_polyline_points: ^1.0.0
+    location: ^4.4.0
 
 dev_dependencies:
     flutter_test:

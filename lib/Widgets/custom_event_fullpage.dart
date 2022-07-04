@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
-class CustomEventFullPage extends StatelessWidget {
+class CustomEventFullPage extends StatefulWidget {
   const CustomEventFullPage({Key? key}) : super(key: key);
+  // late List<dynamic>? images = [];
+  // late String? title = '';
+  // late String? eventType = '';
+  // late String? likes = '';
+  // late String? interested = '';
+  // late String? attendees = '';
+  // late String? description = '';
+  // late String? scheduleStart = '';
+  // late String? scheduleEnd = '';
+  // late String? fees = '';
+  // late String? registrationLink = '';
+  // late List<dynamic>? features = [];
+  // late String? username = '';
+  // late String? name = '';
+  // late String? avatar = '';
+  // late String? email = '';
+  // late String? website = '';
+  // late String? venue = '';
 
+  @override
+  State<CustomEventFullPage> createState() => _CustomEventFullPageState();
+}
+
+class _CustomEventFullPageState extends State<CustomEventFullPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,7 +34,7 @@ class CustomEventFullPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Stack(alignment: Alignment.bottomCenter, children: [
+              Stack(children: [
                 SizedBox(
                     width: (MediaQuery.of(context).size.width),
                     child: Image.network(
@@ -18,43 +42,214 @@ class CustomEventFullPage extends StatelessWidget {
                         height: 400,
                         fit: BoxFit.cover) // event image,
                     ),
-                SizedBox(
-                  height: 100,
-                  width: (MediaQuery.of(context).size.width),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 0, 101, 203)
-                            .withOpacity(0.7)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        children: [
-                          const Expanded(
-                            child: Text(
-                              'Qatar Travel Mart - QTM2020', // event Title
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontStyle: FontStyle.normal,
-                                  color: Colors.white),
+                Positioned(
+                  top: 0,
+                  child: SizedBox(
+                    width: (MediaQuery.of(context).size.width),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: SizedBox(
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(
+                                        width: 0, color: Colors.transparent),
+                                    primary: Colors.white,
+                                    backgroundColor: Colors.transparent,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)))),
+                                onPressed: () {},
+                                child: const Icon(
+                                  Icons.chevron_left,
+                                  size: 30,
+                                ),
+                              ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: Chip(
-                              padding: const EdgeInsets.all(5),
-                              backgroundColor: Colors.white,
-                              label: Text('TIcketed', // eventType
-                                  style: TextStyle(color: Colors.grey[700])),
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: SizedBox(
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(
+                                        width: 0, color: Colors.transparent),
+                                    primary: Colors.white,
+                                    backgroundColor: Colors.transparent,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)))),
+                                onPressed: () {},
+                                child: const Icon(
+                                  Icons.share,
+                                  size: 30,
+                                ),
+                              ),
                             ),
-                          )
-                        ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: SizedBox(
+                    height: 100,
+                    width: (MediaQuery.of(context).size.width),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 0, 101, 203)
+                              .withOpacity(0.7)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              child: Text(
+                                'Qatar Travel Mart - QTM2020', // event Title
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontStyle: FontStyle.normal,
+                                    color: Colors.white),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            Expanded(
+                              child: Chip(
+                                padding: const EdgeInsets.all(5),
+                                backgroundColor: Colors.white,
+                                label: Text('Ticketed', // eventType
+                                    style: TextStyle(color: Colors.grey[700])),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 )
               ]),
+
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: SizedBox(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 0, color: Colors.transparent),
+                              primary: Colors.grey[700],
+                              backgroundColor: Colors.transparent,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5.0)))),
+                          onPressed: () {},
+                          child: const Icon(
+                            FeatherIcons.heart,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                            side: const BorderSide(
+                                width: 0, color: Colors.transparent),
+                            primary: Colors.grey[700],
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)))),
+                        onPressed: () {},
+                        child: const Icon(
+                          FeatherIcons.messageCircle,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: SizedBox(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 0, color: Colors.transparent),
+                              primary: Colors.grey[700],
+                              backgroundColor: Colors.transparent,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5.0)))),
+                          onPressed: () {},
+                          child: const Icon(
+                            Icons.bookmark_border_outlined,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: const <Widget>[
+                        Text(
+                          '2900 ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'likes',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: const <Widget>[
+                        Text(
+                          '2900 ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'interested',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: const <Widget>[
+                        Text(
+                          '2900 ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'attendees',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
@@ -73,6 +268,7 @@ class CustomEventFullPage extends StatelessWidget {
                   ],
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
@@ -200,7 +396,7 @@ class CustomEventFullPage extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     'Organizer:',
-                                    style: TextStyle(fontSize: 16.0),
+                                    style: TextStyle(fontSize: 12.0),
                                   )),
                               SizedBox(
                                 height: 5,

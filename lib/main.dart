@@ -1,15 +1,12 @@
 import 'dart:io';
 import 'package:eventora/Pages/Auth/otp.dart';
 import 'package:eventora/Pages/Organizer/create_events.dart';
-import 'package:eventora/Pages/Organizer/statistics.dart';
 import 'package:eventora/Pages/User/update_user_info.dart';
-import 'package:eventora/Pages/calendar.dart';
 import 'package:eventora/Pages/home.dart';
+import 'package:eventora/Pages/map.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
-import 'package:eventora/Pages/profile.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
-import 'package:eventora/Widgets/custom_featured_events.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
@@ -25,7 +22,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/customevent',
+      initialRoute: '/map',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -59,9 +56,12 @@ class Routes {
       case '/updateUserInfo':
         return MaterialPageRoute(
             builder: (_) => const UpdateUserInfo(), settings: routeSettings);
-      case '/customevent':
+      case '/custom_event_full':
         return MaterialPageRoute(
             builder: (_) => CustomEventFullPage(), settings: routeSettings);
+      case '/map':
+        return MaterialPageRoute(
+            builder: (_) => MapPage(), settings: routeSettings);
       case '/otherProfile':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(

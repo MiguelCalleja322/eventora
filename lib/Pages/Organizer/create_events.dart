@@ -2,7 +2,6 @@
 
 import 'dart:io';
 import 'dart:math';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:eventora/Widgets/custom_dashboard_button.dart';
