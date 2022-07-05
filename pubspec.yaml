@@ -61,7 +61,8 @@ dependencies:
     flutter_feather_icons: ^2.0.0+1
     google_maps_flutter: ^2.1.8
     flutter_polyline_points: ^1.0.0
-    location: ^4.4.0
+    google_place: ^0.4.7
+    flutter_colorpicker: ^1.0.3
 
 dev_dependencies:
     flutter_test:

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:eventora/controllers/location_controller.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:google_place/google_place.dart';
 
 class MapPage extends StatefulWidget {
   MapPage({Key? key}) : super(key: key);
@@ -20,25 +20,41 @@ class _MapPageState extends State<MapPage> {
   late double? longitude = 0.0;
   late Map<String, dynamic>? locationDetails = {};
   late Set<Marker> _markers = <Marker>{};
-  late Location location = Location();
-  // late bool _serviceEnabled = false;
-  // late PermissionStatus _permissionGranted = PermissionStatus.denied;
-  // late LocationData _locationData = Locat;
-  static const Marker _kGooglePlexMarker = Marker(
-      markerId: MarkerId('_kGoogleMarker'),
-      infoWindow: InfoWindow(title: 'Google Plex'),
-      icon: BitmapDescriptor.defaultMarker,
-      // ignore: unnecessary_const
-      position: const LatLng(37.43296265331129, -122.08832357078792));
+  late GooglePlace googlePlace;
+  late List<AutocompletePrediction> predictions = [];
+  late Timer? _debounce = Timer(const Duration(milliseconds: 1000), () {});
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.43296265331129, -122.08832357078792),
     zoom: 14.4746,
   );
 
+  void googlePlaceInit() async {
+    await dotenv.load(fileName: ".env");
+    final String? key = dotenv.env['GOOGLE_API'];
+    googlePlace = GooglePlace(key!);
+  }
+
+  void autoCompleteSearch(String value) async {
+    var results = await googlePlace.autocomplete.get(value);
+    if (results != null && results.predictions != null && mounted) {
+      setState(() {
+        predictions = results.predictions!;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _debounce!.cancel();
+    super.dispose();
+  }
+
   @override
   void initState() {
     setMarker(const LatLng(37.43296265331129, -122.08832357078792));
+    googlePlaceInit();
     super.initState();
   }
 
@@ -50,21 +66,58 @@ class _MapPageState extends State<MapPage> {
           children: [
             Row(children: <Widget>[
               Expanded(
-                  child: TextField(
-                controller: _searchController,
-                textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(hintText: 'Search'),
+                  child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+                      _debounce = Timer(const Duration(milliseconds: 2000), () {
+                        autoCompleteSearch(value);
+                      });
+                    } else {
+                      setState(() {
+                        _searchController.text = '';
+                        predictions.clear();
+                      });
+                    }
+                  },
+                  controller: _searchController,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: const InputDecoration(hintText: 'Search'),
+                ),
               )),
               IconButton(
-                onPressed: () {
-                  fetchLocationAndGo();
-                },
-                icon: const Icon(FeatherIcons.search),
-              )
+                  onPressed: () {
+                    _searchController.text = '';
+                    predictions.clear();
+                  },
+                  icon: const Icon(FeatherIcons.x))
             ]),
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: predictions.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                        leading: const Icon(FeatherIcons.mapPin),
+                        onTap: () {
+                          fetchLocationAndGo(predictions[index].placeId!);
+                          setState(() {
+                            _searchController.text =
+                                predictions[index].description!.toString();
+                            predictions.clear();
+                          });
+                        },
+                        title: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(predictions[index].description!))),
+                  );
+                }),
             Expanded(
               child: GoogleMap(
-                // polylines: {_kPolyLine},
                 mapType: MapType.normal,
                 markers: _markers,
                 initialCameraPosition: _kGooglePlex,
@@ -79,20 +132,19 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  void setMarker(LatLng point) {
+  void setMarker(LatLng point) async {
     setState(() {
       _markers = {};
       _markers.add(Marker(markerId: MarkerId('marker$point'), position: point));
     });
   }
 
-  void fetchLocationAndGo() async {
+  void fetchLocationAndGo(String placeId) async {
     if (_searchController.text.isEmpty) {
       return;
     }
 
-    locationDetails =
-        await LocationController().getPlace(_searchController.text);
+    locationDetails = await LocationController().getPlace(placeId);
 
     if (locationDetails!.isNotEmpty) {
       setState(() {
@@ -108,24 +160,4 @@ class _MapPageState extends State<MapPage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(latitude!, longitude!), zoom: 12)));
   }
-
-  // static const CameraPosition _kLake = CameraPosition(
-  //   bearing: 192.8334901395799,
-  //   target: LatLng(37.43296265331129, -122.08832357078792),
-  //   tilt: 59.440717697143555,
-  // );
-
-  // static final Marker _kGoogleLakeMarker = Marker(
-  //     markerId: const MarkerId('_kLakeMarker'),
-  //     infoWindow: const InfoWindow(title: 'Lake'),
-  //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-  //     position: const LatLng(37.43296265331129, -122.08832357078792));
-
-  // static const Polyline _kPolyLine = Polyline(
-  //     polylineId: PolylineId('_kPolyLine'),
-  //     points: [
-  //       LatLng(37.43296265331129, -122.08832357078792),
-  //       LatLng(37.42796133580664, -122.085749655962)
-  //     ],
-  //     width: 5);
 }
