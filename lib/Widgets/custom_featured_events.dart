@@ -5,9 +5,32 @@ class CustomFeaturedEvents extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  late String imageUrl = '';
-  late String title = '';
-  late String schedule = '';
+  late String? imageUrl = '';
+  late int? bgColor = 0;
+  late String? title = '';
+  late String? likes = '';
+  late String? interested = '';
+  late String? attendees = '';
+  late String? eventType = '';
+  late String? description = '';
+  late String? scheduleStart = '';
+  late String? scheduleEnd = '';
+  late String? fees = '';
+  late String? registrationLink = '';
+  late List<String>? eventFeatures = [];
+  late String? organizersName = '';
+  late String? organizersEmail = '';
+  late String? organizersWebsite = '';
+  late String? venueAddress = '';
+  late String? venueLocation = '';
+  late List<dynamic>? images = [];
+
+  // final VoidCallback onPressedShare;
+  // final VoidCallback onPressedInterested;
+  // final VoidCallback onPressedBookmark;
+  // final VoidCallback onPressedLike;
+  // final VoidCallback onPressedAttend;
+  // final VoidCallback onPressedDecline;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +52,9 @@ class CustomFeaturedEvents extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                   border: Border.all(
-                      color: Colors.cyan, width: 1.5, style: BorderStyle.solid),
+                      color: Color(bgColor!),
+                      width: 1.5,
+                      style: BorderStyle.solid),
                   borderRadius: BorderRadius.circular(10)),
               child: Padding(
                 padding: const EdgeInsets.all(10.0),

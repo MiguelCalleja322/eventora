@@ -22,7 +22,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/create_events',
+      initialRoute: '/custom_event_full',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
