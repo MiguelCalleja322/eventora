@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventora/Widgets/custom_events_card.dart';
+import 'package:eventora/Widgets/custom_featured_events.dart';
 import 'package:eventora/Widgets/custom_profile.dart';
 import 'package:eventora/controllers/events_controller.dart';
 import 'package:eventora/controllers/feature_page_controller.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 class FeaturePage extends StatefulWidget {
   const FeaturePage({Key? key}) : super(key: key);
@@ -37,6 +39,7 @@ class _FeaturePageState extends State<FeaturePage> {
 
   Future<void> fetchFeatures() async {
     features = await FeaturePageController().getFeatures();
+
     if (features!.isNotEmpty) {
       setState(() {
         featuredOrganizers = features!['organizer'] ?? [];
@@ -87,7 +90,7 @@ class _FeaturePageState extends State<FeaturePage> {
                 children: <Widget>[
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Features',
+                    child: Text('Home',
                         style:
                             TextStyle(color: Colors.grey[800], fontSize: 40.0)),
                   ),
@@ -97,49 +100,70 @@ class _FeaturePageState extends State<FeaturePage> {
                       color: Colors.grey[600],
                     ),
                   ),
-                  const Text(
-                    'Most Followed Organizers',
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        letterSpacing: 2.0,
-                        fontWeight: FontWeight.bold),
+                  Row(
+                    children: <Widget>[
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Featured Events',
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              letterSpacing: 2.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      Expanded(
+                        child: SizedBox(
+                          width: 40,
+                          child: Divider(
+                            color: Colors.grey[600],
+                            thickness: 2,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 15),
-                  featuredOrganizers!.isEmpty
-                      ? SpinKitCircle(
-                          size: 50.0,
-                          color: Colors.grey[700],
+                  featuredEvents!.isEmpty
+                      ? DecoratedBox(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 132, 132, 132),
+                                  width: 2.0,
+                                  style: BorderStyle.solid)),
+                          child: SizedBox(
+                            height: 150,
+                            width: (MediaQuery.of(context).size.width),
+                            child: const Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'No Featured Events',
+                                  style: TextStyle(fontSize: 20),
+                                )),
+                          ),
                         )
                       : ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxHeight: 400,
+                              maxHeight: 85,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CarouselSlider.builder(
-                              itemCount: featuredOrganizers!.length,
+                              itemCount: featuredEvents!.length,
                               itemBuilder: (context, index, realIndex) {
-                                return CustomProfile(
-                                    userId: featuredOrganizers![index]['id'],
-                                    page: 'features',
-                                    isFollowed: featuredOrganizers![index]
-                                                ['followers']
-                                            .isEmpty
-                                        ? 0
-                                        : featuredOrganizers![index]
-                                            ['followers'][0]['is_followed'],
-                                    follow: () => follow(
-                                        featuredOrganizers![index]['username']),
-                                    // image: featuredUsers![index],
-                                    name: featuredOrganizers![index]['name'],
-                                    followers: featuredOrganizers![index]
-                                            ['followers_count']
-                                        .toString(),
-                                    followings: featuredOrganizers![index]
-                                            ['following_count']
-                                        .toString(),
-                                    events: featuredOrganizers![index]
-                                            ['events_count']
-                                        .toString(),
-                                    role: 'organizer');
+                                return CustomFeaturedEvents(
+                                  imageUrl: cloudFrontUri! +
+                                      featuredEvents![index]['images'][0],
+                                  slug: featuredEvents![index]['slug'],
+                                  bgColor: int.parse(
+                                      featuredEvents![index]['bgcolor']),
+                                  title: featuredEvents![index]['title'],
+                                  scheduleStart:
+                                      DateFormat('E, d MMM yyyy HH:mm').format(
+                                          DateTime.parse(featuredEvents![index]
+                                              ['schedule_start'])),
+                                );
                               },
                               options: CarouselOptions(
                                 height: double.infinity,
@@ -220,60 +244,6 @@ class _FeaturePageState extends State<FeaturePage> {
                         letterSpacing: 2.0,
                         fontWeight: FontWeight.bold),
                   ),
-                  featuredEvents!.isEmpty
-                      ? SpinKitCircle(
-                          size: 50.0,
-                          color: Colors.grey[700],
-                        )
-                      : ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxHeight: double.infinity,
-                              maxWidth: (MediaQuery.of(context).size.width)),
-                          child: CarouselSlider.builder(
-                              itemCount: featuredEvents!.length,
-                              itemBuilder: (context, index, realIndex) {
-                                return CustomEventCard(
-                                    slug: featuredEvents![index]['slug'],
-                                    venue:
-                                        '${featuredEvents![index]['venue']['unit_no']} ${featuredEvents![index]['venue']['street_no']} ${featuredEvents![index]['venue']['street_name']} ${featuredEvents![index]['venue']['country']} ${featuredEvents![index]['venue']['state']} ${featuredEvents![index]['venue']['city']} ${featuredEvents![index]['venue']['zipcode']} ',
-                                    eventType: featuredEvents![index]
-                                        ['event_type'],
-                                    registrationLink: featuredEvents![index]
-                                        ['registration_link'],
-                                    images: featuredEvents![index]['images'],
-                                    title: featuredEvents![index]['title']
-                                        .toString(),
-                                    description: featuredEvents![index]['description']
-                                        .toString(),
-                                    schedule: featuredEvents![index]['schedule']
-                                        .toString(),
-                                    fees: featuredEvents![index]['fees']
-                                        .toString(),
-                                    likes: featuredEvents![index]['event_likes_count']
-                                        .toString(),
-                                    interested: featuredEvents![index]
-                                            ['interests_count']
-                                        .toString(),
-                                    attendees: featuredEvents![index]
-                                            ['attendees_count']
-                                        .toString(),
-                                    organizer: featuredEvents![index]['user']
-                                            ['username']
-                                        .toString(),
-                                    onPressedLike: () => onPressedLike(
-                                        featuredEvents![index]['slug']
-                                            .toString()),
-                                    onPressedShare: () =>
-                                        onPressedShareEvent(featuredEvents![index]['slug'].toString()),
-                                    onPressedInterested: () => onPressedInterested(featuredEvents![index]['slug'].toString()),
-                                    onPressedSave: () => onPressedSave(featuredEvents![index]['slug'].toString()));
-                              },
-                              options: CarouselOptions(
-                                height: 650,
-                                autoPlay: false,
-                                viewportFraction: 1,
-                              )),
-                        ),
                 ],
               ),
             ),

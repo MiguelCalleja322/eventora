@@ -49,9 +49,7 @@ class _CalendarPageState extends State<CalendarPage> {
       loading = true;
     });
 
-    Future.delayed(const Duration(milliseconds: 3000), () {
-      getCalendarData();
-    });
+    getCalendarData();
 
     _selectedDay = _focusedDay;
   }
@@ -66,8 +64,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   void dispose() {
-    loading = false;
-    _selectedDay = DateTime.now();
+    selectedEvents.clear();
     _titleController.dispose();
     _descriptionController.dispose();
     _dateController.dispose();

@@ -371,7 +371,7 @@ class _CreateEventsState extends State<CreateEvents> {
                             showTitleActions: true,
                             minTime: DateTime(2022, 3, 5),
                             maxTime: DateTime(2030, 6, 7), onConfirm: (date) {
-                          var inputFormat = DateFormat('yyyy/MM/dd HH:mm');
+                          var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
                           setState(() {
                             scheduleStart = inputFormat.format(date);
                           });
@@ -398,7 +398,7 @@ class _CreateEventsState extends State<CreateEvents> {
                             showTitleActions: true,
                             minTime: DateTime(2022, 3, 5),
                             maxTime: DateTime(2030, 6, 7), onConfirm: (date) {
-                          var inputFormat = DateFormat('yyyy/MM/dd HH:mm');
+                          var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
                           setState(() {
                             scheduleEnd = inputFormat.format(date);
                           });

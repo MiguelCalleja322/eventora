@@ -89,7 +89,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
                       children: <Widget>[
-                        CustomFeaturedEvents(),
                         Align(
                           alignment: Alignment.center,
                           child: Stack(children: [

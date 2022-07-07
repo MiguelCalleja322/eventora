@@ -22,7 +22,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/custom_event_full',
+      initialRoute: '/home',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -57,8 +57,14 @@ class Routes {
         return MaterialPageRoute(
             builder: (_) => const UpdateUserInfo(), settings: routeSettings);
       case '/custom_event_full':
-        return MaterialPageRoute(
-            builder: (_) => CustomEventFullPage(), settings: routeSettings);
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => CustomEventFullPage(
+                    slug: args['slug'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
       case '/map':
         return MaterialPageRoute(
             builder: (_) => MapPage(), settings: routeSettings);
