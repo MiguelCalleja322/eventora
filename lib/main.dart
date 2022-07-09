@@ -6,7 +6,9 @@ import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/map.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
+import 'package:eventora/Widgets/custom_event_category.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
+import 'package:eventora/Widgets/custom_show_map.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
@@ -47,6 +49,7 @@ class Routes {
       case '/feature_page':
         return MaterialPageRoute(
             builder: (_) => const FeaturePage(), settings: routeSettings);
+
       case '/otp_page':
         return MaterialPageRoute(
             builder: (_) => const OTPPage(), settings: routeSettings);
@@ -65,9 +68,17 @@ class Routes {
               settings: routeSettings);
         }
         return _errorRoute();
-      case '/map':
-        return MaterialPageRoute(
-            builder: (_) => MapPage(), settings: routeSettings);
+      case '/show_map':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => ShowMap(
+                    latitude: args['latitude'],
+                    longitude: args['longitude'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+
       case '/otherProfile':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(

@@ -37,11 +37,11 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
 
   @override
   void initState() {
-    super.initState();
     if (mounted) {
       fetchUser(widget.username!);
       fetchCloudFrontUri();
     }
+    super.initState();
   }
 
   @override
@@ -81,11 +81,11 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                         SizedBox(
                           child: CustomProfile(
                               userId: userProfile!['id'],
-                              roleId: userProfile!['role']['id'],
+                              roleId: userProfile!['role']['user_id'],
                               navigate: () => Navigator.pushReplacementNamed(
                                   context, '/home'),
                               page: 'otherProfile',
-                              isFollowed: userProfile!['followers'] == null
+                              isFollowed: userProfile!['followers'].isEmpty
                                   ? 0
                                   : userProfile!['followers'][0]['is_followed'],
                               follow: () {},
@@ -93,6 +93,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                   ? '$cloudFrontUri${userProfile!['avatar']}'
                                   : null,
                               name: userProfile!['name'] ?? '',
+                              username: userProfile!['username'] ?? '',
                               followers:
                                   userProfile!['followers_count'].toString(),
                               followings:

@@ -121,8 +121,6 @@ class _CreateEventsState extends State<CreateEvents> {
   void getEventCategories() async {
     fetchedCategories = await EventCategoriesController().index();
 
-    print(fetchedCategories);
-
     if (fetchedCategories!.isNotEmpty) {
       setState(() {
         _feesController.text = '0';

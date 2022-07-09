@@ -23,7 +23,7 @@ class FeaturePage extends StatefulWidget {
 class _FeaturePageState extends State<FeaturePage> {
   late Map<String, dynamic>? features = {};
   late bool loading = false;
-  late List<dynamic>? featuredUsers = [];
+  late List<dynamic>? featuredUpcoming = [];
   late List<dynamic>? featuredOrganizers = [];
   late List<dynamic>? featuredEvents = [];
   late Map<String, dynamic>? isFollowed = {};
@@ -43,7 +43,7 @@ class _FeaturePageState extends State<FeaturePage> {
     if (features!.isNotEmpty) {
       setState(() {
         featuredOrganizers = features!['organizer'] ?? [];
-        featuredUsers = features!['user'] ?? [];
+        featuredUpcoming = features!['upcoming_events'] ?? [];
         featuredEvents = features!['events'] ?? [];
       });
     }
@@ -68,7 +68,7 @@ class _FeaturePageState extends State<FeaturePage> {
     cloudFrontUri = '';
     message = '';
     featuredOrganizers = [];
-    featuredUsers = [];
+    featuredUpcoming = [];
     featuredEvents = [];
     super.dispose();
   }
@@ -101,6 +101,7 @@ class _FeaturePageState extends State<FeaturePage> {
                     ),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       const Align(
                         alignment: Alignment.centerLeft,
@@ -112,14 +113,11 @@ class _FeaturePageState extends State<FeaturePage> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const SizedBox(width: 40),
-                      Expanded(
-                        child: SizedBox(
-                          width: 40,
-                          child: Divider(
-                            color: Colors.grey[600],
-                            thickness: 2,
-                          ),
+                      SizedBox(
+                        width: 130,
+                        child: Divider(
+                          color: Colors.grey[600],
+                          thickness: 2,
                         ),
                       ),
                     ],
@@ -174,76 +172,152 @@ class _FeaturePageState extends State<FeaturePage> {
                                 pauseAutoPlayOnTouch: true,
                               )),
                         ),
-                  SizedBox(
-                    height: 40,
-                    child: Divider(
-                      color: Colors.grey[600],
-                    ),
+                  const SizedBox(
+                    height: 15,
                   ),
-                  const Text(
-                    'Most Followed Users',
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        letterSpacing: 2.0,
-                        fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Hot Events',
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              letterSpacing: 2.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 130,
+                        child: Divider(
+                          color: Colors.grey[600],
+                          thickness: 2,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 15),
-                  featuredUsers!.isEmpty
-                      ? SpinKitCircle(
-                          size: 50.0,
-                          color: Colors.grey[700],
+                  featuredUpcoming!.isEmpty
+                      ? DecoratedBox(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 132, 132, 132),
+                                  width: 2.0,
+                                  style: BorderStyle.solid)),
+                          child: SizedBox(
+                            height: 150,
+                            width: (MediaQuery.of(context).size.width),
+                            child: const Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'No Featured Events',
+                                  style: TextStyle(fontSize: 20),
+                                )),
+                          ),
                         )
                       : ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxHeight: 400,
+                              maxHeight: 85,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CarouselSlider.builder(
-                              itemCount: featuredUsers!.length,
+                              itemCount: featuredUpcoming!.length,
                               itemBuilder: (context, index, realIndex) {
-                                return CustomProfile(
-                                  userId: featuredUsers![index]['id'],
-                                  page: 'features',
-                                  isFollowed:
-                                      featuredUsers![index]['followers'].isEmpty
-                                          ? 0
-                                          : featuredUsers![index]['followers']
-                                              [0]['is_followed'],
-                                  follow: () =>
-                                      follow(featuredUsers![index]['username']),
-                                  // image: featuredUsers![index],
-                                  name: featuredUsers![index]['name'],
-                                  followers: featuredUsers![index]
-                                          ['followers_count']
-                                      .toString(),
-                                  followings: featuredUsers![index]
-                                          ['following_count']
-                                      .toString(),
-                                  events: featuredUsers![index]['events_count']
-                                      .toString(),
-                                  role: 'user',
+                                return CustomFeaturedEvents(
+                                  imageUrl: cloudFrontUri! +
+                                      featuredUpcoming![index]['images'][0],
+                                  slug: featuredUpcoming![index]['slug'],
+                                  bgColor: int.parse(
+                                      featuredUpcoming![index]['bgcolor']),
+                                  title: featuredUpcoming![index]['title'],
+                                  scheduleStart:
+                                      DateFormat('E, d MMM yyyy HH:mm').format(
+                                          DateTime.parse(
+                                              featuredUpcoming![index]
+                                                  ['schedule_start'])),
                                 );
                               },
                               options: CarouselOptions(
                                 height: double.infinity,
                                 autoPlay: true,
                                 viewportFraction: 1,
+                                reverse: false,
                                 autoPlayInterval: const Duration(seconds: 5),
                                 pauseAutoPlayOnTouch: true,
                               )),
                         ),
-                  SizedBox(
-                    height: 40,
-                    child: Divider(
-                      color: Colors.grey[600],
-                    ),
+                  const SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Organizers',
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              letterSpacing: 2.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 130,
+                        child: Divider(
+                          color: Colors.grey[600],
+                          thickness: 2,
+                        ),
+                      ),
+                    ],
                   ),
-                  const Text(
-                    'Most Liked Events',
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        letterSpacing: 2.0,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  const SizedBox(height: 15),
+                  featuredOrganizers!.isEmpty
+                      ? SpinKitCircle(
+                          size: 50.0,
+                          color: Colors.grey[700],
+                        )
+                      : ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxHeight: 300,
+                              maxWidth: (MediaQuery.of(context).size.width)),
+                          child: CarouselSlider.builder(
+                              itemCount: featuredOrganizers!.length,
+                              itemBuilder: (context, index, realIndex) {
+                                return CustomProfile(
+                                    userId: featuredOrganizers![index]['id'],
+                                    page: 'features',
+                                    isFollowed: featuredOrganizers![index]
+                                                ['followers']
+                                            .isEmpty
+                                        ? 0
+                                        : featuredOrganizers![index]
+                                            ['followers'][0]['is_followed'],
+                                    follow: () => follow(
+                                        featuredOrganizers![index]['username']),
+                                    name: featuredOrganizers![index]['name'],
+                                    username: featuredOrganizers![index]
+                                        ['username'],
+                                    followers: featuredOrganizers![index]
+                                            ['followers_count']
+                                        .toString(),
+                                    followings: featuredOrganizers![index]
+                                            ['following_count']
+                                        .toString(),
+                                    events: featuredOrganizers![index]
+                                            ['events_count']
+                                        .toString(),
+                                    role: 'organizer');
+                              },
+                              options: CarouselOptions(
+                                height: double.infinity,
+                                autoPlay: true,
+                                viewportFraction: 1,
+                                reverse: false,
+                                autoPlayInterval: const Duration(seconds: 5),
+                                pauseAutoPlayOnTouch: true,
+                              )),
+                        ),
                 ],
               ),
             ),

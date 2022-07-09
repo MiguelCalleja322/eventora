@@ -500,11 +500,9 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                                                 fit: BoxFit.cover,
                                                 'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826'),
                                           )
-                                        : ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            child: Image.network(
-                                                fit: BoxFit.cover,
+                                        : CircleAvatar(
+                                            maxRadius: 30,
+                                            backgroundImage: NetworkImage(
                                                 '$cloudFrontUri${event!['user']['avatar']}'),
                                           )),
                                 const SizedBox(
@@ -592,7 +590,9 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                                   shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(5.0)))),
-                              onPressed: () {},
+                              onPressed: () {
+                                showMap(event!['venue']['location'].toString());
+                              },
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Row(
@@ -664,6 +664,17 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
         },
       ),
     );
+  }
+
+  void showMap(String coordinates) {
+    final splitted = coordinates.split(',');
+    final latitude = double.parse(splitted[0]);
+    final longitude = double.parse(splitted[1]);
+
+    Navigator.pushReplacementNamed(context, '/show_map', arguments: {
+      'latitude': latitude,
+      'longitude': longitude,
+    });
   }
 
   void onPressedSave(String? slug) async {

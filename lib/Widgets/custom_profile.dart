@@ -7,6 +7,7 @@ class CustomProfile extends StatelessWidget {
       {Key? key,
       this.image,
       required this.name,
+      required this.username,
       required this.followers,
       required this.followings,
       this.events,
@@ -22,6 +23,7 @@ class CustomProfile extends StatelessWidget {
   late int roleId = 0;
   late String? image = '';
   late String? name = '';
+  late String? username = '';
   late String? followers = '';
   late String? followings = '';
   late String? events = '';
@@ -33,13 +35,22 @@ class CustomProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+          primary: Colors.grey[900],
+          backgroundColor: Colors.transparent,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5.0)))),
+      onPressed: () {
+        Navigator.pushReplacementNamed(context, '/otherProfile', arguments: {
+          'username': username!,
+        });
+      },
+      child: DecoratedBox(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+        child: Column(
+          children: <Widget>[
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
@@ -67,7 +78,7 @@ class CustomProfile extends StatelessWidget {
                                 child: Text(
                                   isFollowed! == 1 ? 'Unfollow' : 'Follow',
                                   style: const TextStyle(
-                                      color: Color(0xFF114F5A),
+                                      color: Color(0xff525b6f),
                                       letterSpacing: 1.0,
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.w500),
@@ -84,17 +95,18 @@ class CustomProfile extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(image ??
                         'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826'),
-                    radius: 90.0,
+                    radius: 50.0,
                   ),
                 ),
                 const SizedBox(height: 15),
                 Text(
                   name!,
                   style: const TextStyle(
-                      color: Color(0xFF114F5A),
-                      letterSpacing: 2.0,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w500),
+                    color: Color(0xff525b6f),
+                    letterSpacing: 2.0,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 15),
                 Row(
@@ -106,7 +118,7 @@ class CustomProfile extends StatelessWidget {
                           const Text(
                             'Followers',
                             style: TextStyle(
-                                color: Color(0xFF114F5A),
+                                color: Color(0xff525b6f),
                                 letterSpacing: 1.0,
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w500),
@@ -114,10 +126,10 @@ class CustomProfile extends StatelessWidget {
                           Text(
                             followers!,
                             style: const TextStyle(
-                                color: Color(0xFF114F5A),
+                                color: Color(0xff525b6f),
                                 letterSpacing: 1.0,
                                 fontSize: 26.0,
-                                fontWeight: FontWeight.w500),
+                                fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -128,7 +140,7 @@ class CustomProfile extends StatelessWidget {
                           const Text(
                             'Following',
                             style: TextStyle(
-                                color: Color(0xFF114F5A),
+                                color: Color(0xff525b6f),
                                 letterSpacing: 1.0,
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w500),
@@ -136,10 +148,10 @@ class CustomProfile extends StatelessWidget {
                           Text(
                             followings!,
                             style: const TextStyle(
-                                color: Color(0xFF114F5A),
+                                color: Color(0xff525b6f),
                                 letterSpacing: 1.0,
                                 fontSize: 26.0,
-                                fontWeight: FontWeight.w500),
+                                fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -151,7 +163,7 @@ class CustomProfile extends StatelessWidget {
                                 const Text(
                                   'No. Events',
                                   style: TextStyle(
-                                      color: Color(0xFF114F5A),
+                                      color: Color(0xff525b6f),
                                       letterSpacing: 1.0,
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.w500),
@@ -159,10 +171,10 @@ class CustomProfile extends StatelessWidget {
                                 Text(
                                   events!,
                                   style: const TextStyle(
-                                      color: Color(0xFF114F5A),
+                                      color: Color(0xff525b6f),
                                       letterSpacing: 1.0,
                                       fontSize: 26.0,
-                                      fontWeight: FontWeight.w500),
+                                      fontWeight: FontWeight.w700),
                                 ),
                               ],
                             ),
@@ -174,9 +186,9 @@ class CustomProfile extends StatelessWidget {
                   ],
                 )
               ],
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
