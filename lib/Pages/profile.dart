@@ -12,7 +12,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
-import '../Widgets/custom_events_card.dart';
+import '../Widgets/custom_events_card_old.dart';
 import '../controllers/auth_controller.dart';
 import 'package:path/path.dart' as path;
 
@@ -80,6 +80,111 @@ class _ProfilePageState extends State<ProfilePage> {
     return profile!.isEmpty
         ? const LoadingPage()
         : Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+            ),
+            drawer: Drawer(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Menu',
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            letterSpacing: 2.0,
+                            fontSize: 20.0),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40,
+                      child: Divider(
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    TextButton(
+                        style: TextButton.styleFrom(
+                            primary: Colors.grey[900],
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)))),
+                        onPressed: () {
+                          setState(() {
+                            model = 'events';
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.event,
+                              color: Colors.grey[800],
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Events',
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          ],
+                        )),
+                    TextButton(
+                        style: TextButton.styleFrom(
+                            primary: Colors.grey[900],
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)))),
+                        onPressed: () {
+                          setState(() {
+                            model = 'share_event';
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_month_outlined,
+                              color: Colors.grey[800],
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Shared Events',
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          ],
+                        )),
+                    TextButton(
+                        style: TextButton.styleFrom(
+                            primary: Colors.grey[900],
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)))),
+                        onPressed: () {
+                          setState(() {
+                            setState(() {
+                              model = 'save_event';
+                            });
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.note_add_outlined,
+                              color: Colors.grey[800],
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Saved Events',
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          ],
+                        )),
+                  ],
+                ),
+              ),
+            ),
             body: RefreshIndicator(
               onRefresh: () => fetchProfile(),
               child: SafeArea(
@@ -204,66 +309,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                         ),
                         const SizedBox(height: 15.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            profile!['user']['role']['type'] == 'organizer'
-                                ? Expanded(
-                                    child: TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            model = 'events';
-                                          });
-                                        },
-                                        child: Column(
-                                          children: const [
-                                            Icon(Icons.event),
-                                            Text('Events'),
-                                          ],
-                                        )),
-                                  )
-                                : const SizedBox(),
-                            Expanded(
-                              child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      model = 'share_event';
-                                    });
-                                  },
-                                  child: Column(
-                                    children: const [
-                                      Icon(Icons.calendar_month_outlined),
-                                      Text('Shared Events')
-                                    ],
-                                  )),
-                            ),
-                            Expanded(
-                              child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      setState(() {
-                                        model = 'save_event';
-                                      });
-                                    });
-                                  },
-                                  child: Column(
-                                    children: const [
-                                      Icon(Icons.note_add_outlined),
-                                      Text('Saved Events')
-                                    ],
-                                  )),
-                            ),
-                          ],
-                        ),
                         const SizedBox(height: 15.0),
-                        profile!['user']['role']['type'] == 'organizer'
-                            ? OutlinedButton(
-                                onPressed: () {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/create_events');
-                                },
-                                child: const Text('Create Event'))
-                            : const SizedBox(),
+                        OutlinedButton(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, '/create_events');
+                            },
+                            child: const Text('Create Event')),
                         const SizedBox(height: 15.0),
                         profile!['user'][model].length != 0 ||
                                 profile!['user'][model].length != 0 ||
@@ -273,7 +325,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 shrinkWrap: true,
                                 itemCount: profile!['user'][model].length,
                                 itemBuilder: (context, index) {
-                                  return CustomEventCard(
+                                  return CustomEventCards(
                                     role: role,
                                     venue: model == 'events'
                                         ? '${profile!['user'][model][index]['venue']['unit_no']} ${profile!['user'][model][index]['venue']['street_no']} ${profile!['user'][model][index]['venue']['street_name']} ${profile!['user'][model][index]['venue']['country']} ${profile!['user'][model][index]['venue']['state']} ${profile!['user'][model][index]['venue']['city']} ${profile!['user'][model][index]['venue']['zipcode']}'

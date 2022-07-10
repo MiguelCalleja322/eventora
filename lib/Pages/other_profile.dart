@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../Widgets/custom_events_card.dart';
+import '../Widgets/custom_events_card_old.dart';
 import '../controllers/events_controller.dart';
 
 // ignore: must_be_immutable
@@ -164,7 +164,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                 itemCount: userProfile![model].length,
                                 itemBuilder: (context, index) {
                                   return SizedBox(
-                                      child: CustomEventCard(
+                                      child: CustomEventCards(
                                     registrationLink: model == 'events'
                                         ? userProfile![model][index]
                                             ['registration_link']

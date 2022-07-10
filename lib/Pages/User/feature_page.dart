@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:eventora/Widgets/custom_events_card.dart';
+import 'package:eventora/Widgets/custom_events_card_old.dart';
 import 'package:eventora/Widgets/custom_featured_events.dart';
 import 'package:eventora/Widgets/custom_profile.dart';
 import 'package:eventora/controllers/events_controller.dart';
@@ -90,7 +90,7 @@ class _FeaturePageState extends State<FeaturePage> {
                 children: <Widget>[
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Home',
+                    child: Text('Features',
                         style:
                             TextStyle(color: Colors.grey[800], fontSize: 40.0)),
                   ),
@@ -145,7 +145,7 @@ class _FeaturePageState extends State<FeaturePage> {
                         )
                       : ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxHeight: 85,
+                              maxHeight: 100,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CarouselSlider.builder(
                               itemCount: featuredEvents!.length,
@@ -208,7 +208,7 @@ class _FeaturePageState extends State<FeaturePage> {
                                   width: 2.0,
                                   style: BorderStyle.solid)),
                           child: SizedBox(
-                            height: 150,
+                            height: 200,
                             width: (MediaQuery.of(context).size.width),
                             child: const Align(
                                 alignment: Alignment.center,
@@ -220,7 +220,7 @@ class _FeaturePageState extends State<FeaturePage> {
                         )
                       : ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxHeight: 85,
+                              maxHeight: 100,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CarouselSlider.builder(
                               itemCount: featuredUpcoming!.length,

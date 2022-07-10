@@ -22,6 +22,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
   late String? cloudFrontUri = '';
   late Map<String, dynamic>? eventMap = {};
   late Map<String, dynamic>? event = {};
+  late String? message = '';
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
     setState(() {
@@ -169,9 +170,9 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                                   width: (MediaQuery.of(context).size.width),
                                   child: DecoratedBox(
                                     decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                                255, 0, 101, 203)
-                                            .withOpacity(0.7)),
+                                        color:
+                                            Color(int.parse(event!['bgcolor']!))
+                                                .withOpacity(0.7)),
                                     child: Padding(
                                       padding: const EdgeInsets.all(15),
                                       child: Row(
@@ -179,7 +180,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                                           Expanded(
                                             child: Text(
                                               // overflow: TextOverflow.ellipsis,
-                                              event!['title']!, // event Title
+                                              event!['title'], // event Title
                                               style: const TextStyle(
                                                   fontSize: 16.0,
                                                   fontStyle: FontStyle.normal,
@@ -267,7 +268,9 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(5.0)))),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    onPressedSave(widget.slug!);
+                                  },
                                   child: const Icon(
                                     Icons.bookmark_border_outlined,
                                     size: 30,
@@ -585,8 +588,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                   primary: Colors.grey[900],
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 248, 248, 248),
+                                  backgroundColor: Colors.transparent,
                                   shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(5.0)))),
@@ -598,25 +600,33 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                                 child: Row(
                                   children: <Widget>[
                                     Expanded(
-                                      flex: 1,
+                                      flex: 0,
                                       child: Icon(
                                         Icons.location_on,
                                         color: Colors.grey[700],
                                       ),
                                     ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          event!['venue']['full_address'],
-                                        ),
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                        Text(event!['venue']['location']),
-                                      ],
-                                    ),
+                                    const SizedBox(width: 10),
                                     Expanded(
-                                      flex: 1,
+                                      flex: 4,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            event!['venue']['full_address'],
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            softWrap: false,
+                                          ),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          Text(event!['venue']['location']),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      flex: 0,
                                       child: Icon(
                                         Icons.location_searching_outlined,
                                         color: Colors.grey[700],
@@ -660,7 +670,21 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
           ),
         ],
         onTap: (value) {
-          //ternary function here and function
+          if (value == 0) {
+            Navigator.pushReplacementNamed(context, '/payment', arguments: {
+              'title': event!['title'],
+              'description': event!['description'],
+              'fees': event!['fees'],
+              'venue': event!['venue']['full_address'],
+              'schedule':
+                  '${event!['schedule_start']} - ${event!['schedule_end']} ',
+              'slug': widget.slug,
+            });
+          } else if (value == 1) {
+            onPressedInterested(widget.slug);
+          } else {
+            Navigator.pushReplacementNamed(context, '/home');
+          }
         },
       ),
     );
@@ -675,6 +699,31 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
       'latitude': latitude,
       'longitude': longitude,
     });
+  }
+
+  void onPressedInterested(String? slug) async {
+    Color? toastColor = Colors.grey[700];
+    Map<String, dynamic> eventSlug = {'slug': slug!};
+
+    Map<String, dynamic> response =
+        await EventController().interested(eventSlug);
+
+    if (response['interested'] != null) {
+      message = response['interested'];
+      toastColor = Colors.grey[700];
+    } else {
+      message = 'Something went wrong...';
+      toastColor = Colors.red[500];
+    }
+
+    Fluttertoast.showToast(
+        msg: message!,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: toastColor,
+        textColor: Colors.white,
+        timeInSecForIosWeb: 3,
+        toastLength: Toast.LENGTH_LONG,
+        fontSize: 16.0);
   }
 
   void onPressedSave(String? slug) async {

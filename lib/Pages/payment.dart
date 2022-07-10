@@ -19,7 +19,7 @@ class PaymentPage extends StatefulWidget {
   late String? description = '';
   late String? title = '';
   late String? schedule = '';
-  late String? fees = '';
+  late int? fees = 0;
   late String? venue = '';
   late String? slug = '';
   @override
@@ -164,7 +164,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        widget.fees!,
+                        widget.fees!.toString(),
                         style: TextStyle(
                             color: Colors.grey[700],
                             letterSpacing: 1.0,

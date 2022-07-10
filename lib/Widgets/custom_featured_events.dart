@@ -36,71 +36,74 @@ class CustomFeaturedEvents extends StatelessWidget {
                 'scheduleStart': scheduleStart,
               });
         },
-        child: Row(
-          children: <Widget>[
-            DecoratedBox(
-                decoration: BoxDecoration(
-                    border: Border.all(width: 0, style: BorderStyle.solid),
-                    borderRadius: BorderRadius.circular(10)),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    imageUrl!,
-                    fit: BoxFit.cover,
-                    width: 75,
-                    height: 75,
-                  ),
-                )),
-            const SizedBox(width: 10.0),
-            Expanded(
-                child: SizedBox(
-              height: 75,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Color(bgColor!),
-                        width: 1.5,
-                        style: BorderStyle.solid),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(title!,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: Colors.grey[700],
-                                fontSize: 14.0,
-                                fontStyle: FontStyle.normal)),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.access_time_sharp,
-                            color: Colors.grey[500],
-                          ),
-                          const SizedBox(width: 10.0),
-                          Flexible(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(scheduleStart!,
-                                  style: TextStyle(
-                                      color: Colors.grey[700],
-                                      fontSize: 12.0,
-                                      fontStyle: FontStyle.normal)),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          child: Row(
+            children: <Widget>[
+              DecoratedBox(
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 0, style: BorderStyle.solid),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      imageUrl!,
+                      fit: BoxFit.cover,
+                      width: 75,
+                      height: 75,
+                    ),
+                  )),
+              const SizedBox(width: 10.0),
+              Expanded(
+                  child: SizedBox(
+                height: 75,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Color(bgColor!),
+                          width: 1.5,
+                          style: BorderStyle.solid),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(title!,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontSize: 14.0,
+                                  fontStyle: FontStyle.normal)),
+                        ),
+                        const SizedBox(height: 10.0),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.access_time_sharp,
+                              color: Colors.grey[500],
                             ),
-                          ),
-                        ],
-                      )
-                    ],
+                            const SizedBox(width: 10.0),
+                            Flexible(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(scheduleStart!,
+                                    style: TextStyle(
+                                        color: Colors.grey[700],
+                                        fontSize: 12.0,
+                                        fontStyle: FontStyle.normal)),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )),
-          ],
+              )),
+            ],
+          ),
         ),
       ),
     );

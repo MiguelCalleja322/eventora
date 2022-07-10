@@ -6,8 +6,8 @@ import 'package:badges/badges.dart';
 import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
-class CustomEventCard extends StatelessWidget {
-  CustomEventCard({
+class CustomEventCards extends StatelessWidget {
+  CustomEventCards({
     Key? key,
     required this.title,
     required this.description,

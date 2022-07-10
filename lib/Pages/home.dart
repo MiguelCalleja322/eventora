@@ -1,6 +1,6 @@
 import 'package:eventora/Pages/Organizer/statistics.dart';
 import 'package:eventora/Pages/User/feature_page.dart';
-import 'package:eventora/Pages/wall.dart';
+import 'package:eventora/Pages/event_category.dart';
 import 'package:eventora/Pages/profile.dart';
 import 'package:eventora/Pages/settings.dart';
 import 'package:eventora/Widgets/custom_loading.dart';
@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                   index: _selectedIndex,
                   children: [
                     // Index = 0
-                    const WallPage(),
+                    const EventCategpry(),
 
                     // Index = 1
                     role == 'user'

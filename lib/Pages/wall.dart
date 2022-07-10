@@ -1,10 +1,13 @@
-import 'package:eventora/Widgets/custom_event_category.dart';
+import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/event_categories_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 
 class WallPage extends StatefulWidget {
-  const WallPage({Key? key}) : super(key: key);
+  WallPage({Key? key, required this.type}) : super(key: key);
+
+  late String type = '';
 
   @override
   State<WallPage> createState() => _WallPageState();
@@ -12,21 +15,28 @@ class WallPage extends StatefulWidget {
 
 class _WallPageState extends State<WallPage> {
   late Map<String, dynamic>? fetchedCategories = {};
-  late List<dynamic>? eventCategories = [];
+  late List<dynamic>? events = [];
+  late String? cloudFrontUri = '';
 
-  void getEventCategories() async {
-    fetchedCategories = await EventCategoriesController().index();
+  void fetchCloudFrontUri() async {
+    await dotenv.load(fileName: ".env");
+    cloudFrontUri = dotenv.env['CLOUDFRONT_URI'];
+  }
+
+  void getEventsFromCategory() async {
+    fetchedCategories = await EventCategoriesController().show(widget.type);
 
     if (fetchedCategories!.isNotEmpty) {
       setState(() {
-        eventCategories = fetchedCategories!['event_categories'] ?? [];
+        events = fetchedCategories!['event_categories']['events'] ?? [];
       });
     }
   }
 
   @override
   void initState() {
-    getEventCategories();
+    fetchCloudFrontUri();
+    getEventsFromCategory();
     super.initState();
   }
 
@@ -36,44 +46,70 @@ class _WallPageState extends State<WallPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: eventCategories!.isEmpty
-                ? Center(
-                    child: SpinKitCircle(
-                      size: 50.0,
-                      color: Colors.grey[700],
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Home',
+                          style: TextStyle(
+                              color: Colors.grey[800], fontSize: 40.0)),
                     ),
-                  )
-                : Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Event Category',
-                            style: TextStyle(
-                                color: Colors.grey[800], fontSize: 40.0)),
-                      ),
-                      SizedBox(
-                        height: 40,
-                        child: Divider(
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            childAspectRatio: 2.6 / 2.5,
-                          ),
-                          itemCount: eventCategories!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return CustomEventCategory(
-                              type: eventCategories![index]['type'],
-                            );
-                          }),
-                    ],
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, '/home');
+                        },
+                        child:
+                            Icon(Icons.chevron_left, color: Colors.grey[700]))
+                  ],
+                ),
+                SizedBox(
+                  height: 40,
+                  child: Divider(
+                    color: Colors.grey[600],
                   ),
+                ),
+                events!.isEmpty
+                    ? DecoratedBox(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                                color: const Color.fromARGB(255, 132, 132, 132),
+                                width: 2.0,
+                                style: BorderStyle.solid)),
+                        child: SizedBox(
+                          height: 150,
+                          width: (MediaQuery.of(context).size.width),
+                          child: const Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'No Events Posted for this Category',
+                                style: TextStyle(fontSize: 20),
+                              )),
+                        ),
+                      )
+                    : ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: events!.length,
+                        itemBuilder: (context, index) {
+                          return CustomEventCard(
+                              slug: events![index]['slug'],
+                              bgColor: int.parse(events![index]['bgcolor']),
+                              imageUrl:
+                                  cloudFrontUri! + events![index]['images'][0],
+                              eventType: events![index]['event_type'],
+                              title: events![index]['title'],
+                              description: events![index]['description'],
+                              dateTime: DateFormat('E, d MMM yyyy HH:mm')
+                                  .format(DateTime.parse(
+                                      events![index]['schedule_start'])));
+                        }),
+              ],
+            ),
           ),
         ),
       ),

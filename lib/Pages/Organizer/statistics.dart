@@ -1,10 +1,12 @@
+import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/statistics_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:eventora/Widgets/custom_events_card.dart';
+import 'package:eventora/Widgets/custom_events_card_old.dart';
 import 'package:eventora/controllers/user_controller.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 
 import '../../utils/secure_storage.dart';
 
@@ -23,6 +25,14 @@ class _StatisticsPageState extends State<StatisticsPage> {
   late Map<String, dynamic>? mostInteresting = {};
   late Map<String, dynamic>? isFollowed = {};
   late String? role = '';
+  late String? cloudFrontUri = '';
+
+  void fetchCloudFrontUri() async {
+    await dotenv.load(fileName: ".env");
+    setState(() {
+      cloudFrontUri = dotenv.env['CLOUDFRONT_URI'];
+    });
+  }
 
   void getRole() async {
     await dotenv.load(fileName: ".env");
@@ -47,6 +57,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
   @override
   void initState() {
     if (mounted) {
+      fetchCloudFrontUri();
       getRole();
       fetchStatistics();
     }
@@ -105,28 +116,16 @@ class _StatisticsPageState extends State<StatisticsPage> {
                               maxHeight: double.infinity,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CustomEventCard(
-                              role: role,
                               slug: mostLiked!['slug'],
-                              venue: mostLiked!['venue'].isEmpty
-                                  ? 'To be posted'
-                                  : '${mostLiked!['venue']['unit_no']} ${mostLiked!['venue']['street_no']} ${mostLiked!['venue']['street_name']} ${mostLiked!['venue']['street_name']} ${mostLiked!['venue']['country']} ${mostLiked!['venue']['state']} ${mostLiked!['venue']['city']} ${mostLiked!['venue']['zipcode']}',
-                              registrationLink: mostLiked!['registration_link'],
+                              bgColor: int.parse(mostLiked!['bgcolor']),
+                              imageUrl:
+                                  cloudFrontUri! + mostLiked!['images'][0],
                               eventType: mostLiked!['event_type'],
-                              images: mostLiked!['images'],
-                              title: mostLiked!['title'].toString(),
-                              description: mostLiked!['description'].toString(),
-                              schedule: mostLiked!['schedule'].toString(),
-                              fees: mostLiked!['fees'].toString(),
-                              likes:
-                                  mostLiked!['events_likes_count'].toString(),
-                              interested: '',
-                              attendees: '',
-                              organizer: '',
-                              onPressedLike: onPressedAttend,
-                              onPressedShare: onPressedAttend,
-                              onPressedInterested: onPressedInterested,
-                              onPressedSave: onPressedSave),
-                        ),
+                              title: mostLiked!['title'],
+                              description: mostLiked!['description'],
+                              dateTime: DateFormat('E, d MMM yyyy HH:mm')
+                                  .format(DateTime.parse(
+                                      mostLiked!['schedule_start'])))),
                   SizedBox(
                     height: 40,
                     child: Divider(
@@ -150,29 +149,16 @@ class _StatisticsPageState extends State<StatisticsPage> {
                               maxHeight: double.infinity,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CustomEventCard(
-                              role: role,
                               slug: mostInteresting!['slug'],
-                              venue: mostInteresting!['venue'].isEmpty
-                                  ? 'To be posted'
-                                  : '${mostInteresting!['venue']['unit_no']} ${mostInteresting!['venue']['street_no']} ${mostInteresting!['venue']['street_name']} ${mostInteresting!['venue']['street_name']} ${mostInteresting!['venue']['country']} ${mostInteresting!['venue']['state']} ${mostInteresting!['venue']['city']} ${mostInteresting!['venue']['zipcode']}',
-                              registrationLink:
-                                  mostInteresting!['registration_link'],
+                              bgColor: int.parse(mostInteresting!['bgcolor']),
+                              imageUrl: cloudFrontUri! +
+                                  mostInteresting!['images'][0],
                               eventType: mostInteresting!['event_type'],
-                              images: mostInteresting!['images'],
-                              title: mostInteresting!['title'].toString(),
-                              description:
-                                  mostInteresting!['description'].toString(),
-                              schedule: mostInteresting!['schedule'].toString(),
-                              fees: mostInteresting!['fees'].toString(),
-                              likes: '',
-                              interested: mostInteresting!['interests_count']
-                                  .toString(),
-                              attendees: '',
-                              organizer: '',
-                              onPressedLike: onPressedAttend,
-                              onPressedShare: onPressedAttend,
-                              onPressedInterested: onPressedInterested,
-                              onPressedSave: onPressedSave),
+                              title: mostInteresting!['title'],
+                              description: mostInteresting!['description'],
+                              dateTime: DateFormat('E, d MMM yyyy HH:mm')
+                                  .format(DateTime.parse(
+                                      mostInteresting!['schedule_start']))),
                         ),
                   SizedBox(
                     height: 40,
@@ -198,29 +184,16 @@ class _StatisticsPageState extends State<StatisticsPage> {
                               maxHeight: double.infinity,
                               maxWidth: (MediaQuery.of(context).size.width)),
                           child: CustomEventCard(
-                              role: role,
                               slug: mostAttendees!['slug'],
-                              venue: mostAttendees!['venue'].isEmpty
-                                  ? 'To be posted'
-                                  : '${mostAttendees!['venue']['unit_no']} ${mostAttendees!['venue']['street_no']} ${mostAttendees!['venue']['street_name']} ${mostAttendees!['venue']['street_name']} ${mostAttendees!['venue']['country']} ${mostAttendees!['venue']['state']} ${mostAttendees!['venue']['city']} ${mostAttendees!['venue']['zipcode']}',
-                              registrationLink:
-                                  mostAttendees!['registration_link'],
+                              bgColor: int.parse(mostAttendees!['bgcolor']),
+                              imageUrl:
+                                  cloudFrontUri! + mostAttendees!['images'][0],
                               eventType: mostAttendees!['event_type'],
-                              images: mostAttendees!['images'],
-                              title: mostAttendees!['title'].toString(),
-                              description:
-                                  mostAttendees!['description'].toString(),
-                              schedule: mostAttendees!['schedule'].toString(),
-                              fees: mostAttendees!['fees'].toString(),
-                              likes: '',
-                              interested: '',
-                              attendees:
-                                  mostAttendees!['attendees_count'].toString(),
-                              organizer: '',
-                              onPressedLike: onPressedAttend,
-                              onPressedShare: onPressedAttend,
-                              onPressedInterested: onPressedInterested,
-                              onPressedSave: onPressedSave),
+                              title: mostAttendees!['title'],
+                              description: mostAttendees!['description'],
+                              dateTime: DateFormat('E, d MMM yyyy HH:mm')
+                                  .format(DateTime.parse(
+                                      mostAttendees!['schedule_start']))),
                         ),
                 ],
               ),

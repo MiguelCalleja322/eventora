@@ -10,7 +10,7 @@ class EventController {
 
   Future saveEvent(Map<String, dynamic> slug) async {
     Map<String, dynamic> response =
-        await ApiService().request('saveEvent', 'GET', slug, true);
+        await ApiService().request('saveEvent', 'POST', slug, true);
 
     return response;
   }
