@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomFeaturedEvents extends StatelessWidget {
-  CustomFeaturedEvents({
+  const CustomFeaturedEvents({
     Key? key,
     required this.imageUrl,
     required this.slug,
@@ -10,11 +10,11 @@ class CustomFeaturedEvents extends StatelessWidget {
     required this.scheduleStart,
   }) : super(key: key);
 
-  late String? imageUrl = '';
-  late String? slug = '';
-  late int? bgColor = 0;
-  late String? title = '';
-  late String? scheduleStart = '';
+  final String? imageUrl;
+  final String? slug;
+  final int? bgColor;
+  final String? title;
+  final String? scheduleStart;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class CustomFeaturedEvents extends StatelessWidget {
               });
         },
         child: Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
           child: Row(
             children: <Widget>[
               DecoratedBox(

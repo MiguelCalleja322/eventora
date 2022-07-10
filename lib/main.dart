@@ -5,9 +5,9 @@ import 'package:eventora/Pages/User/update_user_info.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
-import 'package:eventora/Pages/saved_events.dart';
+import 'package:eventora/Pages/saved_events_page.dart';
+import 'package:eventora/Pages/shared_events_page.dart';
 import 'package:eventora/Pages/wall.dart';
-import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
 import 'package:eventora/Widgets/custom_show_map.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      initialRoute: '/saved_events',
+      initialRoute: '/home',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -58,6 +58,16 @@ class Routes {
           return MaterialPageRoute(
               builder: (_) => SavedEvents(
                     savedEvents: args['savedEvents'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+
+      case '/shared_events':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => SharedEventsPage(
+                    sharedEvents: args['sharedEvents'],
                   ),
               settings: routeSettings);
         }

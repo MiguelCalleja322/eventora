@@ -151,8 +151,6 @@ class _OTPPageState extends State<OTPPage> {
 
     isVerified = await AuthController().verifyAccount(otp);
 
-    print(isVerified);
-
     if (isVerified['error_otp'] != null) {
       toast(isVerified['error_otp'], Colors.red[500]);
     }

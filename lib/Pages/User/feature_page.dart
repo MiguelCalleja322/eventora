@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:eventora/Widgets/custom_events_card_old.dart';
 import 'package:eventora/Widgets/custom_featured_events.dart';
 import 'package:eventora/Widgets/custom_profile.dart';
 import 'package:eventora/controllers/events_controller.dart';

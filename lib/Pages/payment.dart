@@ -7,7 +7,7 @@ import '../Widgets/custom_dashboard_button.dart';
 import '../Widgets/custom_textfield.dart';
 
 class PaymentPage extends StatefulWidget {
-  PaymentPage(
+  const PaymentPage(
       {Key? key,
       required this.description,
       required this.title,
@@ -16,12 +16,12 @@ class PaymentPage extends StatefulWidget {
       required this.slug,
       required this.venue})
       : super(key: key);
-  late String? description = '';
-  late String? title = '';
-  late String? schedule = '';
-  late int? fees = 0;
-  late String? venue = '';
-  late String? slug = '';
+  final String? description;
+  final String? title;
+  final String? schedule;
+  final int? fees;
+  final String? venue;
+  final String? slug;
   @override
   State<PaymentPage> createState() => _PaymentPageState();
 }

@@ -1,11 +1,10 @@
+import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/Widgets/custom_profile.dart';
 import 'package:eventora/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import '../Widgets/custom_events_card_old.dart';
 import '../controllers/events_controller.dart';
 
 // ignore: must_be_immutable
@@ -25,7 +24,9 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
 
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
-    cloudFrontUri = dotenv.env['CLOUDFRONT_URI'];
+    setState(() {
+      cloudFrontUri = dotenv.env['CLOUDFRONT_URI'];
+    });
   }
 
   Future<void> fetchUser(String? username) async {
@@ -164,12 +165,11 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                 itemCount: userProfile![model].length,
                                 itemBuilder: (context, index) {
                                   return SizedBox(
-                                      child: CustomEventCards(
-                                    registrationLink: model == 'events'
-                                        ? userProfile![model][index]
-                                            ['registration_link']
+                                      child: CustomEventCard(
+                                    slug: model == 'events'
+                                        ? userProfile![model][index]['slug']
                                         : userProfile![model][index]['event']
-                                            ['registration_link'],
+                                            ['slug'],
                                     eventType: model == 'events'
                                         ? userProfile![model][index]
                                             ['event_type']
@@ -184,66 +184,19 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                             ['description']
                                         : userProfile![model][index]['event']
                                             ['description'],
-                                    schedule: model == 'events'
-                                        ? userProfile![model][index]['schedule']
-                                        : userProfile![model][index]['event']
-                                            ['schedule'],
-                                    images: model == 'events'
-                                        ? userProfile![model][index]['images']
-                                        : userProfile![model][index]['event']
-                                            ['images'],
-                                    fees: model == 'events'
-                                        ? userProfile![model][index]['fees']
-                                            .toString()
-                                        : userProfile![model][index]['event']
-                                                ['fees']
-                                            .toString(),
-                                    likes: model == 'events'
+                                    dateTime: model == 'events'
                                         ? userProfile![model][index]
-                                                ['event_likes_count']
-                                            .toString()
+                                            ['schedule_start']
                                         : userProfile![model][index]['event']
-                                                ['event_likes_count']
-                                            .toString(),
-                                    interested: model == 'events'
-                                        ? userProfile![model][index]
-                                                ['interests_count']
-                                            .toString()
-                                        : userProfile![model][index]['event']
-                                                ['interests_count']
-                                            .toString(),
-                                    attendees: model == 'events'
-                                        ? userProfile![model][index]
-                                                ['attendees_count']
-                                            .toString()
-                                        : userProfile![model][index]['event']
-                                                ['attendees_count']
-                                            .toString(),
-                                    organizer: model == 'events'
-                                        ? userProfile![model][index]['user']
-                                            ['name']
-                                        : userProfile![model][index]['event']
-                                            ['user']['name'],
-                                    onPressedLike: () => onPressedLike(
-                                        model == 'events'
-                                            ? userProfile![model][index]['slug']
-                                            : userProfile![model][index]
-                                                ['event']['slug']),
-                                    onPressedShare: () => onPressedShareEvent(
-                                        model == 'events'
-                                            ? userProfile![model][index]['slug']
-                                            : userProfile![model][index]
-                                                ['event']['slug']),
-                                    onPressedInterested: () =>
-                                        onPressedInterested(model == 'events'
-                                            ? userProfile![model][index]['slug']
-                                            : userProfile![model][index]
-                                                ['event']['slug']),
-                                    onPressedSave: () => onPressedSave(
-                                        model == 'events'
-                                            ? userProfile![model][index]['slug']
-                                            : userProfile![model][index]
-                                                ['event']['slug']),
+                                            ['schedule_start'],
+                                    bgColor: model == 'events'
+                                        ? int.parse(userProfile![model][index]
+                                            ['bgcolor'])
+                                        : int.parse(userProfile![model][index]
+                                            ['event']['bgcolor']),
+                                    imageUrl: model == 'events'
+                                        ? '$cloudFrontUri${userProfile![model][index]['images'][0]}'
+                                        : '$cloudFrontUri${userProfile![model][index]['event']['images'][0]}',
                                   ));
                                 })
                             : SizedBox(

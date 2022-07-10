@@ -7,12 +7,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class CustomEventFullPage extends StatefulWidget {
-  CustomEventFullPage({
+  const CustomEventFullPage({
     Key? key,
     required this.slug,
   }) : super(key: key);
 
-  late String? slug = '';
+  final String? slug;
 
   @override
   State<CustomEventFullPage> createState() => _CustomEventFullPageState();

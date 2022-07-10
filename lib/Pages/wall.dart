@@ -5,9 +5,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 
 class WallPage extends StatefulWidget {
-  WallPage({Key? key, required this.type}) : super(key: key);
+  const WallPage({Key? key, required this.type}) : super(key: key);
 
-  late String type = '';
+  final String type;
 
   @override
   State<WallPage> createState() => _WallPageState();

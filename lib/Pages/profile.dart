@@ -2,20 +2,17 @@
 
 import 'dart:io';
 import 'dart:math';
-
-import 'package:eventora/Widgets/custom_featured_events.dart';
 import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:eventora/utils/s3.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
-import '../Widgets/custom_events_card_old.dart';
+import 'package:intl/intl.dart';
+import '../Widgets/custom_event_card_new.dart';
 import '../controllers/auth_controller.dart';
 import 'package:path/path.dart' as path;
-
 import '../controllers/events_controller.dart';
 import '../utils/secure_storage.dart';
 
@@ -32,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late int timestamp = DateTime.now().millisecondsSinceEpoch;
   late bool loading = false;
   late String? cloudFrontURI = '';
-  late String? model = 'save_event';
+  late String? cloudFrontUri = '';
   late String? message = '';
   late String? role = '';
 
@@ -40,6 +37,13 @@ class _ProfilePageState extends State<ProfilePage> {
     await dotenv.load(fileName: ".env");
     final String? roleKey = dotenv.env['ROLE_KEY'];
     role = await StorageSevice().read(roleKey!) ?? '';
+  }
+
+  void fetchCloudFrontUri() async {
+    await dotenv.load(fileName: ".env");
+    setState(() {
+      cloudFrontUri = dotenv.env['CLOUDFRONT_URI'];
+    });
   }
 
   Future<void> fetchProfile() async {
@@ -50,7 +54,9 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       loading = true;
     });
-    profile = await AuthController().getProfile();
+    profile = await AuthController().getProfile() ?? {};
+
+    
 
     setState(() {
       loading = false;
@@ -60,13 +66,13 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     getRole();
+    fetchCloudFrontUri();
     fetchProfile();
     super.initState();
   }
 
   @override
   void dispose() {
-    model = '';
     loading = false;
     timestamp = DateTime.now().millisecondsSinceEpoch;
     profile = {};
@@ -112,33 +118,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0)))),
                         onPressed: () {
-                          setState(() {
-                            model = 'events';
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.event,
-                              color: Colors.grey[800],
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              'Events',
-                              style: TextStyle(color: Colors.grey[800]),
-                            ),
-                          ],
-                        )),
-                    TextButton(
-                        style: TextButton.styleFrom(
-                            primary: Colors.grey[900],
-                            backgroundColor: Colors.transparent,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5.0)))),
-                        onPressed: () {
-                          setState(() {
-                            model = 'share_event';
+                          Navigator.pushReplacementNamed(
+                              context, '/shared_events', arguments: {
+                            'sharedEvents': profile!['user']['share_event']
                           });
                         },
                         child: Row(
@@ -162,10 +144,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0)))),
                         onPressed: () {
-                          setState(() {
-                            setState(() {
-                              model = 'save_event';
-                            });
+                          Navigator.pushReplacementNamed(
+                              context, '/saved_events', arguments: {
+                            'savedEvents': profile!['user']['save_event']
                           });
                         },
                         child: Row(
@@ -177,6 +158,32 @@ class _ProfilePageState extends State<ProfilePage> {
                             const SizedBox(width: 10),
                             Text(
                               'Saved Events',
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          ],
+                        )),
+                    TextButton(
+                        style: TextButton.styleFrom(
+                            primary: Colors.grey[900],
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)))),
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, '/shared_events', arguments: {
+                            'sharedEvents': profile!['user']['share_event']
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.notes_outlined,
+                              color: Colors.grey[800],
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Create Notes',
                               style: TextStyle(color: Colors.grey[800]),
                             ),
                           ],
@@ -317,119 +324,38 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                             child: const Text('Create Event')),
                         const SizedBox(height: 15.0),
-                        profile!['user'][model].length != 0 ||
-                                profile!['user'][model].length != 0 ||
-                                profile!['user'][model].length != 0
+                        profile!['user']['events'].length != 0
                             ? ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: profile!['user'][model].length,
+                                itemCount: profile!['user']['events'].length,
                                 itemBuilder: (context, index) {
-                                  return CustomEventCards(
-                                    role: role,
-                                    venue: model == 'events'
-                                        ? '${profile!['user'][model][index]['venue']['unit_no']} ${profile!['user'][model][index]['venue']['street_no']} ${profile!['user'][model][index]['venue']['street_name']} ${profile!['user'][model][index]['venue']['country']} ${profile!['user'][model][index]['venue']['state']} ${profile!['user'][model][index]['venue']['city']} ${profile!['user'][model][index]['venue']['zipcode']}'
-                                        : '${profile!['user'][model][index]['event']['venue']['unit_no']} ${profile!['user'][model][index]['event']['venue']['street_no']} ${profile!['user'][model][index]['event']['venue']['street_name']} ${profile!['user'][model][index]['event']['venue']['country']} ${profile!['user'][model][index]['event']['venue']['state']} ${profile!['user'][model][index]['event']['venue']['city']} ${profile!['user'][model][index]['event']['venue']['zipcode']} ',
-                                    registrationLink: model == 'events'
-                                        ? profile!['user'][model][index]
-                                            ['registration_link']
-                                        : profile!['user'][model][index]
-                                            ['event']['registration_link'],
-                                    slug: model == 'events'
-                                        ? profile!['user'][model][index]['slug']
-                                        : profile!['user'][model][index]
-                                            ['event']['slug'],
-                                    eventType: model == 'events'
-                                        ? profile!['user'][model][index]
-                                            ['event_type']
-                                        : profile!['user'][model][index]
-                                            ['event']['event_type'],
-                                    title: model == 'events'
-                                        ? profile!['user'][model][index]
-                                            ['title']
-                                        : profile!['user'][model][index]
-                                            ['event']['title'],
-                                    description: model == 'events'
-                                        ? profile!['user'][model][index]
-                                            ['description']
-                                        : profile!['user'][model][index]
-                                            ['event']['description'],
-                                    schedule: model == 'events'
-                                        ? profile!['user'][model][index]
-                                            ['schedule']
-                                        : profile!['user'][model][index]
-                                            ['event']['schedule'],
-                                    images: model == 'events'
-                                        ? profile!['user'][model][index]
-                                            ['images']
-                                        : profile!['user'][model][index]
-                                            ['event']['images'],
-                                    fees: model == 'events'
-                                        ? profile!['user'][model][index]['fees']
-                                            .toString()
-                                        : profile!['user'][model][index]
-                                                ['event']['fees']
-                                            .toString(),
-                                    likes: model == 'events'
-                                        ? profile!['user'][model][index]
-                                                ['event_likes_count']
-                                            .toString()
-                                        : profile!['user'][model][index]
-                                                ['event']['event_likes_count']
-                                            .toString(),
-                                    interested: model == 'events'
-                                        ? profile!['user'][model][index]
-                                                ['interests_count']
-                                            .toString()
-                                        : profile!['user'][model][index]
-                                                ['event']['interests_count']
-                                            .toString(),
-                                    attendees: model == 'events'
-                                        ? profile!['user'][model][index]
-                                                ['attendees_count']
-                                            .toString()
-                                        : profile!['user'][model][index]
-                                                ['event']['attendees_count']
-                                            .toString(),
-                                    organizer: model == 'events'
-                                        ? profile!['user'][model][index]['user']
-                                            ['username']
-                                        : profile!['user'][model][index]
-                                            ['event']['user']['username'],
-                                    onPressedLike: () => onPressedLike(model ==
-                                            'events'
-                                        ? profile!['user'][model][index]['slug']
-                                        : profile!['user'][model][index]
-                                            ['event']['slug']),
-                                    onPressedShare: () => onPressedShareEvent(
-                                        model == 'events'
-                                            ? profile!['user'][model][index]
-                                                ['slug']
-                                            : profile!['user'][model][index]
-                                                ['event']['slug']),
-                                    onPressedInterested: () =>
-                                        onPressedInterested(model == 'events'
-                                            ? profile!['user'][model][index]
-                                                ['slug']
-                                            : profile!['user'][model][index]
-                                                ['event']['slug']),
-                                    onPressedSave: () => onPressedSave(model ==
-                                            'events'
-                                        ? profile!['user'][model][index]['slug']
-                                        : profile!['user'][model][index]
-                                            ['event']['slug']),
-                                  );
+                                  return CustomEventCard(
+                                      slug: profile!['user']['events']
+                                          [index]!['slug'],
+                                      bgColor: int.parse(profile!['user']
+                                          ['events'][index]!['bgcolor']),
+                                      imageUrl: cloudFrontUri! +
+                                          profile!['user']['events']
+                                              [index]!['images'][0],
+                                      eventType: profile!['user']['events']
+                                          [index]!['event_type'],
+                                      title: profile!['user']['events']
+                                          [index]!['title'],
+                                      description: profile!['user']['events']
+                                          [index]!['description'],
+                                      dateTime: DateFormat('E, d MMM yyyy HH:mm')
+                                          .format(DateTime.parse(
+                                              profile!['user']['events'][index]!['schedule_start'])));
                                 })
                             : Column(
                                 children: [
                                   SizedBox(
                                     width: (MediaQuery.of(context).size.width),
-                                    child: Padding(
+                                    child: const Padding(
                                       padding: const EdgeInsets.all(15.0),
                                       child: Text(
-                                        profile!['user'][model].length == 0
-                                            ? 'There are no saved/shared events'
-                                            : 'There are no events',
+                                        'There are no events',
                                         style: const TextStyle(fontSize: 20),
                                         textAlign: TextAlign.center,
                                       ),

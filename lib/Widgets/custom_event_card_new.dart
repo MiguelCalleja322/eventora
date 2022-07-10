@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomEventCard extends StatefulWidget {
-  CustomEventCard({
+  const CustomEventCard({
     Key? key,
     required this.slug,
     required this.bgColor,
@@ -10,16 +10,15 @@ class CustomEventCard extends StatefulWidget {
     required this.title,
     required this.description,
     required this.dateTime,
-    // required this.address,
   }) : super(key: key);
-  late String? slug = '';
-  late int? bgColor = 0;
-  late String? imageUrl = '';
-  late String? eventType = '';
-  late String? title = '';
-  late String? description = '';
-  late String? dateTime = '';
-  late String? address = '';
+  final String? slug;
+  final int? bgColor;
+  final String? imageUrl;
+  final String? eventType;
+  final String? title;
+  final String? description;
+  final String? dateTime;
+
   @override
   State<CustomEventCard> createState() => _CustomEventCardState();
 }

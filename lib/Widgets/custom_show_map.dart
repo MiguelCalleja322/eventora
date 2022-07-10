@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ShowMap extends StatefulWidget {
-  ShowMap({
+  const ShowMap({
     Key? key,
     required this.latitude,
     required this.longitude,
   }) : super(key: key);
 
-  late double latitude = 0.0;
-  late double longitude = 0.0;
+  final double latitude;
+  final double longitude;
 
   @override
   State<ShowMap> createState() => _ShowMapState();

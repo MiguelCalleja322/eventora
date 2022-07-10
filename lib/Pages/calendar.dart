@@ -33,7 +33,7 @@ class _CalendarPageState extends State<CalendarPage> {
   late Map<String, dynamic>? calendarData = {};
   late List<dynamic>? listOfAppointments = [];
   late List<dynamic>? listOfTasks = [];
-  late List<dynamic>? listOfNotes = [];
+
   late DateTime _selectedDay = DateTime.now();
   late DateTime _focusedDay = DateTime.now();
   late String? model = '';
@@ -381,71 +381,6 @@ class _CalendarPageState extends State<CalendarPage> {
                                           Text('Appointments')
                                         ],
                                       )),
-                                  TextButton(
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return StatefulBuilder(builder:
-                                                  (BuildContext context,
-                                                      StateSetter mystate) {
-                                                return AlertDialog(
-                                                  content: SizedBox(
-                                                    height: 300.0,
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          child: Text('Notes',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      800],
-                                                                  fontSize:
-                                                                      20.0)),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 40,
-                                                          child: Divider(
-                                                            color: Colors
-                                                                .grey[600],
-                                                          ),
-                                                        ),
-                                                        CustomTextFormField(
-                                                          label: 'Title:',
-                                                          controller:
-                                                              _titleController,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 15),
-                                                        CustomTextFormField(
-                                                          label: 'Description:',
-                                                          controller:
-                                                              _descriptionController,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 15),
-                                                        OutlinedButton(
-                                                            onPressed: () {
-                                                              store(context,
-                                                                  'notes');
-                                                            },
-                                                            child: const Text(
-                                                                'Save'))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              });
-                                            });
-                                      },
-                                      child: Column(
-                                        children: const [
-                                          Icon(Icons.note_add_outlined),
-                                          Text('Notes')
-                                        ],
-                                      )),
                                 ],
                               ),
                         const SizedBox(height: 15.0),
@@ -569,7 +504,6 @@ class _CalendarPageState extends State<CalendarPage> {
     calendarData = await CalendarController().index() ?? {};
     listOfAppointments = calendarData!['appointments'] ?? [];
     listOfTasks = calendarData!['tasks'] ?? [];
-    listOfNotes = calendarData!['notes'] ?? [];
     DateFormat actualDateAndTimeOfATFormat = DateFormat('yyyy-MM-dd HH:mm');
     DateFormat actualDateFormat = DateFormat('yyyy-MM-dd');
     String? actualDateString = '';
@@ -580,26 +514,6 @@ class _CalendarPageState extends State<CalendarPage> {
     }
 
     setState(() {
-      listOfNotes!.map((notes) {
-        DateTime date = DateTime.parse(notes['created_at']);
-        actualDateString = actualDateFormat.format(date);
-        actualDate = DateTime.parse(actualDateString!);
-
-        if (selectedEvents[actualDate] != null) {
-          selectedEvents[actualDate]?.add(Calendar(
-              notes['id'],
-              'Note',
-              notes['title'],
-              notes['description'],
-              actualDateAndTimeOfATFormat.format(date).toString()));
-        } else {
-          selectedEvents[actualDate] = [
-            Calendar(notes['id'], 'Note', notes['title'], notes['description'],
-                actualDateAndTimeOfATFormat.format(date).toString()),
-          ];
-        }
-      }).toList();
-
       listOfAppointments!.map((appointments) {
         DateTime date = DateTime.parse(appointments['date_time']);
         actualDateString = actualDateFormat.format(date);

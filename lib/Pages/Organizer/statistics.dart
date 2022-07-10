@@ -1,7 +1,6 @@
 import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/statistics_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:eventora/Widgets/custom_events_card_old.dart';
 import 'package:eventora/controllers/user_controller.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 

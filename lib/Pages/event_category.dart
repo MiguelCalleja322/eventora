@@ -1,4 +1,3 @@
-import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/event_categories_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

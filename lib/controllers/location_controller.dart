@@ -28,18 +28,12 @@ class LocationController {
     latitude = input.latitude;
     longitude = input.longitude;
 
-    // final String placeId = await getPlaceId();
-
     final String url =
         '$googleApisUrl/autocomplete/xml?types=establishment&location=$latitude,$longitude&radius=500&strictbounds&key=$key';
 
-    print(url);
-
-    var response = await http.get(Uri.parse(url));
-    Map<String, dynamic> json = convert.jsonDecode(response.body);
-    Map<String, dynamic> results = json['result'];
-
-    print(results);
+    await http.get(Uri.parse(url));
+    // Map<String, dynamic> json = convert.jsonDecode(response.body);
+    // Map<String, dynamic> results = json['result'];
 
     return {};
   }
