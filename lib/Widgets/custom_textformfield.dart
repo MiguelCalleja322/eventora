@@ -22,26 +22,21 @@ class CustomTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      focusNode: focusNode,
-      obscureText: obscureText,
-      controller: controller,
-      validator: validator,
-      decoration: InputDecoration(
-          border: const OutlineInputBorder(
-              borderSide: BorderSide(
-            color: Color(0xFF114F5A),
-          )),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-            width: 2,
-            color: Color(0xFF114F5A),
-          )),
-          labelText: label,
-          labelStyle: const TextStyle(
-            color: Color(0xFF114F5A),
-          )),
-      onChanged: onChanged,
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: Colors.grey)),
+      child: TextFormField(
+        focusNode: focusNode,
+        obscureText: obscureText,
+        controller: controller,
+        decoration: InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            border: InputBorder.none,
+            labelText: label,
+            labelStyle: TextStyle(color: Colors.grey[800])),
+      ),
     );
   }
 }

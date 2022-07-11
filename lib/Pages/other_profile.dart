@@ -83,8 +83,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                           child: CustomProfile(
                               userId: userProfile!['id'],
                               roleId: userProfile!['role']['user_id'],
-                              navigate: () => Navigator.pushReplacementNamed(
-                                  context, '/home'),
+                              navigate: () => Navigator.pop(context),
                               page: 'otherProfile',
                               isFollowed: userProfile!['followers'].isEmpty
                                   ? 0

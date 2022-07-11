@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../Widgets/custom_appbar.dart';
 import '../Widgets/custom_dashboard_button.dart';
 import '../Widgets/custom_textfield.dart';
 
@@ -50,6 +51,9 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: 'Payment',
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -61,20 +65,17 @@ class _PaymentPageState extends State<PaymentPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Align(
-                      alignment: Alignment.center,
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         'Payment',
-                        style: TextStyle(
-                            color: Colors.grey[600],
-                            letterSpacing: 2.0,
-                            fontSize: 26.0),
+                        style:
+                            TextStyle(color: Colors.grey[800], fontSize: 30.0),
                       ),
                     ),
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                          onPressed: () =>
-                              Navigator.pushReplacementNamed(context, '/home'),
+                          onPressed: () => Navigator.pop(context),
                           child: const Icon(
                             Icons.chevron_left,
                             color: Colors.blue,

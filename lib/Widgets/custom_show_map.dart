@@ -67,7 +67,7 @@ class _ShowMapState extends State<ShowMap> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0)))),
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/home');
+                          Navigator.pop(context);
                         },
                         child: const Icon(
                           Icons.chevron_left,

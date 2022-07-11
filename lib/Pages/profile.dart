@@ -56,8 +56,6 @@ class _ProfilePageState extends State<ProfilePage> {
     });
     profile = await AuthController().getProfile() ?? {};
 
-    
-
     setState(() {
       loading = false;
     });
@@ -118,10 +116,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0)))),
                         onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, '/shared_events', arguments: {
-                            'sharedEvents': profile!['user']['share_event']
-                          });
+                          Navigator.pushNamed(context, '/shared_events',
+                              arguments: {
+                                'sharedEvents': profile!['user']['share_event']
+                              });
                         },
                         child: Row(
                           children: [
@@ -144,10 +142,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0)))),
                         onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, '/saved_events', arguments: {
-                            'savedEvents': profile!['user']['save_event']
-                          });
+                          Navigator.pushNamed(context, '/saved_events',
+                              arguments: {
+                                'savedEvents': profile!['user']['save_event']
+                              });
                         },
                         child: Row(
                           children: [
@@ -170,10 +168,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0)))),
                         onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, '/shared_events', arguments: {
-                            'sharedEvents': profile!['user']['share_event']
-                          });
+                          Navigator.pushNamed(
+                            context,
+                            '/list_notes',
+                          );
                         },
                         child: Row(
                           children: [
@@ -319,8 +317,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         const SizedBox(height: 15.0),
                         OutlinedButton(
                             onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                  context, '/create_events');
+                              Navigator.pushNamed(context, '/create_events');
                             },
                             child: const Text('Create Event')),
                         const SizedBox(height: 15.0),

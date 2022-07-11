@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'package:eventora/Pages/Auth/otp.dart';
+import 'package:eventora/Pages/Notes/create_notes.dart';
+import 'package:eventora/Pages/Notes/list_notes.dart';
+import 'package:eventora/Pages/Notes/view_note.dart';
 import 'package:eventora/Pages/Organizer/create_events.dart';
 import 'package:eventora/Pages/User/update_user_info.dart';
 import 'package:eventora/Pages/home.dart';
@@ -53,11 +56,28 @@ class Routes {
       case '/otp_page':
         return MaterialPageRoute(
             builder: (_) => const OTPPage(), settings: routeSettings);
+      case '/list_notes':
+        return MaterialPageRoute(
+            builder: (_) => const CreateAndListNotes(),
+            settings: routeSettings);
+      case '/create_notes':
+        return MaterialPageRoute(
+            builder: (_) => const CreateNotesPage(), settings: routeSettings);
       case '/saved_events':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
               builder: (_) => SavedEvents(
                     savedEvents: args['savedEvents'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+      case '/read_note':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => ShowNote(
+                    title: args['title'],
+                    description: args['description'],
                   ),
               settings: routeSettings);
         }

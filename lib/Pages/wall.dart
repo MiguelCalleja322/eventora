@@ -1,3 +1,4 @@
+import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/event_categories_controller.dart';
 import 'package:flutter/material.dart';
@@ -43,35 +44,15 @@ class _WallPageState extends State<WallPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: 'Home',
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Home',
-                          style: TextStyle(
-                              color: Colors.grey[800], fontSize: 40.0)),
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/home');
-                        },
-                        child:
-                            Icon(Icons.chevron_left, color: Colors.grey[700]))
-                  ],
-                ),
-                SizedBox(
-                  height: 40,
-                  child: Divider(
-                    color: Colors.grey[600],
-                  ),
-                ),
                 events!.isEmpty
                     ? DecoratedBox(
                         decoration: BoxDecoration(

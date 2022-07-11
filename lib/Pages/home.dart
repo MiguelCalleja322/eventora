@@ -6,6 +6,7 @@ import 'package:eventora/Pages/settings.dart';
 import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../utils/secure_storage.dart';
 import 'calendar.dart';
@@ -92,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               showSelectedLabels: true,
               showUnselectedLabels: true,
               backgroundColor: const Color(0xFFF7F8FB),
-              selectedItemColor: Colors.green[800],
+              selectedItemColor: Colors.grey[800],
               currentIndex: _selectedIndex,
               elevation: 8,
               unselectedIconTheme: IconThemeData(
@@ -102,28 +103,28 @@ class _HomePageState extends State<HomePage> {
               type: BottomNavigationBarType.fixed,
               items: <BottomNavigationBarItem>[
                 const BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
+                  icon: Icon(Ionicons.home_outline),
                   label: 'Home',
                 ),
                 role == 'user'
                     ? const BottomNavigationBarItem(
-                        icon: Icon(Icons.trending_up),
+                        icon: Icon(Ionicons.trending_up),
                         label: 'Features',
                       )
                     : const BottomNavigationBarItem(
-                        icon: Icon(Icons.trending_up),
+                        icon: Icon(Ionicons.stats_chart_outline),
                         label: 'Statistics',
                       ),
                 const BottomNavigationBarItem(
-                  icon: Icon(Icons.face),
+                  icon: Icon(Ionicons.person_outline),
                   label: 'Profile',
                 ),
                 const BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month),
+                  icon: Icon(Ionicons.calendar_clear_outline),
                   label: 'Calendar',
                 ),
                 const BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
+                  icon: Icon(Ionicons.settings_outline),
                   label: 'Settings',
                 ),
               ],

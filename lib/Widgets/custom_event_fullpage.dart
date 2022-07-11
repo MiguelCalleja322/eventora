@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventora/controllers/events_controller.dart';
 import 'package:flutter/material.dart';
@@ -78,8 +79,11 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                                     itemCount:
                                         eventMap!['event']['images']!.length,
                                     itemBuilder: (context, index, realIndex) {
-                                      return Image.network(
-                                          '$cloudFrontUri${event!['images'][index]}',
+                                      return CachedNetworkImage(
+                                          imageUrl:
+                                              '$cloudFrontUri${event!['images'][index]}',
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
                                           fit: BoxFit.cover,
                                           width: (MediaQuery.of(context)
                                               .size
@@ -120,8 +124,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                                                                   Radius.circular(
                                                                       5.0)))),
                                               onPressed: () {
-                                                Navigator.pushReplacementNamed(
-                                                    context, '/home');
+                                                Navigator.pop(context);
                                               },
                                               child: const Icon(
                                                 Icons.chevron_left,
@@ -671,7 +674,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
         ],
         onTap: (value) {
           if (value == 0) {
-            Navigator.pushReplacementNamed(context, '/payment', arguments: {
+            Navigator.pushNamed(context, '/payment', arguments: {
               'title': event!['title'],
               'description': event!['description'],
               'fees': event!['fees'],
@@ -683,7 +686,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
           } else if (value == 1) {
             onPressedInterested(widget.slug);
           } else {
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pop(context);
           }
         },
       ),
@@ -695,7 +698,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
     final latitude = double.parse(splitted[0]);
     final longitude = double.parse(splitted[1]);
 
-    Navigator.pushReplacementNamed(context, '/show_map', arguments: {
+    Navigator.pushNamed(context, '/show_map', arguments: {
       'latitude': latitude,
       'longitude': longitude,
     });

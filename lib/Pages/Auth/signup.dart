@@ -251,8 +251,7 @@ class _SignupState extends State<Signup> {
                         const SizedBox(height: 15),
                         Center(
                           child: TextButton(
-                            onPressed: () =>
-                                Navigator.pushReplacementNamed(context, '/'),
+                            onPressed: () => Navigator.pushNamed(context, '/'),
                             child: const Text('Click Here to Login'),
                           ),
                         ),

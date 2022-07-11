@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CustomEventCard extends StatefulWidget {
@@ -36,13 +37,14 @@ class _CustomEventCardState extends State<CustomEventCard> {
       margin: const EdgeInsets.all(10),
       child: InkWell(
         onTap: () {
-          Navigator.pushReplacementNamed(context, '/custom_event_full',
+          Navigator.pushNamed(context, '/custom_event_full',
               arguments: {'slug': widget.slug!});
         },
         child: Column(
           children: [
-            Image.network(
-              widget.imageUrl!,
+            CachedNetworkImage(
+              imageUrl: widget.imageUrl!,
+              errorWidget: (context, url, error) => const Icon(Icons.error),
               height: 200,
               width: double.infinity,
               fit: BoxFit.fill,

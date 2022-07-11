@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
+import '../../Widgets/custom_appbar.dart';
 import '../../utils/secure_storage.dart';
 
 class StatisticsPage extends StatefulWidget {
@@ -76,6 +77,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: 'Statistics',
+      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => fetchStatistics(),
@@ -87,9 +91,13 @@ class _StatisticsPageState extends State<StatisticsPage> {
                 children: <Widget>[
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Statistics',
-                        style:
-                            TextStyle(color: Colors.grey[800], fontSize: 40.0)),
+                    child: Text(
+                      'Statistics',
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          letterSpacing: 2.0,
+                          fontSize: 30.0),
+                    ),
                   ),
                   SizedBox(
                     height: 40,

@@ -42,7 +42,7 @@ class CustomProfile extends StatelessWidget {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(5.0)))),
       onPressed: () {
-        Navigator.pushReplacementNamed(context, '/otherProfile', arguments: {
+        Navigator.pushNamed(context, '/otherProfile', arguments: {
           'username': username!,
         });
       },

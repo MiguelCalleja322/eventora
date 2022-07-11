@@ -127,7 +127,7 @@ class _CalendarPageState extends State<CalendarPage> {
                               selectedTextStyle:
                                   const TextStyle(color: Colors.white),
                               todayDecoration: BoxDecoration(
-                                  color: Colors.purpleAccent,
+                                  color: Colors.grey[850],
                                   shape: BoxShape.rectangle,
                                   borderRadius: BorderRadius.circular(5.0)),
                               defaultDecoration: BoxDecoration(
@@ -160,227 +160,250 @@ class _CalendarPageState extends State<CalendarPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: <Widget>[
-                                  TextButton(
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return StatefulBuilder(builder:
-                                                  (BuildContext context,
-                                                      StateSetter mystate) {
-                                                return AlertDialog(
-                                                  content: SizedBox(
-                                                    height: 350,
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          child: Text('Tasks',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      800],
-                                                                  fontSize:
-                                                                      20.0)),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 40,
-                                                          child: Divider(
-                                                            color: Colors
-                                                                .grey[600],
+                                  Expanded(
+                                    child: TextButton(
+                                        style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10))),
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return StatefulBuilder(builder:
+                                                    (BuildContext context,
+                                                        StateSetter mystate) {
+                                                  return AlertDialog(
+                                                    content: SizedBox(
+                                                      height: 350,
+                                                      child: Column(
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text('Tasks',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                            .grey[
+                                                                        800],
+                                                                    fontSize:
+                                                                        20.0)),
                                                           ),
-                                                        ),
-                                                        CustomTextFormField(
-                                                          label: 'Title:',
-                                                          controller:
-                                                              _titleController,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 15),
-                                                        CustomTextFormField(
-                                                          label: 'Description:',
-                                                          controller:
-                                                              _descriptionController,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 15),
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              DatePicker
-                                                                  .showDateTimePicker(
-                                                                context,
-                                                                showTitleActions:
-                                                                    true,
-                                                                minTime:
-                                                                    DateTime(
-                                                                        1950,
-                                                                        1,
-                                                                        1),
-                                                                maxTime:
-                                                                    DateTime(
-                                                                        2030,
-                                                                        12,
-                                                                        31),
-                                                                onConfirm:
-                                                                    (date) {
-                                                                  var inputFormat =
-                                                                      DateFormat(
-                                                                          'yyyy-MM-dd HH:mm');
-                                                                  mystate(() {
-                                                                    _dateController
-                                                                            .text =
-                                                                        inputFormat
-                                                                            .format(date);
-                                                                  });
-                                                                },
-                                                              );
-                                                            },
-                                                            child: Text(_dateController
-                                                                        .text ==
-                                                                    ''
-                                                                ? 'Choose Date:'
-                                                                : _dateController
-                                                                    .text)),
-                                                        const SizedBox(
-                                                            height: 15),
-                                                        OutlinedButton(
-                                                            onPressed: () {
-                                                              store(context,
-                                                                  'Task');
-                                                            },
-                                                            child: const Text(
-                                                                'Save'))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              });
-                                            });
-                                      },
-                                      child: Column(
-                                        children: const [
-                                          Icon(Icons.task_alt_outlined),
-                                          Text('Tasks'),
-                                        ],
-                                      )),
-                                  TextButton(
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext builder) {
-                                              return StatefulBuilder(builder:
-                                                  (BuildContext context,
-                                                      StateSetter mystate) {
-                                                return AlertDialog(
-                                                  content: SizedBox(
-                                                    height: 350,
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          child: Text(
-                                                              'Appointments',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      800],
-                                                                  fontSize:
-                                                                      20.0)),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 40,
-                                                          child: Divider(
-                                                            color: Colors
-                                                                .grey[600],
+                                                          SizedBox(
+                                                            height: 40,
+                                                            child: Divider(
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
                                                           ),
-                                                        ),
-                                                        CustomTextFormField(
-                                                          label: 'Title:',
-                                                          controller:
-                                                              _titleController,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 15),
-                                                        CustomTextFormField(
-                                                          label: 'Tescription:',
-                                                          controller:
-                                                              _descriptionController,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 15),
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              DatePicker
-                                                                  .showDateTimePicker(
-                                                                context,
-                                                                showTitleActions:
-                                                                    true,
-                                                                minTime:
-                                                                    DateTime(
-                                                                        1950,
-                                                                        1,
-                                                                        1),
-                                                                maxTime:
-                                                                    DateTime(
-                                                                        2030,
-                                                                        12,
-                                                                        31),
-                                                                onConfirm:
-                                                                    (date) {
-                                                                  var inputFormat =
-                                                                      DateFormat(
-                                                                          'yyyy-MM-dd HH:mm');
-                                                                  mystate(() {
-                                                                    _dateController
-                                                                            .text =
-                                                                        inputFormat
-                                                                            .format(date);
-                                                                  });
-                                                                },
-                                                              );
-                                                            },
-                                                            child: Text(_dateController
-                                                                        .text ==
-                                                                    ''
-                                                                ? 'Choose Date:'
-                                                                : _dateController
-                                                                    .text)),
-                                                        const SizedBox(
-                                                            height: 15),
-                                                        OutlinedButton(
-                                                            onPressed: () {
-                                                              mystate(() {
-                                                                saving = true;
-                                                              });
-                                                              Future.delayed(
-                                                                  const Duration(
-                                                                      milliseconds:
-                                                                          3000),
-                                                                  () async {
+                                                          CustomTextFormField(
+                                                            label: 'Title:',
+                                                            controller:
+                                                                _titleController,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 15),
+                                                          CustomTextFormField(
+                                                            label:
+                                                                'Description:',
+                                                            controller:
+                                                                _descriptionController,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 15),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                DatePicker
+                                                                    .showDateTimePicker(
+                                                                  context,
+                                                                  showTitleActions:
+                                                                      true,
+                                                                  minTime:
+                                                                      DateTime(
+                                                                          1950,
+                                                                          1,
+                                                                          1),
+                                                                  maxTime:
+                                                                      DateTime(
+                                                                          2030,
+                                                                          12,
+                                                                          31),
+                                                                  onConfirm:
+                                                                      (date) {
+                                                                    var inputFormat =
+                                                                        DateFormat(
+                                                                            'yyyy-MM-dd HH:mm');
+                                                                    mystate(() {
+                                                                      _dateController
+                                                                              .text =
+                                                                          inputFormat
+                                                                              .format(date);
+                                                                    });
+                                                                  },
+                                                                );
+                                                              },
+                                                              child: Text(_dateController
+                                                                          .text ==
+                                                                      ''
+                                                                  ? 'Choose Date:'
+                                                                  : _dateController
+                                                                      .text)),
+                                                          const SizedBox(
+                                                              height: 15),
+                                                          OutlinedButton(
+                                                              onPressed: () {
                                                                 store(context,
-                                                                    'Appointment');
-                                                              });
-                                                              mystate(() {
-                                                                saving = false;
-                                                              });
-                                                            },
-                                                            child: const Text(
-                                                                'Save'))
-                                                      ],
+                                                                    'Task');
+                                                              },
+                                                              child: const Text(
+                                                                  'Save'))
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                );
+                                                  );
+                                                });
                                               });
-                                            });
-                                      },
-                                      child: Column(
-                                        children: const [
-                                          Icon(Icons.calendar_month_outlined),
-                                          Text('Appointments')
-                                        ],
-                                      )),
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Icon(Icons.task_alt_outlined,
+                                                color: Colors.grey[850]),
+                                            Text(
+                                              'Tasks',
+                                              style: TextStyle(
+                                                  color: Colors.grey[850]),
+                                            ),
+                                          ],
+                                        )),
+                                  ),
+                                  Expanded(
+                                    child: TextButton(
+                                        style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10))),
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext builder) {
+                                                return StatefulBuilder(builder:
+                                                    (BuildContext context,
+                                                        StateSetter mystate) {
+                                                  return AlertDialog(
+                                                    content: SizedBox(
+                                                      height: 350,
+                                                      child: Column(
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text(
+                                                                'Appointments',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                            .grey[
+                                                                        800],
+                                                                    fontSize:
+                                                                        20.0)),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 40,
+                                                            child: Divider(
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
+                                                          ),
+                                                          CustomTextFormField(
+                                                            label: 'Title:',
+                                                            controller:
+                                                                _titleController,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 15),
+                                                          CustomTextFormField(
+                                                            label:
+                                                                'Tescription:',
+                                                            controller:
+                                                                _descriptionController,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 15),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                DatePicker
+                                                                    .showDateTimePicker(
+                                                                  context,
+                                                                  showTitleActions:
+                                                                      true,
+                                                                  minTime:
+                                                                      DateTime(
+                                                                          1950,
+                                                                          1,
+                                                                          1),
+                                                                  maxTime:
+                                                                      DateTime(
+                                                                          2030,
+                                                                          12,
+                                                                          31),
+                                                                  onConfirm:
+                                                                      (date) {
+                                                                    var inputFormat =
+                                                                        DateFormat(
+                                                                            'yyyy-MM-dd HH:mm');
+                                                                    mystate(() {
+                                                                      _dateController
+                                                                              .text =
+                                                                          inputFormat
+                                                                              .format(date);
+                                                                    });
+                                                                  },
+                                                                );
+                                                              },
+                                                              child: Text(_dateController
+                                                                          .text ==
+                                                                      ''
+                                                                  ? 'Choose Date:'
+                                                                  : _dateController
+                                                                      .text)),
+                                                          const SizedBox(
+                                                              height: 15),
+                                                          OutlinedButton(
+                                                              onPressed: () {
+                                                                mystate(() {
+                                                                  saving = true;
+                                                                });
+                                                                Future.delayed(
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            3000),
+                                                                    () async {
+                                                                  store(context,
+                                                                      'Appointment');
+                                                                });
+                                                                mystate(() {
+                                                                  saving =
+                                                                      false;
+                                                                });
+                                                              },
+                                                              child: const Text(
+                                                                  'Save'))
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                });
+                                              });
+                                        },
+                                        child: Column(children: [
+                                          Icon(Icons.calendar_month_outlined,
+                                              color: Colors.grey[850]),
+                                          Text(
+                                            'Appointments',
+                                            style: TextStyle(
+                                                color: Colors.grey[850]),
+                                          ),
+                                        ])),
+                                  ),
                                 ],
                               ),
                         const SizedBox(height: 15.0),
@@ -682,6 +705,13 @@ class _CalendarPageState extends State<CalendarPage> {
       await AppointmentController().delete(id);
     }
 
-    getCalendarData();
+    setState(() {
+      calendarData = {};
+      listOfAppointments = [];
+      listOfTasks = [];
+      selectedEvents = {};
+    });
+
+    await getCalendarData();
   }
 }

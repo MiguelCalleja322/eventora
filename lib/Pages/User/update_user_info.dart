@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import '../../Widgets/custom_appbar.dart';
 import '../../Widgets/custom_dashboard_button.dart';
 import '../../Widgets/custom_textfield.dart';
 import '../../utils/email_validation.dart';
@@ -61,6 +62,9 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: 'Basic Information',
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
@@ -88,9 +92,11 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Basic Information:',
-                          style: TextStyle(
-                              color: Colors.grey[800], fontSize: 20.0)),
+                      child: Text(
+                        'Basic Information',
+                        style:
+                            TextStyle(color: Colors.grey[800], fontSize: 30.0),
+                      ),
                     ),
                     TextButton(
                         onPressed: () => Navigator.pushReplacementNamed(

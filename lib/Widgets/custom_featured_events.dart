@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CustomFeaturedEvents extends StatelessWidget {
@@ -28,13 +29,12 @@ class CustomFeaturedEvents extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
         onPressed: () {
-          Navigator.pushReplacementNamed(context, '/custom_event_full',
-              arguments: {
-                'bgColor': bgColor,
-                'slug': slug,
-                'title': title,
-                'scheduleStart': scheduleStart,
-              });
+          Navigator.pushNamed(context, '/custom_event_full', arguments: {
+            'bgColor': bgColor,
+            'slug': slug,
+            'title': title,
+            'scheduleStart': scheduleStart,
+          });
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -46,8 +46,10 @@ class CustomFeaturedEvents extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      imageUrl!,
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl!,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                       fit: BoxFit.cover,
                       width: 75,
                       height: 75,
