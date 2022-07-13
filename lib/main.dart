@@ -4,7 +4,7 @@ import 'package:eventora/Pages/Notes/create_notes.dart';
 import 'package:eventora/Pages/Notes/list_notes.dart';
 import 'package:eventora/Pages/Notes/view_note.dart';
 import 'package:eventora/Pages/Organizer/create_events.dart';
-import 'package:eventora/Pages/User/update_user_info.dart';
+import 'package:eventora/Pages/Auth/update_user_info.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';

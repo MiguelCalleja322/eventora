@@ -10,6 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 import '../Widgets/custom_event_card_new.dart';
 import '../controllers/auth_controller.dart';
 import 'package:path/path.dart' as path;
@@ -124,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.calendar_month_outlined,
+                              Ionicons.calendar_number_outline,
                               color: Colors.grey[800],
                             ),
                             const SizedBox(width: 10),
@@ -150,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.note_add_outlined,
+                              Ionicons.bookmark_outline,
                               color: Colors.grey[800],
                             ),
                             const SizedBox(width: 10),
@@ -176,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.notes_outlined,
+                              Ionicons.document_text_outline,
                               color: Colors.grey[800],
                             ),
                             const SizedBox(width: 10),
@@ -224,8 +225,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 top: 145,
                                 child: IconButton(
                                     icon: Icon(
-                                      Icons.update_outlined,
-                                      color: Colors.black.withOpacity(0.5),
+                                      Ionicons.camera_outline,
+                                      color: Colors.grey[800],
                                       size: 20,
                                     ),
                                     onPressed: () {
@@ -236,8 +237,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         const SizedBox(height: 15),
                         Text(
                           profile!['user']['name'],
-                          style: const TextStyle(
-                              color: Color(0xFF114F5A),
+                          style: TextStyle(
+                              color: Colors.grey[800],
                               letterSpacing: 2.0,
                               fontSize: 24.0,
                               fontWeight: FontWeight.w500),
@@ -248,10 +249,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: <Widget>[
                             Column(
                               children: [
-                                const Text(
+                                Text(
                                   'Followers',
                                   style: TextStyle(
-                                      color: Color(0xFF114F5A),
+                                      color: Colors.grey[800],
                                       letterSpacing: 1.0,
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.w500),
@@ -260,8 +261,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   profile!['user']['followers_count']
                                       .toString()
                                       .toString(),
-                                  style: const TextStyle(
-                                      color: Color(0xFF114F5A),
+                                  style: TextStyle(
+                                      color: Colors.grey[800],
                                       letterSpacing: 1.0,
                                       fontSize: 26.0,
                                       fontWeight: FontWeight.w500),
@@ -270,10 +271,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             Column(
                               children: [
-                                const Text(
+                                Text(
                                   'Following',
                                   style: TextStyle(
-                                      color: Color(0xFF114F5A),
+                                      color: Colors.grey[800],
                                       letterSpacing: 1.0,
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.w500),
@@ -281,8 +282,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Text(
                                   profile!['user']['following_count']
                                       .toString(),
-                                  style: const TextStyle(
-                                      color: Color(0xFF114F5A),
+                                  style: TextStyle(
+                                      color: Colors.grey[800],
                                       letterSpacing: 1.0,
                                       fontSize: 26.0,
                                       fontWeight: FontWeight.w500),
@@ -291,10 +292,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             Column(
                               children: [
-                                const Text(
+                                Text(
                                   'No. Events',
                                   style: TextStyle(
-                                      color: Color(0xFF114F5A),
+                                      color: Colors.grey[800],
                                       letterSpacing: 1.0,
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.w500),
@@ -303,8 +304,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   profile!['user']['events_count']
                                       .toString()
                                       .toString(),
-                                  style: const TextStyle(
-                                      color: Color(0xFF114F5A),
+                                  style: TextStyle(
+                                      color: Colors.grey[800],
                                       letterSpacing: 1.0,
                                       fontSize: 26.0,
                                       fontWeight: FontWeight.w500),
@@ -316,6 +317,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         const SizedBox(height: 15.0),
                         const SizedBox(height: 15.0),
                         OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                                primary: Colors.grey[800],
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
                             onPressed: () {
                               Navigator.pushNamed(context, '/create_events');
                             },
@@ -360,10 +365,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                   const SizedBox(height: 15.0),
                                   TextButton(
+                                      style: OutlinedButton.styleFrom(
+                                          primary: Colors.grey[700],
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10))),
                                       onPressed: () {
                                         fetchProfile();
                                       },
-                                      child: const Icon(Icons.refresh))
+                                      child: const Icon(Ionicons.refresh))
                                 ],
                               )
                       ],

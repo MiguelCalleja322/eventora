@@ -47,7 +47,7 @@ class _CreateAndListNotesState extends State<CreateAndListNotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'List Notes',
       ),
       floatingActionButton: FloatingActionButton(

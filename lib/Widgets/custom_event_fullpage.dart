@@ -6,6 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomEventFullPage extends StatefulWidget {
   const CustomEventFullPage({
@@ -367,11 +369,36 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
                             const SizedBox(
                               height: 15,
                             ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(event!['fees'] != 0
-                                  ? event!['fees']!.toString()
-                                  : event!['registration_link']),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      event!['fees'] != 0
+                                          ? event!['fees']!.toString()
+                                          : event!['registration_link'],
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                                event!['registration_link'] == null
+                                    ? const SizedBox.shrink()
+                                    : TextButton(
+                                        style: OutlinedButton.styleFrom(
+                                            primary: Colors.grey[700],
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10))),
+                                        onPressed: () {
+                                          _launchUrl(
+                                              event!['registration_link']);
+                                        },
+                                        child:
+                                            const Icon(Ionicons.globe_outline))
+                              ],
                             ),
                           ],
                         ),
@@ -691,6 +718,42 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
         },
       ),
     );
+  }
+
+  void _launchUrl(String _url) async {
+    if (_url.contains('https://')) {
+      Uri url = Uri.parse(_url);
+      bool validURL = url.isAbsolute;
+
+      if (validURL) {
+        launchUrl(url);
+      } else {
+        if (!await launchUrl(Uri.parse(_url))) {
+          Fluttertoast.showToast(
+              msg: "Can't launch url.",
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red[500],
+              textColor: Colors.white,
+              timeInSecForIosWeb: 3,
+              toastLength: Toast.LENGTH_LONG,
+              fontSize: 16.0);
+        }
+        return;
+      }
+    } else {
+      String newUrl = 'https://$_url';
+      if (!await launchUrl(Uri.parse(newUrl))) {
+        Fluttertoast.showToast(
+            msg: "Can't launch url.",
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.red[500],
+            textColor: Colors.white,
+            timeInSecForIosWeb: 3,
+            toastLength: Toast.LENGTH_LONG,
+            fontSize: 16.0);
+      }
+      return;
+    }
   }
 
   void showMap(String coordinates) {

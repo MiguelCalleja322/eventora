@@ -13,6 +13,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -266,8 +267,11 @@ class _CalendarPageState extends State<CalendarPage> {
                                         },
                                         child: Column(
                                           children: [
-                                            Icon(Icons.task_alt_outlined,
+                                            Icon(Ionicons.list_outline,
                                                 color: Colors.grey[850]),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
                                             Text(
                                               'Tasks',
                                               style: TextStyle(
@@ -395,8 +399,11 @@ class _CalendarPageState extends State<CalendarPage> {
                                               });
                                         },
                                         child: Column(children: [
-                                          Icon(Icons.calendar_month_outlined,
+                                          Icon(Ionicons.calendar_number_outline,
                                               color: Colors.grey[850]),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
                                           Text(
                                             'Appointments',
                                             style: TextStyle(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ionicons/ionicons.dart';
 import '../controllers/events_controller.dart';
 
 // ignore: must_be_immutable
@@ -110,6 +111,11 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                             userProfile!['role']['type'] == 'organizer'
                                 ? Expanded(
                                     child: TextButton(
+                                        style: OutlinedButton.styleFrom(
+                                            primary: Colors.grey[800],
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10))),
                                         onPressed: () {
                                           setState(() {
                                             model = 'events';
@@ -117,7 +123,11 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                         },
                                         child: Column(
                                           children: const [
-                                            Icon(Icons.event),
+                                            Icon(Ionicons
+                                                .calendar_number_outline),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
                                             Text('Events'),
                                           ],
                                         )),
@@ -125,6 +135,11 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                 : const SizedBox(),
                             Expanded(
                               child: TextButton(
+                                  style: OutlinedButton.styleFrom(
+                                      primary: Colors.grey[800],
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10))),
                                   onPressed: () {
                                     setState(() {
                                       model = 'share_event';
@@ -132,13 +147,21 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                   },
                                   child: Column(
                                     children: const [
-                                      Icon(Icons.calendar_month_outlined),
+                                      Icon(Ionicons.checkbox_outline),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Text('Shared Events')
                                     ],
                                   )),
                             ),
                             Expanded(
                               child: TextButton(
+                                  style: OutlinedButton.styleFrom(
+                                      primary: Colors.grey[800],
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10))),
                                   onPressed: () {
                                     setState(() {
                                       setState(() {
@@ -148,7 +171,10 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                   },
                                   child: Column(
                                     children: const [
-                                      Icon(Icons.note_add_outlined),
+                                      Icon(Ionicons.bookmark_outline),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Text('Saved Events')
                                     ],
                                   )),

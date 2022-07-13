@@ -26,6 +26,7 @@ class CustomTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextAlign textAlign;
   final double letterSpacing;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,10 +42,13 @@ class CustomTextField extends StatelessWidget {
         textAlign: textAlign,
         inputFormatters: inputFormatters,
         decoration: InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            border: InputBorder.none,
-            labelText: label,
-            labelStyle: TextStyle(color: Colors.grey[800])),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          border: InputBorder.none,
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.grey[800]),
+          prefixIconConstraints:
+              const BoxConstraints(minWidth: 0, minHeight: 0),
+        ),
       ),
     );
 

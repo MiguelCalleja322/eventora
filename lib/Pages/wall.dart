@@ -44,56 +44,44 @@ class _WallPageState extends State<WallPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Home',
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: <Widget>[
-                events!.isEmpty
-                    ? DecoratedBox(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 132, 132, 132),
-                                width: 2.0,
-                                style: BorderStyle.solid)),
-                        child: SizedBox(
-                          height: 150,
-                          width: (MediaQuery.of(context).size.width),
-                          child: const Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'No Events Posted for this Category',
-                                style: TextStyle(fontSize: 20),
-                              )),
-                        ),
-                      )
-                    : ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: events!.length,
-                        itemBuilder: (context, index) {
-                          return CustomEventCard(
-                              slug: events![index]['slug'],
-                              bgColor: int.parse(events![index]['bgcolor']),
-                              imageUrl:
-                                  cloudFrontUri! + events![index]['images'][0],
-                              eventType: events![index]['event_type'],
-                              title: events![index]['title'],
-                              description: events![index]['description'],
-                              dateTime: DateFormat('E, d MMM yyyy HH:mm')
-                                  .format(DateTime.parse(
-                                      events![index]['schedule_start'])));
-                        }),
-              ],
+      body: events!.isEmpty
+          ? Align(
+              alignment: Alignment.center,
+              child: Text(
+                'No Events for ${widget.type}',
+                style: const TextStyle(fontSize: 23, color: Colors.black54),
+              ))
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: <Widget>[
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: events!.length,
+                          itemBuilder: (context, index) {
+                            return CustomEventCard(
+                                slug: events![index]['slug'],
+                                bgColor: int.parse(events![index]['bgcolor']),
+                                imageUrl: cloudFrontUri! +
+                                    events![index]['images'][0],
+                                eventType: events![index]['event_type'],
+                                title: events![index]['title'],
+                                description: events![index]['description'],
+                                dateTime: DateFormat('E, d MMM yyyy HH:mm')
+                                    .format(DateTime.parse(
+                                        events![index]['schedule_start'])));
+                          }),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

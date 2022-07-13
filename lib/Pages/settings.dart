@@ -15,9 +15,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Settings',
         height: 70,
+        hideBackButton: true,
       ),
       body: SafeArea(
           child: Padding(
@@ -31,8 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         title: const Text('User Settings'),
                         tiles: <SettingsTile>[
                           SettingsTile.navigation(
-                            onPressed: (context) =>
-                                Navigator.pushReplacementNamed(
+                            onPressed: (context) => Navigator.pushNamed(
                               context,
                               '/updateUserInfo',
                             ),

@@ -77,8 +77,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Statistics',
+        hideBackButton: true,
       ),
       body: SafeArea(
         child: RefreshIndicator(
@@ -89,22 +90,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Statistics',
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          letterSpacing: 2.0,
-                          fontSize: 30.0),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    child: Divider(
-                      color: Colors.grey[600],
-                    ),
-                  ),
                   const Text(
                     'Most Liked Event',
                     style: TextStyle(

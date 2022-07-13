@@ -34,7 +34,7 @@ class _EventCategpryState extends State<EventCategpry> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Event Category',
         height: 70,
         hideBackButton: true,

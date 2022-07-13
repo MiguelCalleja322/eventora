@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar(
+  // ignore: prefer_const_constructors_in_immutables
+  CustomAppBar(
       {Key? key,
       this.height = 70,
       required this.title,

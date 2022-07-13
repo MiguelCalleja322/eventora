@@ -3,7 +3,9 @@
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import '../../Widgets/custom_dashboard_button.dart';
 import '../../Widgets/custom_loading.dart';
 import '../../Widgets/custom_textfield.dart';
 
@@ -23,24 +25,7 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   DateTime birthdate = DateTime.now();
-  late String formattedBirthDate = DateFormat('yyyy-MM-dd').format(birthdate);
   late int isAgeOver18 = 0;
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: birthdate,
-        firstDate: DateTime(1970, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != birthdate) {
-      setState(() {
-        birthdate = picked;
-        formattedBirthDate = DateFormat('yyyy-MM-dd').format(birthdate);
-        final difference = DateTime.now().difference(birthdate);
-        isAgeOver18 = (difference.inDays / 365).floor();
-      });
-    }
-  }
 
   String roleValue = 'user';
 
@@ -58,11 +43,13 @@ class _SignupState extends State<Signup> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmController =
       TextEditingController();
+  final TextEditingController _birthdateController = TextEditingController();
   bool screenLoading = false;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
+    _birthdateController.dispose();
     _nameController.dispose();
     _usernameController.dispose();
     _emailController.dispose();
@@ -139,7 +126,7 @@ class _SignupState extends State<Signup> {
                                   onChanged: (value) => value,
                                   textAlign: TextAlign.left,
                                   letterSpacing: 1.0,
-                                  label: 'Mobile',
+                                  label: 'Mobile: +974',
                                   controller: _mobileController,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
@@ -210,21 +197,47 @@ class _SignupState extends State<Signup> {
                             ),
                           ],
                         ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => _selectDate(context),
-                                child: const Text('Birthdate'),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 20.0,
-                            ),
-                            Expanded(
-                                child: Text(
-                                    "${birthdate.toLocal()}".split(' ')[0])),
-                          ],
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: CustomButton(
+                            height: 50.0,
+                            width: 200.0,
+                            backgroundColor: Colors.grey[800],
+                            borderRadius: BorderRadius.circular(10.0),
+                            onPressed: () {
+                              DatePicker.showDatePicker(context,
+                                  showTitleActions: true,
+                                  minTime: DateTime(1970, 3, 5),
+                                  maxTime: DateTime(2022, 6, 7),
+                                  onConfirm: (date) {
+                                var inputFormat = DateFormat('yyyy-MM-dd');
+                                setState(() {
+                                  _birthdateController.text =
+                                      inputFormat.format(date);
+
+                                  final difference =
+                                      DateTime.now().difference(date);
+                                  isAgeOver18 =
+                                      (difference.inDays / 365).floor();
+                                });
+                              },
+                                  currentTime: DateTime.now(),
+                                  locale: LocaleType.en);
+                            },
+                            padding: const EdgeInsets.all(0.0),
+                            alignment: Alignment.center,
+                            text: _birthdateController.text.isEmpty
+                                ? 'Birthdate'
+                                : _birthdateController.text,
+                            color: Colors.grey[100],
+                            letterSpacing: 2.0,
+                            fontSize: 12.0,
+                            fit: BoxFit.none,
+                            elevation: 0,
+                          ),
                         ),
                         const SizedBox(height: 15),
                         SizedBox(
@@ -251,7 +264,7 @@ class _SignupState extends State<Signup> {
                         const SizedBox(height: 15),
                         Center(
                           child: TextButton(
-                            onPressed: () => Navigator.pushNamed(context, '/'),
+                            onPressed: () => Navigator.pop(context),
                             child: const Text('Click Here to Login'),
                           ),
                         ),
@@ -331,8 +344,8 @@ class _SignupState extends State<Signup> {
         'email': _emailController.text,
         'password': _passwordController.text,
         'username': _usernameController.text,
-        'mobile': _mobileController.text,
-        'birthdate': formattedBirthDate,
+        'mobile': '+974${_mobileController.text}',
+        'birthdate': _birthdateController.text,
         'type': roleValue,
       };
 

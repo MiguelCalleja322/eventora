@@ -72,7 +72,7 @@ class _CreateNotesPageState extends State<CreateNotesPage> {
           color: Colors.white,
         ),
       ),
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Create Note',
       ),
       body: SafeArea(

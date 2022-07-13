@@ -1,10 +1,9 @@
-// ignore_for_file: avoid_function_literals_in_foreach_calls, non_constant_identifier_names, avoid_print
+// ignore_for_file: avoid_function_literals_in_foreach_calls, non_constant_identifier_names, avoid_print, depend_on_referenced_packages
 
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
-
 import 'package:eventora/Widgets/custom_dashboard_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/event_categories_controller.dart';
@@ -22,7 +21,7 @@ import 'package:google_place/google_place.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
-// ignore: depend_on_referenced_packages
+
 import 'package:path/path.dart' as p;
 
 import '../../Widgets/custom_appbar.dart';
@@ -121,7 +120,6 @@ class _CreateEventsState extends State<CreateEvents> {
 
   void getEventCategories() async {
     fetchedCategories = await EventCategoriesController().index();
-
     if (fetchedCategories!.isNotEmpty) {
       setState(() {
         _feesController.text = '0';
@@ -155,7 +153,7 @@ class _CreateEventsState extends State<CreateEvents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar(
+        appBar: CustomAppBar(
           title: 'Create Event',
           hideBackButton: false,
         ),
@@ -345,6 +343,7 @@ class _CreateEventsState extends State<CreateEvents> {
                     textAlign: TextAlign.left,
                     letterSpacing: 1.0,
                     label: 'Description',
+                    maxLine: 12,
                     controller: _descriptionController,
                     focusNode: _descriptionfocusNode,
                   ),
@@ -658,6 +657,7 @@ class _CreateEventsState extends State<CreateEvents> {
                           label: 'Event Link',
                           controller: _registrationLinkController,
                           focusNode: _registrationLinkfocusNode,
+                          maxLine: 1,
                         )
                       : eventType == 'ticketed'
                           ? CustomTextField(
@@ -666,6 +666,7 @@ class _CreateEventsState extends State<CreateEvents> {
                               label: 'Fees',
                               controller: _feesController,
                               focusNode: _feesfocusNode,
+                              maxLine: 1,
                             )
                           : Container(),
                   const SizedBox(

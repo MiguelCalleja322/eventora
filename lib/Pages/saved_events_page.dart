@@ -29,7 +29,7 @@ class _SavedEventsState extends State<SavedEvents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Saved Events',
       ),
       body: SafeArea(

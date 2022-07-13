@@ -77,7 +77,7 @@ class _FeaturePageState extends State<FeaturePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Features',
         height: 70,
         hideBackButton: true,
