@@ -305,6 +305,8 @@ class _UpdateEventState extends State<UpdateEvent> {
                                 _fullAddressController.text =
                                     predictions![index].description!.toString();
                                 predictions!.clear();
+                                _debounce!.cancel();
+                                FocusManager.instance.primaryFocus?.unfocus();
                               });
                             },
                             title: Align(

@@ -727,6 +727,8 @@ class _CreateEventsState extends State<CreateEvents> {
                                           .description!
                                           .toString();
                                   predictions!.clear();
+                                  _debounce!.cancel();
+                                  FocusManager.instance.primaryFocus?.unfocus();
                                 });
                               },
                               title: Align(

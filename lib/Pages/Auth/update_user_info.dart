@@ -331,6 +331,8 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                                 _fullAddressController.text =
                                     predictions![index].description!.toString();
                                 predictions!.clear();
+                                _debounce!.cancel();
+                                FocusManager.instance.primaryFocus?.unfocus();
                               });
                             },
                             title: Align(
