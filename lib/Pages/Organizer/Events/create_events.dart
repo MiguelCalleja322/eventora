@@ -21,11 +21,9 @@ import 'package:google_place/google_place.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
-
 import 'package:path/path.dart' as p;
-
-import '../../Widgets/custom_appbar.dart';
-import '../../controllers/location_controller.dart';
+import '../../../Widgets/custom_appbar.dart';
+import '../../../controllers/location_controller.dart';
 
 class CreateEvents extends StatefulWidget {
   const CreateEvents({Key? key}) : super(key: key);

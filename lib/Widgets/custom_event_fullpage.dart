@@ -13,9 +13,11 @@ class CustomEventFullPage extends StatefulWidget {
   const CustomEventFullPage({
     Key? key,
     required this.slug,
+    this.hideBottomNavBar = false,
   }) : super(key: key);
 
   final String? slug;
+  final bool? hideBottomNavBar;
 
   @override
   State<CustomEventFullPage> createState() => _CustomEventFullPageState();

@@ -14,6 +14,7 @@ class CustomTextField extends StatelessWidget {
       this.maxLine,
       required this.textAlign,
       required this.letterSpacing,
+      this.textCapitalization = TextCapitalization.none,
       this.inputFormatters})
       : super(key: key);
 
@@ -26,6 +27,7 @@ class CustomTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextAlign textAlign;
   final double letterSpacing;
+  final TextCapitalization? textCapitalization;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: Colors.grey)),
       child: TextField(
+        textCapitalization: textCapitalization!,
         maxLines: maxLine,
         focusNode: focusNode,
         obscureText: obscureText,

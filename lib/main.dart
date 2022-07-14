@@ -3,8 +3,10 @@ import 'package:eventora/Pages/Auth/otp.dart';
 import 'package:eventora/Pages/Notes/create_notes.dart';
 import 'package:eventora/Pages/Notes/list_notes.dart';
 import 'package:eventora/Pages/Notes/view_note.dart';
-import 'package:eventora/Pages/Organizer/create_events.dart';
+
 import 'package:eventora/Pages/Auth/update_user_info.dart';
+import 'package:eventora/Pages/Organizer/Events/create_events.dart';
+import 'package:eventora/Pages/Organizer/Events/update_event.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
@@ -95,6 +97,15 @@ class Routes {
       case '/create_events':
         return MaterialPageRoute(
             builder: (_) => const CreateEvents(), settings: routeSettings);
+      case '/update_event':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => UpdateEvent(
+                    slug: args['slug'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
       case '/updateUserInfo':
         return MaterialPageRoute(
             builder: (_) => const UpdateUserInfo(), settings: routeSettings);

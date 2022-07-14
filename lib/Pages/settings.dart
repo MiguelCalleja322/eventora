@@ -26,9 +26,13 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 children: [
                   SettingsList(
+                    lightTheme: const SettingsThemeData(
+                        settingsListBackground: Colors.transparent,
+                        settingsSectionBackground: Colors.transparent),
                     shrinkWrap: true,
                     sections: [
                       SettingsSection(
+                        margin: EdgeInsetsDirectional.zero,
                         title: const Text('User Settings'),
                         tiles: <SettingsTile>[
                           SettingsTile.navigation(
@@ -58,6 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       //   ],
                       // ),
                       SettingsSection(
+                        margin: EdgeInsetsDirectional.zero,
                         tiles: <SettingsTile>[
                           SettingsTile.navigation(
                             onPressed: (context) {

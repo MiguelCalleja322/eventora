@@ -333,6 +333,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 itemCount: profile!['user']['events'].length,
                                 itemBuilder: (context, index) {
                                   return CustomEventCard(
+                                      isOptionsButton: true,
                                       slug: profile!['user']['events']
                                           [index]!['slug'],
                                       bgColor: int.parse(profile!['user']

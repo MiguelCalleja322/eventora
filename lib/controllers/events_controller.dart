@@ -36,7 +36,25 @@ class EventController {
     return response;
   }
 
+  Future update(Map<String, dynamic> dataToUpdate) async {
+    return await ApiService().request('events', 'PUT', dataToUpdate, true);
+  }
+
   Future like(Map<String, dynamic> slug) async {
     return await ApiService().request('events/eventLike', 'POST', slug, true);
+  }
+
+  Future delete(String slug) async {
+    return await ApiService().request('events/$slug', 'DELETE', {}, true);
+  }
+
+  Future markAsPrivate(String slug) async {
+    return await ApiService()
+        .request('events/mark_as_private/$slug', 'PUT', {}, true);
+  }
+
+  Future availability(String slug) async {
+    return await ApiService()
+        .request('events/availability/$slug', 'PUT', {}, true);
   }
 }
