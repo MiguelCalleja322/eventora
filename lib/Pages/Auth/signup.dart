@@ -47,6 +47,9 @@ class _SignupState extends State<Signup> {
   bool screenLoading = false;
   final _formKey = GlobalKey<FormState>();
 
+  late DateTime currentMaxDate = DateTime.now();
+  late DateTime newMaxDate = DateTime(
+      currentMaxDate.year - 18, currentMaxDate.month, currentMaxDate.day);
   @override
   void dispose() {
     _birthdateController.dispose();
@@ -210,9 +213,8 @@ class _SignupState extends State<Signup> {
                             onPressed: () {
                               DatePicker.showDatePicker(context,
                                   showTitleActions: true,
-                                  minTime: DateTime(1970, 3, 5),
-                                  maxTime: DateTime(2022, 6, 7),
-                                  onConfirm: (date) {
+                                  minTime: DateTime(1960, 1, 1),
+                                  maxTime: newMaxDate, onConfirm: (date) {
                                 var inputFormat = DateFormat('yyyy-MM-dd');
                                 setState(() {
                                   _birthdateController.text =
@@ -302,6 +304,7 @@ class _SignupState extends State<Signup> {
       }
 
       if (isAgeOver18 < 18) {
+        Fluttertoast.cancel();
         Fluttertoast.showToast(
             msg: 'Age must be over 18',
             gravity: ToastGravity.BOTTOM,
@@ -315,6 +318,7 @@ class _SignupState extends State<Signup> {
 
       // ignore: unnecessary_null_comparison
       if (roleValue == null) {
+        Fluttertoast.cancel();
         Fluttertoast.showToast(
             msg: 'You must have a role.',
             gravity: ToastGravity.BOTTOM,
@@ -327,6 +331,7 @@ class _SignupState extends State<Signup> {
       }
 
       if (_passwordController.text != _passwordConfirmController.text) {
+        Fluttertoast.cancel();
         Fluttertoast.showToast(
             msg: 'Password did not match!',
             gravity: ToastGravity.BOTTOM,

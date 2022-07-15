@@ -349,7 +349,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                           [index]!['description'],
                                       dateTime: DateFormat('E, d MMM yyyy HH:mm')
                                           .format(DateTime.parse(
-                                              profile!['user']['events'][index]!['schedule_start'])));
+                                              profile!['user']['events'][index]!['schedule_start'])),
+                                      scheduleStart: DateTime.parse(profile!['user']['events'][index]!['schedule_start']),
+                                      scheduleEnd: DateTime.parse(profile!['user']['events'][index]!['schedule_end']));
                                 })
                             : Column(
                                 children: [
@@ -445,7 +447,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       message = 'Something went wrong...';
     }
-
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message!,
         gravity: ToastGravity.BOTTOM,
@@ -471,7 +473,7 @@ class _ProfilePageState extends State<ProfilePage> {
       message = 'Something went wrong...';
       toastColor = Colors.red[500];
     }
-
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message!,
         gravity: ToastGravity.BOTTOM,
@@ -496,7 +498,7 @@ class _ProfilePageState extends State<ProfilePage> {
       message = response['events'];
       toastColor = Colors.grey[700];
     }
-
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message!,
         gravity: ToastGravity.BOTTOM,

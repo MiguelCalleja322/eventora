@@ -415,6 +415,7 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
 
   void updateInfo() async {
     if (isAgeOver18 != 0 && isAgeOver18 < 18) {
+      Fluttertoast.cancel();
       Fluttertoast.showToast(
           msg: 'Age must be over 18',
           gravity: ToastGravity.BOTTOM,
@@ -426,6 +427,7 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
     }
 
     if (_passwordController.text != _passwordConfirmationController.text) {
+      Fluttertoast.cancel();
       Fluttertoast.showToast(
           msg: 'Password did not match!',
           gravity: ToastGravity.BOTTOM,
@@ -454,6 +456,7 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
 
     if (response!.isNotEmpty) {
       if (response!['message'] != null) {
+        Fluttertoast.cancel();
         Fluttertoast.showToast(
             msg: response!['message'].toString(),
             gravity: ToastGravity.BOTTOM,

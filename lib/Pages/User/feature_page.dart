@@ -204,7 +204,7 @@ class _FeaturePageState extends State<FeaturePage> {
                           child: const Align(
                               alignment: Alignment.center,
                               child: Text(
-                                'No Featured Events',
+                                'No Hot Events',
                                 style: TextStyle(fontSize: 20),
                               )),
                         ),
@@ -275,6 +275,8 @@ class _FeaturePageState extends State<FeaturePage> {
                             itemCount: featuredOrganizers!.length,
                             itemBuilder: (context, index, realIndex) {
                               return CustomProfile(
+                                  image:
+                                      '$cloudFrontUri${featuredOrganizers![index]['avatar']}',
                                   userId: featuredOrganizers![index]['id'],
                                   page: 'features',
                                   isFollowed: featuredOrganizers![index]
@@ -350,6 +352,7 @@ class _FeaturePageState extends State<FeaturePage> {
       message = 'Something went wrong...';
     }
 
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message,
         gravity: ToastGravity.BOTTOM,
@@ -376,6 +379,7 @@ class _FeaturePageState extends State<FeaturePage> {
       toastColor = Colors.red[500];
     }
 
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message,
         gravity: ToastGravity.BOTTOM,
@@ -401,6 +405,7 @@ class _FeaturePageState extends State<FeaturePage> {
       toastColor = Colors.grey[700];
     }
 
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message,
         gravity: ToastGravity.BOTTOM,

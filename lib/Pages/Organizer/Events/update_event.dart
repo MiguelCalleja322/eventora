@@ -8,6 +8,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:intl/intl.dart';
@@ -16,9 +17,21 @@ import 'package:ionicons/ionicons.dart';
 import '../../../Widgets/custom_dashboard_button.dart';
 
 class UpdateEvent extends StatefulWidget {
-  UpdateEvent({Key? key, required this.slug}) : super(key: key);
+  const UpdateEvent(
+      {Key? key,
+      required this.slug,
+      this.title,
+      this.description,
+      this.scheduleStart,
+      this.scheduleEnd})
+      : super(key: key);
 
   final String slug;
+  final String? title;
+  final String? description;
+  final DateTime? scheduleStart;
+  final DateTime? scheduleEnd;
+
   @override
   State<UpdateEvent> createState() => _UpdateEventState();
 }
@@ -72,6 +85,12 @@ class _UpdateEventState extends State<UpdateEvent> {
 
   @override
   void initState() {
+    DateFormat inputFormat = DateFormat('yyyy-MM-dd HH:mm');
+    _titleController.text = widget.title!;
+    _descriptionController.text = widget.description!;
+    scheduleStart = inputFormat.format(widget.scheduleStart!);
+    scheduleEnd = inputFormat.format(widget.scheduleEnd!);
+
     googlePlaceInit();
     super.initState();
   }
@@ -342,7 +361,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                   backgroundColor: Colors.grey[800],
                   borderRadius: BorderRadius.circular(10.0),
                   onPressed: () {
-                    update();
+                    update(context);
                   },
                   padding: const EdgeInsets.all(0.0),
                   alignment: Alignment.center,
@@ -389,7 +408,7 @@ class _UpdateEventState extends State<UpdateEvent> {
     );
   }
 
-  void update() async {
+  void update(context) async {
     Map<String, dynamic> dataToUpdate = {
       'slug': widget.slug,
       'title': _titleController.text,
@@ -403,6 +422,35 @@ class _UpdateEventState extends State<UpdateEvent> {
       'full_address': _fullAddressController.text,
     };
 
-    await EventController().update(dataToUpdate);
+    Map<String, dynamic>? response =
+        await EventController().update(dataToUpdate);
+
+    if (response!['message'].isNotEmpty) {
+      Fluttertoast.cancel();
+      await Fluttertoast.showToast(
+          msg: response['message'],
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.grey[800],
+          textColor: Colors.white,
+          timeInSecForIosWeb: 3,
+          toastLength: Toast.LENGTH_LONG,
+          fontSize: 16.0);
+
+      Navigator.pop(context);
+      return;
+    } else {
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(
+          msg: response['error'],
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red[500],
+          textColor: Colors.white,
+          timeInSecForIosWeb: 3,
+          toastLength: Toast.LENGTH_LONG,
+          fontSize: 16.0);
+
+      Navigator.pop(context);
+      return;
+    }
   }
 }

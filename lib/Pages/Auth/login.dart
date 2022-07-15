@@ -34,7 +34,9 @@ class _LoginState extends State<Login> {
 
     String? bearerToken = await StorageSevice().read(storageKey) ?? '';
 
-    if (bearerToken.isNotEmpty && mounted) {
+    // print(bearerToken);
+
+    if (bearerToken != '') {
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -168,6 +170,7 @@ class _LoginState extends State<Login> {
       await Navigator.pushReplacementNamed(context, '/otp_page');
     } else {
       if (widget._isAuthenticated!['message'] != null) {
+        Fluttertoast.cancel();
         Fluttertoast.showToast(
             msg: widget._isAuthenticated!['message'],
             gravity: ToastGravity.BOTTOM,

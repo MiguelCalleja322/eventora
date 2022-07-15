@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               showSelectedLabels: true,
               showUnselectedLabels: true,
               backgroundColor: const Color(0xFFF7F8FB),
-              selectedItemColor: Colors.grey[800],
+              selectedItemColor: Colors.blue[700],
               currentIndex: _selectedIndex,
               elevation: 8,
               unselectedIconTheme: IconThemeData(

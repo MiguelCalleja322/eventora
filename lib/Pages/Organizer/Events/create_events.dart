@@ -771,7 +771,7 @@ class _CreateEventsState extends State<CreateEvents> {
                             borderRadius: BorderRadius.circular(10.0),
                             onPressed: () {
                               setState(() {
-                                store();
+                                store(context);
                               });
                             },
                             padding: const EdgeInsets.all(0.0),
@@ -830,7 +830,7 @@ class _CreateEventsState extends State<CreateEvents> {
         ),
       );
 
-  void store() async {
+  void store(context) async {
     List<String> fileImages = [];
 
     if (_titleController.text.isEmpty) {
@@ -842,6 +842,7 @@ class _CreateEventsState extends State<CreateEvents> {
     }
 
     if (scheduleStart.isEmpty && scheduleEnd.isEmpty) {
+      Fluttertoast.cancel();
       Fluttertoast.showToast(
           msg: 'Please provide start date or end date',
           gravity: ToastGravity.BOTTOM,
@@ -855,6 +856,7 @@ class _CreateEventsState extends State<CreateEvents> {
     }
 
     if (eventType.isEmpty) {
+      Fluttertoast.cancel();
       Fluttertoast.showToast(
           msg: 'Please provide the date or schedule',
           gravity: ToastGravity.BOTTOM,
@@ -879,6 +881,7 @@ class _CreateEventsState extends State<CreateEvents> {
     }
 
     if (imageFileList!.isEmpty) {
+      Fluttertoast.cancel();
       Fluttertoast.showToast(
           msg: 'Please pick at least one picture',
           gravity: ToastGravity.BOTTOM,
@@ -922,6 +925,7 @@ class _CreateEventsState extends State<CreateEvents> {
     Map<String, dynamic>? response = await EventController().store(eventData);
 
     if (response!['message'] != null) {
+      Fluttertoast.cancel();
       Fluttertoast.showToast(
           msg: response['message'],
           gravity: ToastGravity.BOTTOM,
@@ -932,6 +936,7 @@ class _CreateEventsState extends State<CreateEvents> {
           fontSize: 16.0);
       return;
     } else {
+      Fluttertoast.cancel();
       Fluttertoast.showToast(
           msg: 'Done',
           gravity: ToastGravity.BOTTOM,
@@ -965,6 +970,7 @@ class _CreateEventsState extends State<CreateEvents> {
         isEventPrivate = [false, false];
         isEventAvailable = [false, false];
       });
+      Navigator.pop(context);
     }
   }
 

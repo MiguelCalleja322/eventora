@@ -53,7 +53,7 @@ class _WallPageState extends State<WallPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Home',
+        title: widget.type,
       ),
       body: loading == true
           ? Align(

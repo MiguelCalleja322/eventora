@@ -183,6 +183,7 @@ class _OTPPageState extends State<OTPPage> {
   }
 
   void toast(String message, Color? color) async {
+    Fluttertoast.cancel();
     await Fluttertoast.showToast(
         msg: message,
         gravity: ToastGravity.BOTTOM,
@@ -191,7 +192,5 @@ class _OTPPageState extends State<OTPPage> {
         timeInSecForIosWeb: 2,
         toastLength: Toast.LENGTH_LONG,
         fontSize: 16.0);
-
-    Fluttertoast.cancel();
   }
 }

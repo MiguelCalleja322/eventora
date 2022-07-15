@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eventora/controllers/events_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class CustomEventCard extends StatefulWidget {
-  const CustomEventCard(
+  CustomEventCard(
       {Key? key,
       required this.slug,
       required this.bgColor,
@@ -15,6 +16,8 @@ class CustomEventCard extends StatefulWidget {
       required this.title,
       required this.description,
       required this.dateTime,
+      this.scheduleStart,
+      this.scheduleEnd,
       this.isOptionsButton = false})
       : super(key: key);
   final String? slug;
@@ -25,6 +28,8 @@ class CustomEventCard extends StatefulWidget {
   final String? description;
   final String? dateTime;
   final bool? isOptionsButton;
+  late DateTime? scheduleStart;
+  late DateTime? scheduleEnd;
 
   @override
   State<CustomEventCard> createState() => _CustomEventCardState();
@@ -118,9 +123,19 @@ class _CustomEventCardState extends State<CustomEventCard> {
                                                                   context,
                                                                   '/update_event',
                                                                   arguments: {
-                                                                    'slug':
+                                                                    'slug': widget
+                                                                        .slug,
+                                                                    'title': widget
+                                                                        .title,
+                                                                    'description':
                                                                         widget
-                                                                            .slug
+                                                                            .description,
+                                                                    'scheduleStart':
+                                                                        widget
+                                                                            .scheduleStart,
+                                                                    'scheduleEnd':
+                                                                        widget
+                                                                            .scheduleEnd
                                                                   });
                                                             },
                                                             leading: const Icon(
@@ -275,14 +290,42 @@ class _CustomEventCardState extends State<CustomEventCard> {
   }
 
   void markAsPrivate(String slug) async {
-    await EventController().markAsPrivate(slug);
+    Map<String, dynamic>? response =
+        await EventController().markAsPrivate(slug);
+    Fluttertoast.cancel();
+    await Fluttertoast.showToast(
+        msg: response!['message'],
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+        timeInSecForIosWeb: 3,
+        toastLength: Toast.LENGTH_LONG,
+        fontSize: 16.0);
   }
 
   void availability(String slug) async {
-    await EventController().availability(slug);
+    Map<String, dynamic>? response = await EventController().availability(slug);
+    Fluttertoast.cancel();
+    await Fluttertoast.showToast(
+        msg: response!['message'],
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+        timeInSecForIosWeb: 3,
+        toastLength: Toast.LENGTH_LONG,
+        fontSize: 16.0);
   }
 
   void delete(String slug) async {
-    await EventController().delete(slug);
+    Map<String, dynamic>? response = await EventController().delete(slug);
+    Fluttertoast.cancel();
+    await Fluttertoast.showToast(
+        msg: response!['message'],
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+        timeInSecForIosWeb: 3,
+        toastLength: Toast.LENGTH_LONG,
+        fontSize: 16.0);
   }
 }

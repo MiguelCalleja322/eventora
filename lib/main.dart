@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:eventora/Pages/Appointments/create_appointment.dart';
+import 'package:eventora/Pages/Appointments/view_appointment.dart';
 import 'package:eventora/Pages/Auth/otp.dart';
 import 'package:eventora/Pages/Notes/create_notes.dart';
 import 'package:eventora/Pages/Notes/list_notes.dart';
@@ -7,6 +9,8 @@ import 'package:eventora/Pages/Notes/view_note.dart';
 import 'package:eventora/Pages/Auth/update_user_info.dart';
 import 'package:eventora/Pages/Organizer/Events/create_events.dart';
 import 'package:eventora/Pages/Organizer/Events/update_event.dart';
+import 'package:eventora/Pages/Tasks/create_task.dart';
+import 'package:eventora/Pages/Tasks/view_task.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
@@ -30,7 +34,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MaterialApp(
-      // initialRoute: '/home',
+      initialRoute: '/home',
       onGenerateRoute: Routes.generateRoutes,
       theme: ThemeData(
         useMaterial3: true,
@@ -58,28 +62,60 @@ class Routes {
       case '/otp_page':
         return MaterialPageRoute(
             builder: (_) => const OTPPage(), settings: routeSettings);
+      //notes
+      case '/create_notes':
+        return MaterialPageRoute(
+            builder: (_) => const CreateNotesPage(), settings: routeSettings);
       case '/list_notes':
         return MaterialPageRoute(
             builder: (_) => const CreateAndListNotes(),
             settings: routeSettings);
-      case '/create_notes':
-        return MaterialPageRoute(
-            builder: (_) => const CreateNotesPage(), settings: routeSettings);
-      case '/saved_events':
-        if (args is Map<String, dynamic>) {
-          return MaterialPageRoute(
-              builder: (_) => SavedEvents(
-                    savedEvents: args['savedEvents'],
-                  ),
-              settings: routeSettings);
-        }
-        return _errorRoute();
       case '/read_note':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
               builder: (_) => ShowNote(
                     title: args['title'],
                     description: args['description'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+      //tasks
+      case '/create_task':
+        return MaterialPageRoute(
+            builder: (_) => CreateTask(), settings: routeSettings);
+      case '/view_task':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => ViewTask(
+                    title: args['title'],
+                    description: args['description'],
+                    dateTime: args['dateTime'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+      //appointment
+      case '/create_appointment':
+        return MaterialPageRoute(
+            builder: (_) => CreateAppointment(), settings: routeSettings);
+      case '/view_appointment':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => ViewAppointment(
+                    title: args['title'],
+                    description: args['description'],
+                    dateTime: args['dateTime'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+      //events
+      case '/saved_events':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => SavedEvents(
+                    savedEvents: args['savedEvents'],
                   ),
               settings: routeSettings);
         }
@@ -102,6 +138,10 @@ class Routes {
           return MaterialPageRoute(
               builder: (_) => UpdateEvent(
                     slug: args['slug'],
+                    title: args['title'],
+                    description: args['description'],
+                    scheduleStart: args['scheduleStart'],
+                    scheduleEnd: args['scheduleEnd'],
                   ),
               settings: routeSettings);
         }
@@ -157,6 +197,7 @@ class Routes {
                     fees: args['fees'],
                     venue: args['venue'],
                     slug: args['slug'],
+                    images: args['images'],
                   ),
               settings: routeSettings);
         }

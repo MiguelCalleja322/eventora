@@ -49,7 +49,6 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
       fetchCloudFrontUri();
       fetchEventUsingSlug();
     }
-
     super.initState();
   }
 
@@ -703,15 +702,20 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
         ],
         onTap: (value) {
           if (value == 0) {
-            Navigator.pushNamed(context, '/payment', arguments: {
-              'title': event!['title'],
-              'description': event!['description'],
-              'fees': event!['fees'],
-              'venue': event!['venue']['full_address'],
-              'schedule':
-                  '${event!['schedule_start']} - ${event!['schedule_end']} ',
-              'slug': widget.slug,
-            });
+            if (event!['event_type'] == 'ticketed') {
+              Navigator.pushNamed(context, '/payment', arguments: {
+                'title': event!['title'],
+                'description': event!['description'],
+                'fees': event!['fees'],
+                'venue': event!['venue']['full_address'],
+                'schedule':
+                    '${event!['schedule_start']} - ${event!['schedule_end']} ',
+                'slug': widget.slug,
+                'images': event!['images'],
+              });
+            } else {
+              _launchUrl(event!['registration_link']);
+            }
           } else if (value == 1) {
             onPressedInterested(widget.slug);
           } else {
@@ -731,6 +735,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
         launchUrl(url);
       } else {
         if (!await launchUrl(Uri.parse(_url))) {
+          Fluttertoast.cancel();
           Fluttertoast.showToast(
               msg: "Can't launch url.",
               gravity: ToastGravity.BOTTOM,
@@ -745,6 +750,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
     } else {
       String newUrl = 'https://$_url';
       if (!await launchUrl(Uri.parse(newUrl))) {
+        Fluttertoast.cancel();
         Fluttertoast.showToast(
             msg: "Can't launch url.",
             gravity: ToastGravity.BOTTOM,
@@ -784,6 +790,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
       toastColor = Colors.red[500];
     }
 
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message!,
         gravity: ToastGravity.BOTTOM,
@@ -809,6 +816,7 @@ class _CustomEventFullPageState extends State<CustomEventFullPage> {
       toastColor = Colors.grey[700];
     }
 
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message,
         gravity: ToastGravity.BOTTOM,

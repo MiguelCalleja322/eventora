@@ -257,7 +257,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
     } else {
       message = 'Something went wrong...';
     }
-
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message!,
         gravity: ToastGravity.BOTTOM,
@@ -283,7 +283,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
       message = 'Something went wrong...';
       toastColor = Colors.red[500];
     }
-
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message!,
         gravity: ToastGravity.BOTTOM,
@@ -308,7 +308,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
       message = response['events'];
       toastColor = Colors.grey[700];
     }
-
+    Fluttertoast.cancel();
     Fluttertoast.showToast(
         msg: message!,
         gravity: ToastGravity.BOTTOM,

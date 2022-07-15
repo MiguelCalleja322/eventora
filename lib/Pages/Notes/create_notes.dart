@@ -18,7 +18,7 @@ class _CreateNotesPageState extends State<CreateNotesPage> {
   late FocusNode titleNode = FocusNode();
   late FocusNode descrioptionNode = FocusNode();
 
-  void saveNote() async {
+  void saveNote(context) async {
     if (noteTitle.text.isEmpty) {
       titleNode.requestFocus();
       return;
@@ -37,6 +37,7 @@ class _CreateNotesPageState extends State<CreateNotesPage> {
     Map<String, dynamic>? response = await NoteController().store(note);
 
     if (response!.isNotEmpty) {
+      Fluttertoast.cancel();
       Fluttertoast.showToast(
           msg: response['message'],
           gravity: ToastGravity.BOTTOM,
@@ -48,6 +49,7 @@ class _CreateNotesPageState extends State<CreateNotesPage> {
 
       noteTitle.clear();
       noteDescription.clear();
+      Navigator.pushNamed(context, '/list_notes');
       return;
     }
   }
@@ -64,7 +66,7 @@ class _CreateNotesPageState extends State<CreateNotesPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          saveNote();
+          saveNote(context);
         },
         backgroundColor: Colors.grey[850],
         child: const Icon(
