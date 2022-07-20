@@ -49,7 +49,7 @@ class _CreateNotesPageState extends State<CreateNotesPage> {
 
       noteTitle.clear();
       noteDescription.clear();
-      Navigator.pushNamed(context, '/list_notes');
+      Navigator.popAndPushNamed(context, '/list_notes');
       return;
     }
   }

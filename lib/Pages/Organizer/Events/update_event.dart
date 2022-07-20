@@ -14,7 +14,7 @@ import 'package:google_place/google_place.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
-import '../../../Widgets/custom_dashboard_button.dart';
+import '../../../Widgets/custom_button.dart';
 
 class UpdateEvent extends StatefulWidget {
   const UpdateEvent(
@@ -146,8 +146,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                   children: [
                     Expanded(
                       child: CustomButton(
-                        height: 50.0,
-                        width: 200.0,
+                        title: 'Event Start:',
                         backgroundColor: Colors.grey[800],
                         borderRadius: BorderRadius.circular(10.0),
                         onPressed: () {
@@ -166,18 +165,13 @@ class _UpdateEventState extends State<UpdateEvent> {
                         padding: const EdgeInsets.all(0.0),
                         alignment: Alignment.center,
                         text:
-                            scheduleStart == '' ? 'Start Date' : scheduleStart,
-                        color: Colors.grey[100],
-                        letterSpacing: 2.0,
-                        fontSize: 12.0,
-                        fit: BoxFit.none,
+                            scheduleStart == '' ? 'Select Date' : scheduleStart,
                         elevation: 0,
                       ),
                     ),
                     Expanded(
                       child: CustomButton(
-                        height: 50.0,
-                        width: 200.0,
+                        title: 'Event End:',
                         backgroundColor: Colors.grey[800],
                         borderRadius: BorderRadius.circular(10.0),
                         onPressed: () {
@@ -195,11 +189,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                         },
                         padding: const EdgeInsets.all(0.0),
                         alignment: Alignment.center,
-                        text: scheduleEnd == '' ? 'End Date' : scheduleEnd,
-                        color: Colors.grey[100],
-                        letterSpacing: 2.0,
-                        fontSize: 12.0,
-                        fit: BoxFit.none,
+                        text: scheduleEnd == '' ? 'Select Date' : scheduleEnd,
                         elevation: 0,
                       ),
                     ),
@@ -356,8 +346,6 @@ class _UpdateEventState extends State<UpdateEvent> {
                   height: 15.0,
                 ),
                 CustomButton(
-                  height: 50.0,
-                  width: 200.0,
                   backgroundColor: Colors.grey[800],
                   borderRadius: BorderRadius.circular(10.0),
                   onPressed: () {
@@ -366,10 +354,6 @@ class _UpdateEventState extends State<UpdateEvent> {
                   padding: const EdgeInsets.all(0.0),
                   alignment: Alignment.center,
                   text: 'Update',
-                  color: Colors.grey[100],
-                  letterSpacing: 2.0,
-                  fontSize: 12.0,
-                  fit: BoxFit.none,
                   elevation: 0,
                 ),
               ],

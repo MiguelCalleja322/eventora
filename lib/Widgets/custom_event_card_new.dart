@@ -40,6 +40,7 @@ class _CustomEventCardState extends State<CustomEventCard> {
   Widget build(BuildContext context) {
     return SizedBox(
         child: Card(
+      elevation: 2,
       semanticContainer: true,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       shape: RoundedRectangleBorder(

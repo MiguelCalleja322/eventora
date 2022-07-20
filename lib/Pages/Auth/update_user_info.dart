@@ -13,8 +13,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 import '../../Widgets/custom_appbar.dart';
-import '../../Widgets/custom_dashboard_button.dart';
+import '../../Widgets/custom_button.dart';
 import '../../Widgets/custom_textfield.dart';
 import '../../controllers/location_controller.dart';
 import '../../utils/email_validation.dart';
@@ -216,8 +217,8 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                       width: 15,
                     ),
                     CustomButton(
-                      height: 50.0,
-                      width: 200.0,
+                      isIcon: true,
+                      icon: Ionicons.calendar,
                       backgroundColor: Colors.grey[800],
                       borderRadius: BorderRadius.circular(10.0),
                       onPressed: () {
@@ -237,13 +238,9 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                       },
                       padding: const EdgeInsets.all(15.0),
                       alignment: Alignment.center,
-                      text: _birthdateController.text == ''
-                          ? 'Birthdate'
-                          : _birthdateController.text,
-                      color: Colors.grey[100],
-                      letterSpacing: 2.0,
-                      fontSize: 12.0,
-                      fit: BoxFit.none,
+                      // text: _birthdateController.text == ''
+                      //     ? 'Birthdate'
+                      //     : _birthdateController.text,
                       elevation: 0,
                     ),
                   ],
@@ -361,8 +358,6 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                 ),
                 const SizedBox(height: 15),
                 CustomButton(
-                  height: 65.0,
-                  width: 100.0,
                   backgroundColor: Colors.grey[800],
                   borderRadius: BorderRadius.circular(10.0),
                   onPressed: () {
@@ -371,10 +366,6 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                   padding: const EdgeInsets.all(10.0),
                   alignment: Alignment.center,
                   text: 'Update',
-                  color: Colors.grey[100],
-                  letterSpacing: 2.0,
-                  fontSize: 15.0,
-                  fit: BoxFit.none,
                   elevation: 0.0,
                 ),
               ],

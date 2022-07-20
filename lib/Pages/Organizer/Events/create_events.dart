@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:eventora/Widgets/custom_dashboard_button.dart';
+import 'package:eventora/Widgets/custom_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/event_categories_controller.dart';
 import 'package:eventora/controllers/events_controller.dart';
@@ -161,13 +161,6 @@ class _CreateEventsState extends State<CreateEvents> {
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 children: <Widget>[
-                  const Divider(
-                    height: 30.0,
-                    thickness: 1,
-                  ),
-                  const SizedBox(
-                    height: 15.0,
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -295,8 +288,6 @@ class _CreateEventsState extends State<CreateEvents> {
                     height: 15.0,
                   ),
                   CustomButton(
-                    height: 50.0,
-                    width: 200,
                     backgroundColor: Colors.grey[800],
                     borderRadius: BorderRadius.circular(10.0),
                     onPressed: () {
@@ -308,10 +299,6 @@ class _CreateEventsState extends State<CreateEvents> {
                     padding: const EdgeInsets.all(15.0),
                     alignment: Alignment.center,
                     text: 'Clear Selections',
-                    color: Colors.grey[100],
-                    letterSpacing: 2.0,
-                    fontSize: 15.0,
-                    fit: BoxFit.scaleDown,
                     elevation: 18.0,
                   ),
                   const SizedBox(
@@ -352,8 +339,7 @@ class _CreateEventsState extends State<CreateEvents> {
                     children: [
                       Expanded(
                         child: CustomButton(
-                          height: 50.0,
-                          width: 200.0,
+                          title: 'Event Start:',
                           backgroundColor: Colors.grey[800],
                           borderRadius: BorderRadius.circular(10.0),
                           onPressed: () {
@@ -373,25 +359,22 @@ class _CreateEventsState extends State<CreateEvents> {
                           padding: const EdgeInsets.all(0.0),
                           alignment: Alignment.center,
                           text: scheduleStart == ''
-                              ? 'Start Date'
+                              ? 'Select Date'
                               : scheduleStart,
-                          color: Colors.grey[100],
-                          letterSpacing: 2.0,
-                          fontSize: 12.0,
-                          fit: BoxFit.none,
                           elevation: 0,
                         ),
                       ),
                       Expanded(
                         child: CustomButton(
-                          height: 50.0,
-                          width: 200.0,
+                          title: 'End Date:',
                           backgroundColor: Colors.grey[800],
                           borderRadius: BorderRadius.circular(10.0),
                           onPressed: () {
+                            DateTime minTime = DateTime.parse(scheduleStart);
                             DatePicker.showDateTimePicker(context,
                                 showTitleActions: true,
-                                minTime: DateTime(2022, 3, 5),
+                                minTime: DateTime(
+                                    minTime.year, minTime.month, minTime.day),
                                 maxTime: DateTime(2030, 6, 7),
                                 onConfirm: (date) {
                               var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
@@ -404,11 +387,7 @@ class _CreateEventsState extends State<CreateEvents> {
                           },
                           padding: const EdgeInsets.all(0.0),
                           alignment: Alignment.center,
-                          text: scheduleEnd == '' ? 'End Date' : scheduleEnd,
-                          color: Colors.grey[100],
-                          letterSpacing: 2.0,
-                          fontSize: 12.0,
-                          fit: BoxFit.none,
+                          text: scheduleEnd == '' ? 'Select Date' : scheduleEnd,
                           elevation: 0,
                         ),
                       ),
@@ -765,8 +744,6 @@ class _CreateEventsState extends State<CreateEvents> {
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: CustomButton(
-                            height: 50.0,
-                            width: 100.0,
                             backgroundColor: Colors.grey[800],
                             borderRadius: BorderRadius.circular(10.0),
                             onPressed: () {
@@ -777,10 +754,6 @@ class _CreateEventsState extends State<CreateEvents> {
                             padding: const EdgeInsets.all(0.0),
                             alignment: Alignment.center,
                             text: 'Save',
-                            color: Colors.grey[100],
-                            letterSpacing: 2.0,
-                            fontSize: 15.0,
-                            fit: BoxFit.none,
                             elevation: 18.0,
                           ),
                         ),

@@ -2,16 +2,16 @@ import 'package:eventora/controllers/event_categories_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../Widgets/custom_appbar.dart';
+import '../../Widgets/custom_appbar.dart';
 
-class EventCategpry extends StatefulWidget {
-  const EventCategpry({Key? key}) : super(key: key);
+class EventCategory extends StatefulWidget {
+  const EventCategory({Key? key}) : super(key: key);
 
   @override
-  State<EventCategpry> createState() => _EventCategpryState();
+  State<EventCategory> createState() => _EventCategoryState();
 }
 
-class _EventCategpryState extends State<EventCategpry> {
+class _EventCategoryState extends State<EventCategory> {
   late Map<String, dynamic>? fetchedCategories = {};
   late List<dynamic>? eventCategories = [];
 

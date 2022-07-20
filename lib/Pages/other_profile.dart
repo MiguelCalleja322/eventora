@@ -82,8 +82,6 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                       children: <Widget>[
                         SizedBox(
                           child: CustomProfile(
-                              userId: userProfile!['id'],
-                              roleId: userProfile!['role']['user_id'],
                               navigate: () => Navigator.pop(context),
                               page: 'otherProfile',
                               isFollowed: userProfile!['followers'].isEmpty

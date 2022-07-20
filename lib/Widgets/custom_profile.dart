@@ -1,26 +1,25 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomProfile extends StatelessWidget {
-  CustomProfile(
-      {Key? key,
-      this.image,
-      required this.name,
-      required this.username,
-      required this.followers,
-      required this.followings,
-      this.events,
-      required this.role,
-      required this.follow,
-      required this.isFollowed,
-      required this.page,
-      this.navigate,
-      this.userId = 0,
-      this.roleId = 0})
-      : super(key: key);
-  late int userId = 0;
-  late int roleId = 0;
+class CustomProfile extends ConsumerWidget {
+  CustomProfile({
+    Key? key,
+    this.image,
+    required this.name,
+    required this.username,
+    required this.followers,
+    required this.followings,
+    this.events,
+    required this.role,
+    required this.follow,
+    required this.isFollowed,
+    required this.page,
+    this.navigate,
+    this.isFollowHidden = false,
+  }) : super(key: key);
+  late bool? isFollowHidden;
   late String? image = '';
   late String? name = '';
   late String? username = '';
@@ -34,7 +33,7 @@ class CustomProfile extends StatelessWidget {
   late VoidCallback? navigate;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.grey[900],
@@ -69,7 +68,7 @@ class CustomProfile extends StatelessWidget {
                             ),
                           )
                         : const SizedBox(),
-                    userId != roleId
+                    isFollowHidden == false
                         ? Expanded(
                             child: Align(
                               alignment: Alignment.centerRight,

@@ -1,25 +1,16 @@
-// Copyright 2019 Aleksander Woźniak
-// SPDX-License-Identifier: Apache-2.0
-
-// ignore_for_file: list_remove_unrelated_type
-
 import 'dart:collection';
-
+import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/controllers/appointment_controller.dart';
 import 'package:eventora/controllers/note_controller.dart';
 import 'package:eventora/controllers/task_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import '../Widgets/custom_textformfield.dart';
 import '../controllers/calendar_controller.dart';
 import '../models/calendar.dart';
 
@@ -35,7 +26,6 @@ class _CalendarPageState extends State<CalendarPage> {
   late Map<String, dynamic>? calendarData = {};
   late List<dynamic>? listOfAppointments = [];
   late List<dynamic>? listOfTasks = [];
-
   late DateTime _selectedDay = DateTime.now();
   late DateTime _focusedDay = DateTime.now();
   late String? model = '';
@@ -80,6 +70,10 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBar(
+        title: 'Calendar',
+        hideBackButton: true,
+      ),
       body: SafeArea(
         child: loading == true
             ? SpinKitCircle(
@@ -96,10 +90,6 @@ class _CalendarPageState extends State<CalendarPage> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Text('Calendar',
-                            style: TextStyle(
-                                color: Colors.grey[800], fontSize: 40.0)),
-                        const SizedBox(height: 15.0),
                         TableCalendar(
                           calendarFormat: _calendarFormat,
                           onFormatChanged: (format) {

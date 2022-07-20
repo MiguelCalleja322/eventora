@@ -1,7 +1,6 @@
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/appointment_controller.dart';
-import 'package:eventora/controllers/task_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';

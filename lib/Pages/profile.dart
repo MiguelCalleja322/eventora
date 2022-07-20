@@ -2,11 +2,12 @@
 
 import 'dart:io';
 import 'dart:math';
-import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:eventora/utils/s3.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -17,19 +18,23 @@ import 'package:path/path.dart' as path;
 import '../controllers/events_controller.dart';
 import '../utils/secure_storage.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  late Map<String, dynamic>? profile = {};
+final profileProvider = FutureProvider.autoDispose((ref) async {
+  final response = await AuthController().getProfile() ?? {};
+  return await response;
+});
+
+class ProfilePageState extends ConsumerState<ProfilePage> {
   final ImagePicker imagePicker = ImagePicker();
   late int timestamp = DateTime.now().millisecondsSinceEpoch;
   late bool loading = false;
-  late String? cloudFrontURI = '';
+  late String? newProfilePic = '';
   late String? cloudFrontUri = '';
   late String? message = '';
   late String? role = '';
@@ -47,44 +52,25 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Future<void> fetchProfile() async {
-    await dotenv.load(fileName: ".env");
-    setState(() {
-      cloudFrontURI = dotenv.env['CLOUDFRONT_URI'];
-    });
-    setState(() {
-      loading = true;
-    });
-    profile = await AuthController().getProfile() ?? {};
-
-    setState(() {
-      loading = false;
-    });
-  }
-
   @override
   void initState() {
     getRole();
     fetchCloudFrontUri();
-    fetchProfile();
+
     super.initState();
   }
 
   @override
   void dispose() {
-    loading = false;
-    timestamp = DateTime.now().millisecondsSinceEpoch;
-    profile = {};
-    cloudFrontURI = '';
-    message = '';
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return profile!.isEmpty
-        ? const LoadingPage()
-        : Scaffold(
+    final profile = ref.watch(profileProvider);
+    return profile.when(
+        data: (profileData) {
+          return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.transparent,
             ),
@@ -117,10 +103,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0)))),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/shared_events',
-                              arguments: {
-                                'sharedEvents': profile!['user']['share_event']
-                              });
+                          Navigator.pushNamed(
+                              context, '/shared_events', arguments: {
+                            'sharedEvents': profileData['user']['share_event']
+                          });
                         },
                         child: Row(
                           children: [
@@ -145,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {
                           Navigator.pushNamed(context, '/saved_events',
                               arguments: {
-                                'savedEvents': profile!['user']['save_event']
+                                'savedEvents': profileData['user']['save_event']
                               });
                         },
                         child: Row(
@@ -192,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             body: RefreshIndicator(
-              onRefresh: () => fetchProfile(),
+              onRefresh: () async => ref.refresh(profileProvider),
               child: SafeArea(
                 child: SingleChildScrollView(
                   dragStartBehavior: DragStartBehavior.down,
@@ -203,16 +189,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         Align(
                           alignment: Alignment.center,
                           child: Stack(children: [
-                            cloudFrontURI != '' || cloudFrontURI != null
+                            cloudFrontUri != '' || cloudFrontUri != null
                                 ? CircleAvatar(
-                                    backgroundImage: profile!['user']
+                                    backgroundImage: profileData['user']
                                                     ['avatar'] ==
                                                 null ||
-                                            profile!['user']['avatar'] == ''
+                                            profileData['user']['avatar'] == ''
                                         ? const NetworkImage(
                                             'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826')
                                         : NetworkImage(
-                                            '$cloudFrontURI${profile!['user']['avatar']}'),
+                                            '$cloudFrontUri${profileData['user']['avatar']}'),
                                     radius: 90.0,
                                   )
                                 : const CircleAvatar(
@@ -229,14 +215,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: Colors.grey[800],
                                       size: 20,
                                     ),
-                                    onPressed: () {
-                                      openImages();
+                                    onPressed: () async {
+                                      await openImages();
+
+                                      setState(() {
+                                        profileData['user']['avatar'] =
+                                            newProfilePic;
+                                      });
                                     })),
                           ]),
                         ),
                         const SizedBox(height: 15),
                         Text(
-                          profile!['user']['name'],
+                          profileData['user']['name'],
                           style: TextStyle(
                               color: Colors.grey[800],
                               letterSpacing: 2.0,
@@ -258,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
-                                  profile!['user']['followers_count']
+                                  profileData['user']['followers_count']
                                       .toString()
                                       .toString(),
                                   style: TextStyle(
@@ -280,7 +271,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
-                                  profile!['user']['following_count']
+                                  profileData['user']['following_count']
                                       .toString(),
                                   style: TextStyle(
                                       color: Colors.grey[800],
@@ -301,7 +292,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
-                                  profile!['user']['events_count']
+                                  profileData['user']['events_count']
                                       .toString()
                                       .toString(),
                                   style: TextStyle(
@@ -326,32 +317,32 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                             child: const Text('Create Event')),
                         const SizedBox(height: 15.0),
-                        profile!['user']['events'].length != 0
+                        profileData['user']['events'].length != 0
                             ? ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: profile!['user']['events'].length,
+                                itemCount: profileData['user']['events'].length,
                                 itemBuilder: (context, index) {
                                   return CustomEventCard(
                                       isOptionsButton: true,
-                                      slug: profile!['user']['events']
+                                      slug: profileData['user']['events']
                                           [index]!['slug'],
-                                      bgColor: int.parse(profile!['user']
+                                      bgColor: int.parse(profileData['user']
                                           ['events'][index]!['bgcolor']),
                                       imageUrl: cloudFrontUri! +
-                                          profile!['user']['events']
+                                          profileData['user']['events']
                                               [index]!['images'][0],
-                                      eventType: profile!['user']['events']
+                                      eventType: profileData['user']['events']
                                           [index]!['event_type'],
-                                      title: profile!['user']['events']
+                                      title: profileData['user']['events']
                                           [index]!['title'],
-                                      description: profile!['user']['events']
+                                      description: profileData['user']['events']
                                           [index]!['description'],
                                       dateTime: DateFormat('E, d MMM yyyy HH:mm')
-                                          .format(DateTime.parse(
-                                              profile!['user']['events'][index]!['schedule_start'])),
-                                      scheduleStart: DateTime.parse(profile!['user']['events'][index]!['schedule_start']),
-                                      scheduleEnd: DateTime.parse(profile!['user']['events'][index]!['schedule_end']));
+                                          .format(
+                                              DateTime.parse(profileData['user']['events'][index]!['schedule_start'])),
+                                      scheduleStart: DateTime.parse(profileData['user']['events'][index]!['schedule_start']),
+                                      scheduleEnd: DateTime.parse(profileData['user']['events'][index]!['schedule_end']));
                                 })
                             : Column(
                                 children: [
@@ -374,7 +365,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               borderRadius:
                                                   BorderRadius.circular(10))),
                                       onPressed: () {
-                                        fetchProfile();
+                                        ref.refresh(profileProvider);
                                       },
                                       child: const Icon(Ionicons.refresh))
                                 ],
@@ -386,12 +377,22 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           );
+        },
+        error: (_, __) => const Align(
+            alignment: Alignment.center,
+            child: Text(
+              'No Notes Created',
+              style: TextStyle(fontSize: 23, color: Colors.black54),
+            )),
+        loading: () => Center(
+              child: SpinKitCircle(
+                size: 50.0,
+                color: Colors.grey[700],
+              ),
+            ));
   }
 
   openImages() async {
-    setState(() {
-      loading = true;
-    });
     try {
       String fileExtension = '';
       final XFile? selectedImage =
@@ -409,23 +410,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
         await AuthController().userUpdate(avatar);
 
-        setState(() {
-          profile!['user']['avatar'] = 'avatars/$newFileName';
-        });
-      } else {
-        setState(() {
-          loading = false;
-        });
-
-        return;
+        newProfilePic = 'avatars/$newFileName';
       }
     } catch (e) {
       return;
     }
-
-    setState(() {
-      loading = false;
-    });
   }
 
   static randomString() {

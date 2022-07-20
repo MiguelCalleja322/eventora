@@ -8,7 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../Widgets/custom_appbar.dart';
-import '../Widgets/custom_dashboard_button.dart';
+import '../Widgets/custom_button.dart';
 import '../Widgets/custom_textfield.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -287,8 +287,6 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                       const SizedBox(height: 15.0),
                       CustomButton(
-                        height: 65.0,
-                        width: 100.0,
                         backgroundColor: Colors.grey[800],
                         borderRadius: BorderRadius.circular(10.0),
                         onPressed: () {
@@ -297,10 +295,6 @@ class _PaymentPageState extends State<PaymentPage> {
                         padding: const EdgeInsets.all(10.0),
                         alignment: Alignment.center,
                         text: 'Pay',
-                        color: Colors.grey[100],
-                        letterSpacing: 2.0,
-                        fontSize: 15.0,
-                        fit: BoxFit.none,
                         elevation: 0.0,
                       ),
                     ],

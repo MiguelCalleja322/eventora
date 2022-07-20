@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
   bool screenLoading = false;
   final _formKey = GlobalKey<FormState>();
 
-  void _redirectIfUserIsLogged() async {
+  void _redirectIfUserIsLogged(context) async {
     await dotenv.load(fileName: ".env");
     final String storageKey = dotenv.env['STORAGE_KEY'] ?? '';
 
@@ -128,8 +128,8 @@ class _LoginState extends State<Login> {
                           const SizedBox(height: 15),
                           const Text("Don't have an account?"),
                           TextButton(
-                            onPressed: () => Navigator.pushReplacementNamed(
-                                context, '/signup'),
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/signup'),
                             child: const Text('Click Here to Signup'),
                           ),
                         ],

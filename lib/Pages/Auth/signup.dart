@@ -1,11 +1,13 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
-import '../../Widgets/custom_dashboard_button.dart';
+import 'package:ionicons/ionicons.dart';
+import '../../Widgets/custom_button.dart';
 import '../../Widgets/custom_loading.dart';
 import '../../Widgets/custom_textfield.dart';
 
@@ -35,12 +37,14 @@ class _SignupState extends State<Signup> {
   final FocusNode _mobileFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _passwordConfirmFocus = FocusNode();
+  final FocusNode _websiteFocus = FocusNode();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
   final TextEditingController _passwordConfirmController =
       TextEditingController();
   final TextEditingController _birthdateController = TextEditingController();
@@ -59,6 +63,7 @@ class _SignupState extends State<Signup> {
     _mobileController.dispose();
     _passwordController.dispose();
     _passwordConfirmController.dispose();
+    _websiteController.dispose();
     screenLoading = false;
     super.dispose();
   }
@@ -68,6 +73,9 @@ class _SignupState extends State<Signup> {
     return screenLoading
         ? const LoadingPage()
         : Scaffold(
+            appBar: CustomAppBar(
+              title: 'Signup',
+            ),
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
@@ -77,12 +85,6 @@ class _SignupState extends State<Signup> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Eventora',
-                          style: TextStyle(
-                              color: Colors.grey[800], fontSize: 40.0),
-                        ),
-                        const SizedBox(height: 70),
                         CustomTextField(
                           onChanged: (value) => value,
                           textAlign: TextAlign.left,
@@ -103,6 +105,19 @@ class _SignupState extends State<Signup> {
                           focusNode: _emailFocus,
                           validator: (value) =>
                               EmailServiceChecker().isEmailValid(value!),
+                        ),
+                        const SizedBox(height: 15),
+                        CustomTextField(
+                          onChanged: (value) => value,
+                          textAlign: TextAlign.left,
+                          letterSpacing: 1.0,
+                          label: 'Website',
+                          controller: _websiteController,
+                          focusNode: _websiteFocus,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp('[a-z A-Z]')),
+                          ],
                         ),
                         const SizedBox(height: 15),
                         Row(
@@ -203,72 +218,67 @@ class _SignupState extends State<Signup> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: CustomButton(
-                            height: 50.0,
-                            width: 200.0,
-                            backgroundColor: Colors.grey[800],
-                            borderRadius: BorderRadius.circular(10.0),
-                            onPressed: () {
-                              DatePicker.showDatePicker(context,
-                                  showTitleActions: true,
-                                  minTime: DateTime(1960, 1, 1),
-                                  maxTime: newMaxDate, onConfirm: (date) {
-                                var inputFormat = DateFormat('yyyy-MM-dd');
-                                setState(() {
-                                  _birthdateController.text =
-                                      inputFormat.format(date);
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: CustomButton(
+                                  backgroundColor: Colors.grey[800],
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  onPressed: () {
+                                    DatePicker.showDatePicker(context,
+                                        showTitleActions: true,
+                                        minTime: DateTime(1960, 1, 1),
+                                        maxTime: newMaxDate, onConfirm: (date) {
+                                      var inputFormat =
+                                          DateFormat('yyyy-MM-dd');
+                                      setState(() {
+                                        _birthdateController.text =
+                                            inputFormat.format(date);
 
-                                  final difference =
-                                      DateTime.now().difference(date);
-                                  isAgeOver18 =
-                                      (difference.inDays / 365).floor();
-                                });
-                              },
-                                  currentTime: DateTime.now(),
-                                  locale: LocaleType.en);
-                            },
-                            padding: const EdgeInsets.all(0.0),
-                            alignment: Alignment.center,
-                            text: _birthdateController.text.isEmpty
-                                ? 'Birthdate'
-                                : _birthdateController.text,
-                            color: Colors.grey[100],
-                            letterSpacing: 2.0,
-                            fontSize: 12.0,
-                            fit: BoxFit.none,
-                            elevation: 0,
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        SizedBox(
-                          height: 50,
-                          width: double.infinity,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                signup(context);
-                              }
-                            },
-                            style: OutlinedButton.styleFrom(
-                                primary: const Color(0xFFF7F8FB),
-                                backgroundColor: const Color(0xFF114F5A),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(5.0)))),
-                            child: const Text(
-                              'Signup',
-                              style: TextStyle(fontSize: 15.0),
+                                        final difference =
+                                            DateTime.now().difference(date);
+                                        isAgeOver18 =
+                                            (difference.inDays / 365).floor();
+                                      });
+                                    },
+                                        currentTime: DateTime.now(),
+                                        locale: LocaleType.en);
+                                  },
+                                  padding: const EdgeInsets.all(0.0),
+                                  alignment: Alignment.center,
+                                  isIcon: true,
+                                  icon: Ionicons.calendar_outline,
+                                  // text: _birthdateController.text.isEmpty
+                                  //     ? 'Birthdate'
+                                  //     : _birthdateController.text,
+                                  elevation: 0,
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                                flex: 3,
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(_birthdateController.text)))
+                          ],
                         ),
                         const SizedBox(height: 15),
-                        Center(
-                          child: TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Click Here to Login'),
-                          ),
+                        CustomButton(
+                          backgroundColor: Colors.grey[800],
+                          borderRadius: BorderRadius.circular(10.0),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              signup(context);
+                            }
+                          },
+                          padding: const EdgeInsets.all(0.0),
+                          alignment: Alignment.center,
+                          text: 'Signup',
+                          elevation: 0,
                         ),
                       ],
                     ),
@@ -316,6 +326,18 @@ class _SignupState extends State<Signup> {
         return;
       }
 
+      if (_websiteController.text.isEmpty) {
+        Fluttertoast.cancel();
+        Fluttertoast.showToast(
+            msg: 'Website is required',
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.red[500],
+            textColor: Colors.white,
+            timeInSecForIosWeb: 3,
+            toastLength: Toast.LENGTH_LONG,
+            fontSize: 16.0);
+        return;
+      }
       // ignore: unnecessary_null_comparison
       if (roleValue == null) {
         Fluttertoast.cancel();
@@ -349,6 +371,7 @@ class _SignupState extends State<Signup> {
         'email': _emailController.text,
         'password': _passwordController.text,
         'username': _usernameController.text,
+        'website': _websiteController.text,
         'mobile': '+974${_mobileController.text}',
         'birthdate': _birthdateController.text,
         'type': roleValue,

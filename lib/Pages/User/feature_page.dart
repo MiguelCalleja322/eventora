@@ -8,20 +8,26 @@ import 'package:eventora/controllers/user_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../../Widgets/custom_appbar.dart';
 
-class FeaturePage extends StatefulWidget {
+class FeaturePage extends ConsumerStatefulWidget {
   const FeaturePage({Key? key}) : super(key: key);
 
   @override
-  State<FeaturePage> createState() => _FeaturePageState();
+  FeaturePageState createState() => FeaturePageState();
 }
 
-class _FeaturePageState extends State<FeaturePage> {
+final featuresProvider = FutureProvider.autoDispose((ref) async {
+  final response = await FeaturePageController().getFeatures() ?? {};
+  return await response;
+});
+
+class FeaturePageState extends ConsumerState<FeaturePage> {
   late Map<String, dynamic>? features = {};
   late bool loading = false;
   late List<dynamic>? featuredUpcoming = [];
@@ -38,22 +44,9 @@ class _FeaturePageState extends State<FeaturePage> {
     cloudFrontUri = dotenv.env['CLOUDFRONT_URI'];
   }
 
-  Future<void> fetchFeatures() async {
-    features = await FeaturePageController().getFeatures();
-
-    if (features!.isNotEmpty) {
-      setState(() {
-        featuredOrganizers = features!['organizer'] ?? [];
-        featuredUpcoming = features!['upcoming_events'] ?? [];
-        featuredEvents = features!['events'] ?? [];
-      });
-    }
-  }
-
   @override
   void initState() {
     if (mounted) {
-      fetchFeatures();
       fetchCloudFrontUri();
     }
     super.initState();
@@ -76,6 +69,7 @@ class _FeaturePageState extends State<FeaturePage> {
 
   @override
   Widget build(BuildContext context) {
+    final noteData = ref.watch(featuresProvider);
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Features',
@@ -83,236 +77,261 @@ class _FeaturePageState extends State<FeaturePage> {
         hideBackButton: true,
       ),
       body: RefreshIndicator(
-        onRefresh: () {
-          return fetchFeatures();
-        },
+        onRefresh: () async => ref.refresh(featuresProvider),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: SingleChildScrollView(
-            dragStartBehavior: DragStartBehavior.down,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Featured Events',
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            letterSpacing: 2.0,
-                            fontWeight: FontWeight.bold),
+          child: noteData.when(
+              data: (data) {
+                featuredOrganizers = data!['organizer'] ?? [];
+                featuredUpcoming = data!['upcoming_events'] ?? [];
+                featuredEvents = data!['events'] ?? [];
+                return SingleChildScrollView(
+                  dragStartBehavior: DragStartBehavior.down,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Featured Events',
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  letterSpacing: 2.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 130,
+                            child: Divider(
+                              color: Colors.grey[600],
+                              thickness: 2,
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 15),
+                      featuredEvents!.isEmpty
+                          ? DecoratedBox(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: Border.all(
+                                      color: const Color.fromARGB(
+                                          255, 132, 132, 132),
+                                      width: 2.0,
+                                      style: BorderStyle.solid)),
+                              child: SizedBox(
+                                height: 150,
+                                width: (MediaQuery.of(context).size.width),
+                                child: const Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'No Featured Events',
+                                      style: TextStyle(fontSize: 20),
+                                    )),
+                              ),
+                            )
+                          : ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  maxHeight: 100,
+                                  maxWidth:
+                                      (MediaQuery.of(context).size.width)),
+                              child: CarouselSlider.builder(
+                                  itemCount: featuredEvents!.length,
+                                  itemBuilder: (context, index, realIndex) {
+                                    return CustomFeaturedEvents(
+                                      imageUrl: cloudFrontUri! +
+                                          featuredEvents![index]['images'][0],
+                                      slug: featuredEvents![index]['slug'],
+                                      bgColor: int.parse(
+                                          featuredEvents![index]['bgcolor']),
+                                      title: featuredEvents![index]['title'],
+                                      scheduleStart:
+                                          DateFormat('E, d MMM yyyy HH:mm')
+                                              .format(DateTime.parse(
+                                                  featuredEvents![index]
+                                                      ['schedule_start'])),
+                                    );
+                                  },
+                                  options: CarouselOptions(
+                                    height: double.infinity,
+                                    autoPlay: true,
+                                    viewportFraction: 1,
+                                    reverse: false,
+                                    autoPlayInterval:
+                                        const Duration(seconds: 5),
+                                    pauseAutoPlayOnTouch: true,
+                                  )),
+                            ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Hot Events',
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  letterSpacing: 2.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 130,
+                            child: Divider(
+                              color: Colors.grey[600],
+                              thickness: 2,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                      featuredUpcoming!.isEmpty
+                          ? DecoratedBox(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: Border.all(
+                                      color: const Color.fromARGB(
+                                          255, 132, 132, 132),
+                                      width: 2.0,
+                                      style: BorderStyle.solid)),
+                              child: SizedBox(
+                                height: 200,
+                                width: (MediaQuery.of(context).size.width),
+                                child: const Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'No Hot Events',
+                                      style: TextStyle(fontSize: 20),
+                                    )),
+                              ),
+                            )
+                          : ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  maxHeight: 100,
+                                  maxWidth:
+                                      (MediaQuery.of(context).size.width)),
+                              child: CarouselSlider.builder(
+                                  itemCount: featuredUpcoming!.length,
+                                  itemBuilder: (context, index, realIndex) {
+                                    return CustomFeaturedEvents(
+                                      imageUrl: cloudFrontUri! +
+                                          featuredUpcoming![index]['images'][0],
+                                      slug: featuredUpcoming![index]['slug'],
+                                      bgColor: int.parse(
+                                          featuredUpcoming![index]['bgcolor']),
+                                      title: featuredUpcoming![index]['title'],
+                                      scheduleStart:
+                                          DateFormat('E, d MMM yyyy HH:mm')
+                                              .format(DateTime.parse(
+                                                  featuredUpcoming![index]
+                                                      ['schedule_start'])),
+                                    );
+                                  },
+                                  options: CarouselOptions(
+                                    height: double.infinity,
+                                    autoPlay: true,
+                                    viewportFraction: 1,
+                                    reverse: false,
+                                    autoPlayInterval:
+                                        const Duration(seconds: 5),
+                                    pauseAutoPlayOnTouch: true,
+                                  )),
+                            ),
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Organizers',
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  letterSpacing: 2.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 130,
+                            child: Divider(
+                              color: Colors.grey[600],
+                              thickness: 2,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                      featuredOrganizers!.isEmpty
+                          ? SpinKitCircle(
+                              size: 50.0,
+                              color: Colors.grey[700],
+                            )
+                          : ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  maxHeight: 300,
+                                  maxWidth:
+                                      (MediaQuery.of(context).size.width)),
+                              child: CarouselSlider.builder(
+                                  itemCount: featuredOrganizers!.length,
+                                  itemBuilder: (context, index, realIndex) {
+                                    return CustomProfile(
+                                        image:
+                                            '$cloudFrontUri${featuredOrganizers![index]['avatar']}',
+                                        page: 'features',
+                                        isFollowed: featuredOrganizers![index]
+                                                    ['followers']
+                                                .isEmpty
+                                            ? 0
+                                            : featuredOrganizers![index]
+                                                ['followers'][0]['is_followed'],
+                                        follow: () => follow(featuredOrganizers![index]
+                                            ['username']),
+                                        name: featuredOrganizers![index]
+                                            ['name'],
+                                        username: featuredOrganizers![index]
+                                            ['username'],
+                                        followers: featuredOrganizers![index]
+                                                ['followers_count']
+                                            .toString(),
+                                        followings: featuredOrganizers![index]
+                                                ['following_count']
+                                            .toString(),
+                                        events: featuredOrganizers![index]['events_count']
+                                            .toString(),
+                                        role: 'organizer');
+                                  },
+                                  options: CarouselOptions(
+                                    height: double.infinity,
+                                    autoPlay: true,
+                                    viewportFraction: 1,
+                                    reverse: false,
+                                    autoPlayInterval:
+                                        const Duration(seconds: 5),
+                                    pauseAutoPlayOnTouch: true,
+                                  )),
+                            ),
+                    ],
+                  ),
+                );
+              },
+              error: (_, __) => const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'No Notes Created',
+                    style: TextStyle(fontSize: 23, color: Colors.black54),
+                  )),
+              loading: () => Center(
+                    child: SpinKitCircle(
+                      size: 50.0,
+                      color: Colors.grey[700],
                     ),
-                    SizedBox(
-                      width: 130,
-                      child: Divider(
-                        color: Colors.grey[600],
-                        thickness: 2,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                featuredEvents!.isEmpty
-                    ? DecoratedBox(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 132, 132, 132),
-                                width: 2.0,
-                                style: BorderStyle.solid)),
-                        child: SizedBox(
-                          height: 150,
-                          width: (MediaQuery.of(context).size.width),
-                          child: const Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'No Featured Events',
-                                style: TextStyle(fontSize: 20),
-                              )),
-                        ),
-                      )
-                    : ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxHeight: 100,
-                            maxWidth: (MediaQuery.of(context).size.width)),
-                        child: CarouselSlider.builder(
-                            itemCount: featuredEvents!.length,
-                            itemBuilder: (context, index, realIndex) {
-                              return CustomFeaturedEvents(
-                                imageUrl: cloudFrontUri! +
-                                    featuredEvents![index]['images'][0],
-                                slug: featuredEvents![index]['slug'],
-                                bgColor: int.parse(
-                                    featuredEvents![index]['bgcolor']),
-                                title: featuredEvents![index]['title'],
-                                scheduleStart: DateFormat('E, d MMM yyyy HH:mm')
-                                    .format(DateTime.parse(
-                                        featuredEvents![index]
-                                            ['schedule_start'])),
-                              );
-                            },
-                            options: CarouselOptions(
-                              height: double.infinity,
-                              autoPlay: true,
-                              viewportFraction: 1,
-                              reverse: false,
-                              autoPlayInterval: const Duration(seconds: 5),
-                              pauseAutoPlayOnTouch: true,
-                            )),
-                      ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Hot Events',
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            letterSpacing: 2.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 130,
-                      child: Divider(
-                        color: Colors.grey[600],
-                        thickness: 2,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                featuredUpcoming!.isEmpty
-                    ? DecoratedBox(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 132, 132, 132),
-                                width: 2.0,
-                                style: BorderStyle.solid)),
-                        child: SizedBox(
-                          height: 200,
-                          width: (MediaQuery.of(context).size.width),
-                          child: const Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'No Hot Events',
-                                style: TextStyle(fontSize: 20),
-                              )),
-                        ),
-                      )
-                    : ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxHeight: 100,
-                            maxWidth: (MediaQuery.of(context).size.width)),
-                        child: CarouselSlider.builder(
-                            itemCount: featuredUpcoming!.length,
-                            itemBuilder: (context, index, realIndex) {
-                              return CustomFeaturedEvents(
-                                imageUrl: cloudFrontUri! +
-                                    featuredUpcoming![index]['images'][0],
-                                slug: featuredUpcoming![index]['slug'],
-                                bgColor: int.parse(
-                                    featuredUpcoming![index]['bgcolor']),
-                                title: featuredUpcoming![index]['title'],
-                                scheduleStart: DateFormat('E, d MMM yyyy HH:mm')
-                                    .format(DateTime.parse(
-                                        featuredUpcoming![index]
-                                            ['schedule_start'])),
-                              );
-                            },
-                            options: CarouselOptions(
-                              height: double.infinity,
-                              autoPlay: true,
-                              viewportFraction: 1,
-                              reverse: false,
-                              autoPlayInterval: const Duration(seconds: 5),
-                              pauseAutoPlayOnTouch: true,
-                            )),
-                      ),
-                const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Organizers',
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            letterSpacing: 2.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 130,
-                      child: Divider(
-                        color: Colors.grey[600],
-                        thickness: 2,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                featuredOrganizers!.isEmpty
-                    ? SpinKitCircle(
-                        size: 50.0,
-                        color: Colors.grey[700],
-                      )
-                    : ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxHeight: 300,
-                            maxWidth: (MediaQuery.of(context).size.width)),
-                        child: CarouselSlider.builder(
-                            itemCount: featuredOrganizers!.length,
-                            itemBuilder: (context, index, realIndex) {
-                              return CustomProfile(
-                                  image:
-                                      '$cloudFrontUri${featuredOrganizers![index]['avatar']}',
-                                  userId: featuredOrganizers![index]['id'],
-                                  page: 'features',
-                                  isFollowed: featuredOrganizers![index]
-                                              ['followers']
-                                          .isEmpty
-                                      ? 0
-                                      : featuredOrganizers![index]['followers']
-                                          [0]['is_followed'],
-                                  follow: () => follow(
-                                      featuredOrganizers![index]['username']),
-                                  name: featuredOrganizers![index]['name'],
-                                  username: featuredOrganizers![index]
-                                      ['username'],
-                                  followers: featuredOrganizers![index]
-                                          ['followers_count']
-                                      .toString(),
-                                  followings: featuredOrganizers![index]
-                                          ['following_count']
-                                      .toString(),
-                                  events: featuredOrganizers![index]
-                                          ['events_count']
-                                      .toString(),
-                                  role: 'organizer');
-                            },
-                            options: CarouselOptions(
-                              height: double.infinity,
-                              autoPlay: true,
-                              viewportFraction: 1,
-                              reverse: false,
-                              autoPlayInterval: const Duration(seconds: 5),
-                              pauseAutoPlayOnTouch: true,
-                            )),
-                      ),
-              ],
-            ),
-          ),
+                  )),
         ),
       ),
     );
@@ -325,19 +344,7 @@ class _FeaturePageState extends State<FeaturePage> {
 
     isFollowed = await UserController().follow(followUser);
 
-    if (isFollowed!['is_followed'] == true) {
-      if (mounted) {
-        setState(() {
-          followed = 1;
-        });
-      }
-    } else {
-      if (mounted) {
-        setState(() {
-          followed = 0;
-        });
-      }
-    }
+    ref.refresh(featuresProvider);
   }
 
   void onPressedShareEvent(String? slug) async {

@@ -11,15 +11,17 @@ import 'package:eventora/Pages/Organizer/Events/create_events.dart';
 import 'package:eventora/Pages/Organizer/Events/update_event.dart';
 import 'package:eventora/Pages/Tasks/create_task.dart';
 import 'package:eventora/Pages/Tasks/view_task.dart';
+import 'package:eventora/Pages/User/feed_page.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
 import 'package:eventora/Pages/saved_events_page.dart';
 import 'package:eventora/Pages/shared_events_page.dart';
-import 'package:eventora/Pages/wall.dart';
+import 'package:eventora/Pages/Organizer/wall.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
 import 'package:eventora/Widgets/custom_show_map.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
 import 'Pages/User/feature_page.dart';
@@ -33,13 +35,14 @@ void main() async {
 
   HttpOverrides.global = MyHttpOverrides();
 
-  runApp(MaterialApp(
-      initialRoute: '/home',
-      onGenerateRoute: Routes.generateRoutes,
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF7F8FB),
-      )));
+  runApp(ProviderScope(
+      child: MaterialApp(
+          initialRoute: '/home',
+          onGenerateRoute: Routes.generateRoutes,
+          theme: ThemeData(
+            useMaterial3: true,
+            scaffoldBackgroundColor: const Color(0xFFF7F8FB),
+          ))));
 }
 
 class Routes {
@@ -56,6 +59,9 @@ class Routes {
       case '/signup':
         return MaterialPageRoute(
             builder: (_) => Signup(), settings: routeSettings);
+      case '/feed_page':
+        return MaterialPageRoute(
+            builder: (_) => FeedPage(), settings: routeSettings);
       case '/feature_page':
         return MaterialPageRoute(
             builder: (_) => const FeaturePage(), settings: routeSettings);
