@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eventora/Widgets/custom_error_message.dart';
 import 'package:eventora/Widgets/custom_featured_events.dart';
 import 'package:eventora/Widgets/custom_profile.dart';
 import 'package:eventora/controllers/events_controller.dart';
@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:eventora/models/features.dart';
 
 import '../../Widgets/custom_appbar.dart';
 
@@ -22,13 +23,11 @@ class FeaturePage extends ConsumerStatefulWidget {
   FeaturePageState createState() => FeaturePageState();
 }
 
-final featuresProvider = FutureProvider.autoDispose((ref) async {
-  final response = await FeaturePageController().getFeatures() ?? {};
-  return await response;
+final featuresProvider = FutureProvider.autoDispose<Features?>((ref) {
+  return FeaturePageController.index();
 });
 
 class FeaturePageState extends ConsumerState<FeaturePage> {
-  late Map<String, dynamic>? features = {};
   late bool loading = false;
   late List<dynamic>? featuredUpcoming = [];
   late List<dynamic>? featuredOrganizers = [];
@@ -54,7 +53,6 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
 
   @override
   void dispose() {
-    features = {};
     loading = false;
     isFollowed = {};
     followed = 0;
@@ -69,7 +67,8 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
 
   @override
   Widget build(BuildContext context) {
-    final noteData = ref.watch(featuresProvider);
+    final featuredData = ref.watch(featuresProvider);
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Features',
@@ -80,11 +79,14 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
         onRefresh: () async => ref.refresh(featuresProvider),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: noteData.when(
-              data: (data) {
-                featuredOrganizers = data!['organizer'] ?? [];
-                featuredUpcoming = data!['upcoming_events'] ?? [];
-                featuredEvents = data!['events'] ?? [];
+          child: featuredData.when(
+              data: (featured) {
+                featuredUpcoming =
+                    featured!.features![0].featuredUpcoming.events;
+                featuredEvents = featured.features![0].featuredEvents.events;
+                featuredOrganizers =
+                    featured.features![0].featuredOrganizers.organizers;
+                // print(featured!.features![0].upcoming.upcomingEvents[0].title);
                 return SingleChildScrollView(
                   dragStartBehavior: DragStartBehavior.down,
                   child: Column(
@@ -114,25 +116,7 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                       ),
                       const SizedBox(height: 15),
                       featuredEvents!.isEmpty
-                          ? DecoratedBox(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 132, 132, 132),
-                                      width: 2.0,
-                                      style: BorderStyle.solid)),
-                              child: SizedBox(
-                                height: 150,
-                                width: (MediaQuery.of(context).size.width),
-                                child: const Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'No Featured Events',
-                                      style: TextStyle(fontSize: 20),
-                                    )),
-                              ),
-                            )
+                          ? CustomErrorMessage(message: 'No Featured Event')
                           : ConstrainedBox(
                               constraints: BoxConstraints(
                                   maxHeight: 100,
@@ -143,21 +127,22 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                                   itemBuilder: (context, index, realIndex) {
                                     return CustomFeaturedEvents(
                                       imageUrl: cloudFrontUri! +
-                                          featuredEvents![index]['images'][0],
-                                      slug: featuredEvents![index]['slug'],
+                                          featuredEvents![index].images[0],
+                                      slug: featuredEvents![index].slug,
                                       bgColor: int.parse(
-                                          featuredEvents![index]['bgcolor']),
-                                      title: featuredEvents![index]['title'],
+                                          featuredEvents![index].bgcolor),
+                                      title: featuredEvents![index].title,
                                       scheduleStart:
                                           DateFormat('E, d MMM yyyy HH:mm')
                                               .format(DateTime.parse(
                                                   featuredEvents![index]
-                                                      ['schedule_start'])),
+                                                      .scheduleStart)),
                                     );
                                   },
                                   options: CarouselOptions(
                                     height: double.infinity,
-                                    autoPlay: true,
+                                    autoPlay: false,
+                                    enableInfiniteScroll: false,
                                     viewportFraction: 1,
                                     reverse: false,
                                     autoPlayInterval:
@@ -174,7 +159,7 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                           const Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Hot Events',
+                              'Upcoming Events',
                               style: TextStyle(
                                   fontSize: 20.0,
                                   letterSpacing: 2.0,
@@ -192,25 +177,7 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                       ),
                       const SizedBox(height: 15),
                       featuredUpcoming!.isEmpty
-                          ? DecoratedBox(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 132, 132, 132),
-                                      width: 2.0,
-                                      style: BorderStyle.solid)),
-                              child: SizedBox(
-                                height: 200,
-                                width: (MediaQuery.of(context).size.width),
-                                child: const Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'No Hot Events',
-                                      style: TextStyle(fontSize: 20),
-                                    )),
-                              ),
-                            )
+                          ? CustomErrorMessage(message: 'No Upcoming Event')
                           : ConstrainedBox(
                               constraints: BoxConstraints(
                                   maxHeight: 100,
@@ -221,21 +188,22 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                                   itemBuilder: (context, index, realIndex) {
                                     return CustomFeaturedEvents(
                                       imageUrl: cloudFrontUri! +
-                                          featuredUpcoming![index]['images'][0],
-                                      slug: featuredUpcoming![index]['slug'],
+                                          featuredUpcoming![index].images[0],
+                                      slug: featuredUpcoming![index].slug,
                                       bgColor: int.parse(
-                                          featuredUpcoming![index]['bgcolor']),
-                                      title: featuredUpcoming![index]['title'],
+                                          featuredUpcoming![index].bgcolor),
+                                      title: featuredUpcoming![index].title,
                                       scheduleStart:
                                           DateFormat('E, d MMM yyyy HH:mm')
                                               .format(DateTime.parse(
                                                   featuredUpcoming![index]
-                                                      ['schedule_start'])),
+                                                      .scheduleStart)),
                                     );
                                   },
                                   options: CarouselOptions(
                                     height: double.infinity,
-                                    autoPlay: true,
+                                    autoPlay: false,
+                                    enableInfiniteScroll: false,
                                     viewportFraction: 1,
                                     reverse: false,
                                     autoPlayInterval:
@@ -268,10 +236,8 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                       ),
                       const SizedBox(height: 15),
                       featuredOrganizers!.isEmpty
-                          ? SpinKitCircle(
-                              size: 50.0,
-                              color: Colors.grey[700],
-                            )
+                          ? CustomErrorMessage(
+                              message: 'No Organizers Featured')
                           : ConstrainedBox(
                               constraints: BoxConstraints(
                                   maxHeight: 300,
@@ -282,33 +248,32 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                                   itemBuilder: (context, index, realIndex) {
                                     return CustomProfile(
                                         image:
-                                            '$cloudFrontUri${featuredOrganizers![index]['avatar']}',
+                                            '$cloudFrontUri${featuredOrganizers![index].avatar}',
                                         page: 'features',
                                         isFollowed: featuredOrganizers![index]
-                                                    ['followers']
+                                                .isFollowed
                                                 .isEmpty
                                             ? 0
                                             : featuredOrganizers![index]
-                                                ['followers'][0]['is_followed'],
-                                        follow: () => follow(featuredOrganizers![index]
-                                            ['username']),
-                                        name: featuredOrganizers![index]
-                                            ['name'],
-                                        username: featuredOrganizers![index]
-                                            ['username'],
+                                                .isFollowed[0]['is_followed'],
+                                        follow: () => follow(
+                                            featuredOrganizers![index]
+                                                .username),
+                                        name: featuredOrganizers![index].name,
+                                        username:
+                                            featuredOrganizers![index].username,
                                         followers: featuredOrganizers![index]
-                                                ['followers_count']
-                                            .toString(),
+                                            .followersCount,
                                         followings: featuredOrganizers![index]
-                                                ['following_count']
-                                            .toString(),
-                                        events: featuredOrganizers![index]['events_count']
-                                            .toString(),
+                                            .followingCount,
+                                        events: featuredOrganizers![index]
+                                            .eventsCount,
                                         role: 'organizer');
                                   },
                                   options: CarouselOptions(
                                     height: double.infinity,
-                                    autoPlay: true,
+                                    autoPlay: false,
+                                    enableInfiniteScroll: false,
                                     viewportFraction: 1,
                                     reverse: false,
                                     autoPlayInterval:

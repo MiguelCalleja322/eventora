@@ -1,4 +1,5 @@
 import 'package:eventora/controllers/note_controller.dart';
+import 'package:eventora/models/notes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -15,9 +16,8 @@ class CreateAndListNotes extends ConsumerStatefulWidget {
   CreateAndListNotesState createState() => CreateAndListNotesState();
 }
 
-final notesProvider = FutureProvider.autoDispose((ref) async {
-  final response = await NoteController().index() ?? {};
-  return await response;
+final notesProvider = FutureProvider.autoDispose<Notes?>((ref) {
+  return NoteController.index();
 });
 
 class CreateAndListNotesState extends ConsumerState<CreateAndListNotes> {
@@ -57,9 +57,9 @@ class CreateAndListNotesState extends ConsumerState<CreateAndListNotes> {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: noteData.when(
-                  data: (data) {
-                    notes = data['notes'];
-                    return notes!.isEmpty
+                  data: (notes) {
+                    notes = notes;
+                    return notes == null
                         ? const Center(
                             child: Text(
                               'No Notes Created',
@@ -70,7 +70,9 @@ class CreateAndListNotesState extends ConsumerState<CreateAndListNotes> {
                         : SingleChildScrollView(
                             child: StaggeredGrid.count(
                               crossAxisCount: 4,
-                              children: List.generate(notes!.length, (index) {
+                              children:
+                                  List.generate(notes.notes!.length, (index) {
+                                final Note note = notes!.notes![index];
                                 return StaggeredGridTile.fit(
                                     crossAxisCellCount: 2,
                                     child: Card(
@@ -111,9 +113,8 @@ class CreateAndListNotesState extends ConsumerState<CreateAndListNotes> {
                                                                     .navigation(
                                                                   onPressed:
                                                                       (context) {
-                                                                    deleteNote(notes![
-                                                                            index]
-                                                                        ['id']);
+                                                                    deleteNote(
+                                                                        note.id);
 
                                                                     Navigator.pop(
                                                                         context);
@@ -139,9 +140,8 @@ class CreateAndListNotesState extends ConsumerState<CreateAndListNotes> {
                                           Navigator.pushNamed(
                                               context, '/read_note',
                                               arguments: {
-                                                'title': notes![index]['title'],
-                                                'description': notes![index]
-                                                    ['description'],
+                                                'title': note.title,
+                                                'description': note.description,
                                               });
                                         },
                                         child: Padding(
@@ -151,7 +151,7 @@ class CreateAndListNotesState extends ConsumerState<CreateAndListNotes> {
                                               Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
-                                                  notes![index]['title'],
+                                                  note.title,
                                                   style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
@@ -167,7 +167,7 @@ class CreateAndListNotesState extends ConsumerState<CreateAndListNotes> {
                                               Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
-                                                  notes![index]['description'],
+                                                  note.description,
                                                   maxLines: 10,
                                                   overflow:
                                                       TextOverflow.ellipsis,

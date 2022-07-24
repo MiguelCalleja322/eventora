@@ -5,7 +5,6 @@ import 'package:eventora/Pages/Auth/otp.dart';
 import 'package:eventora/Pages/Notes/create_notes.dart';
 import 'package:eventora/Pages/Notes/list_notes.dart';
 import 'package:eventora/Pages/Notes/view_note.dart';
-
 import 'package:eventora/Pages/Auth/update_user_info.dart';
 import 'package:eventora/Pages/Organizer/Events/create_events.dart';
 import 'package:eventora/Pages/Organizer/Events/update_event.dart';

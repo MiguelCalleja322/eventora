@@ -93,10 +93,8 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                   : null,
                               name: userProfile!['name'] ?? '',
                               username: userProfile!['username'] ?? '',
-                              followers:
-                                  userProfile!['followers_count'].toString(),
-                              followings:
-                                  userProfile!['following_count'].toString(),
+                              followers: userProfile!['followers_count'],
+                              followings: userProfile!['following_count'],
                               role: 'user'),
                         ),
                         Divider(

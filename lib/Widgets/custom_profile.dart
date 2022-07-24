@@ -23,9 +23,9 @@ class CustomProfile extends ConsumerWidget {
   late String? image = '';
   late String? name = '';
   late String? username = '';
-  late String? followers = '';
-  late String? followings = '';
-  late String? events = '';
+  late int? followers = 0;
+  late int? followings = 0;
+  late int? events = 0;
   late String? role = '';
   late VoidCallback follow;
   late int? isFollowed = 0;
@@ -123,7 +123,7 @@ class CustomProfile extends ConsumerWidget {
                                 fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            followers!,
+                            followers!.toString(),
                             style: const TextStyle(
                                 color: Color(0xff525b6f),
                                 letterSpacing: 1.0,
@@ -145,7 +145,7 @@ class CustomProfile extends ConsumerWidget {
                                 fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            followings!,
+                            followings!.toString(),
                             style: const TextStyle(
                                 color: Color(0xff525b6f),
                                 letterSpacing: 1.0,
@@ -168,7 +168,7 @@ class CustomProfile extends ConsumerWidget {
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
-                                  events!,
+                                  events!.toString(),
                                   style: const TextStyle(
                                       color: Color(0xff525b6f),
                                       letterSpacing: 1.0,
