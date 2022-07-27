@@ -8,7 +8,7 @@ class EventCategoriesController {
     return response;
   }
 
-  Future show(String type) async {
+  static Future show(String type) async {
     Map<String, dynamic> response =
         await ApiService().request('eventCategories/$type', 'GET', {}, true);
 

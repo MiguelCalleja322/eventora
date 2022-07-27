@@ -1,6 +1,6 @@
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_event_card_new.dart';
-import 'package:eventora/controllers/feature_page_controller.dart';
+import 'package:eventora/controllers/events_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,20 +8,26 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
-class FeedPage extends ConsumerStatefulWidget {
-  FeedPage({Key? key}) : super(key: key);
+class SearchPage extends ConsumerStatefulWidget {
+  SearchPage({Key? key, this.title}) : super(key: key);
+
+  final String? title;
 
   @override
-  FeedPageState createState() => FeedPageState();
+  SearchPageState createState() => SearchPageState();
 }
 
-final feedProvider = FutureProvider.autoDispose((ref) {
-  return FeaturePageController.feed();
-});
+class SearchPageState extends ConsumerState<SearchPage> {
+  late AutoDisposeFutureProvider eventProvider;
 
-class FeedPageState extends ConsumerState<FeedPage> {
   late String? cloudFrontUri = '';
   late List<dynamic>? events = [];
+
+  void generateEventProvider() {
+    eventProvider = FutureProvider.autoDispose((ref) {
+      return EventController.search(widget.title!);
+    });
+  }
 
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
@@ -31,23 +37,21 @@ class FeedPageState extends ConsumerState<FeedPage> {
   @override
   void initState() {
     fetchCloudFrontUri();
+    generateEventProvider();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final feeds = ref.watch(feedProvider);
+    final results = ref.watch(eventProvider);
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Feed',
-        height: 135,
-        hideSearchBar: false,
-        hideBackButton: true,
+        title: 'Results',
       ),
       body: SafeArea(
         child: cloudFrontUri! == ''
             ? RefreshIndicator(
-                onRefresh: () async => ref.refresh(feedProvider),
+                onRefresh: () async => ref.refresh(eventProvider),
                 child: Center(
                   child: SpinKitCircle(
                     size: 50.0,
@@ -57,12 +61,11 @@ class FeedPageState extends ConsumerState<FeedPage> {
               )
             : Padding(
                 padding: const EdgeInsets.all(10),
-                child: feeds.when(
-                    data: (feed) {
-                      feed['feed']['user_preferences'].isEmpty
+                child: results.when(
+                    data: (result) {
+                      result['events'].isEmpty
                           ? events = []
-                          : events = feed['feed']['user_preferences'][0]
-                              ['event_categories']['events'];
+                          : events = result['events'];
 
                       return events!.isEmpty
                           ? Column(
@@ -78,7 +81,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
                                 const SizedBox(height: 10),
                                 IconButton(
                                   onPressed: () async =>
-                                      ref.refresh(feedProvider),
+                                      ref.refresh(eventProvider),
                                   icon: const Icon(
                                       Ionicons.refresh_circle_outline),
                                   color: Colors.black54,

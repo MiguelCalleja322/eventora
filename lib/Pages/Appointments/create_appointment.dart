@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class CreateAppointment extends StatefulWidget {
-  CreateAppointment({Key? key}) : super(key: key);
+  const CreateAppointment({Key? key}) : super(key: key);
 
   @override
   State<CreateAppointment> createState() => _CreateAppointmentState();
@@ -66,7 +66,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
 
     appointmentTitle.clear();
     appointmentDescription.clear();
-    Navigator.pushNamed(context, '/home');
+    Navigator.pop(context);
     return;
   }
 

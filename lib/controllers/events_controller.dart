@@ -15,7 +15,14 @@ class EventController {
     return response;
   }
 
-  Future show(String slug) async {
+  static Future search(String title) async {
+    Map<String, dynamic> response =
+        await ApiService().request('events/search/$title', 'GET', {}, true);
+
+    return response;
+  }
+
+  static Future show(String slug) async {
     Map<String, dynamic> response =
         await ApiService().request('events/$slug', 'GET', {}, true);
 

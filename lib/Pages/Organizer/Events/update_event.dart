@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:eventora/Widgets/custom_appbar.dart';
+import 'package:eventora/Widgets/custom_icon_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/events_controller.dart';
 import 'package:eventora/controllers/location_controller.dart';
@@ -129,7 +130,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                   focusNode: _titlefocusNode,
                 ),
                 const SizedBox(
-                  height: 15.0,
+                  height: 10.0,
                 ),
                 CustomTextField(
                   textAlign: TextAlign.left,
@@ -140,7 +141,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                   focusNode: _descriptionfocusNode,
                 ),
                 const SizedBox(
-                  height: 15.0,
+                  height: 10.0,
                 ),
                 Row(
                   children: [
@@ -196,14 +197,14 @@ class _UpdateEventState extends State<UpdateEvent> {
                   ],
                 ),
                 const SizedBox(
-                  height: 15.0,
+                  height: 10.0,
                 ),
                 const Align(
                     alignment: Alignment.centerLeft,
                     child: Text('Paid or Free event?',
                         style: TextStyle(fontSize: 18))),
                 const SizedBox(
-                  height: 15.0,
+                  height: 10.0,
                 ),
                 ToggleButtons(
                   onPressed: (int newIndex) {
@@ -246,7 +247,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                   ],
                 ),
                 const SizedBox(
-                  height: 15.0,
+                  height: 10.0,
                 ),
                 eventType == 'registration'
                     ? CustomTextField(
@@ -268,11 +269,13 @@ class _UpdateEventState extends State<UpdateEvent> {
                           )
                         : Container(),
                 const SizedBox(
-                  height: 15.0,
+                  height: 10.0,
                 ),
-                Row(children: <Widget>[
-                  Expanded(
-                      child: TextField(
+                CustomTextField(
+                    controller: _fullAddressController,
+                    textCapitalization: TextCapitalization.words,
+                    textAlign: TextAlign.left,
+                    maxLine: 1,
                     onChanged: (value) {
                       if (value.isNotEmpty) {
                         if (_debounce?.isActive ?? false) {
@@ -289,17 +292,13 @@ class _UpdateEventState extends State<UpdateEvent> {
                         });
                       }
                     },
-                    controller: _fullAddressController,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(hintText: 'Search'),
-                  )),
-                  IconButton(
-                      onPressed: () {
-                        _fullAddressController.text = '';
-                        predictions!.clear();
-                      },
-                      icon: const Icon(Ionicons.close_outline))
-                ]),
+                    suffixIcon: CustomIconButton(
+                        icon: Ionicons.close_outline,
+                        onPressed: () {
+                          _fullAddressController.text = '';
+                          predictions!.clear();
+                        }),
+                    letterSpacing: 1),
                 ListView.builder(
                     shrinkWrap: true,
                     itemCount: predictions!.length,
@@ -323,6 +322,9 @@ class _UpdateEventState extends State<UpdateEvent> {
                                 child: Text(predictions![index].description!))),
                       );
                     }),
+                const SizedBox(
+                  height: 10.0,
+                ),
                 SizedBox(
                   height: 400,
                   child: GoogleMap(
@@ -343,7 +345,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                       }),
                 ),
                 const SizedBox(
-                  height: 15.0,
+                  height: 10.0,
                 ),
                 CustomButton(
                   backgroundColor: Colors.grey[800],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CustomErrorMessage extends StatelessWidget {
   CustomErrorMessage({Key? key, required this.message}) : super(key: key);
 

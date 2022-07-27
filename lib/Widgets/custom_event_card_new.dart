@@ -1,12 +1,15 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eventora/controllers/events_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-class CustomEventCard extends StatefulWidget {
+class CustomEventCard extends ConsumerStatefulWidget {
   CustomEventCard(
       {Key? key,
       required this.slug,
@@ -16,6 +19,7 @@ class CustomEventCard extends StatefulWidget {
       required this.title,
       required this.description,
       required this.dateTime,
+      this.model,
       this.scheduleStart,
       this.scheduleEnd,
       this.isOptionsButton = false})
@@ -30,12 +34,13 @@ class CustomEventCard extends StatefulWidget {
   final bool? isOptionsButton;
   late DateTime? scheduleStart;
   late DateTime? scheduleEnd;
+  final ProviderBase<dynamic>? model;
 
   @override
-  State<CustomEventCard> createState() => _CustomEventCardState();
+  CustomEventCardState createState() => CustomEventCardState();
 }
 
-class _CustomEventCardState extends State<CustomEventCard> {
+class CustomEventCardState extends ConsumerState<CustomEventCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -148,7 +153,9 @@ class _CustomEventCardState extends State<CustomEventCard> {
                                                           SettingsTile
                                                               .navigation(
                                                             onPressed:
-                                                                (context) {
+                                                                (context) async {
+                                                              ref.refresh(widget
+                                                                  .model!);
                                                               availability(
                                                                   widget.slug!);
                                                               Navigator.pop(
@@ -164,6 +171,8 @@ class _CustomEventCardState extends State<CustomEventCard> {
                                                               .navigation(
                                                             onPressed:
                                                                 (context) {
+                                                              ref.refresh(widget
+                                                                  .model!);
                                                               markAsPrivate(
                                                                   widget.slug!);
                                                               Navigator.pop(
@@ -179,6 +188,8 @@ class _CustomEventCardState extends State<CustomEventCard> {
                                                               .navigation(
                                                             onPressed:
                                                                 (context) {
+                                                              ref.refresh(widget
+                                                                  .model!);
                                                               delete(
                                                                   widget.slug!);
                                                               Navigator.pop(

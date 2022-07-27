@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventora/Widgets/custom_button.dart';
+import 'package:eventora/Widgets/custom_icon_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/event_categories_controller.dart';
 import 'package:eventora/controllers/events_controller.dart';
@@ -21,6 +22,7 @@ import 'package:google_place/google_place.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:path/path.dart' as p;
 import '../../../Widgets/custom_appbar.dart';
 import '../../../controllers/location_controller.dart';
@@ -213,7 +215,7 @@ class _CreateEventsState extends State<CreateEvents> {
                     ],
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   imageFileList!.isEmpty
                       ? DecoratedBox(
@@ -285,7 +287,7 @@ class _CreateEventsState extends State<CreateEvents> {
                           ),
                         ]),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   CustomButton(
                     backgroundColor: Colors.grey[800],
@@ -302,7 +304,7 @@ class _CreateEventsState extends State<CreateEvents> {
                     elevation: 18.0,
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -312,17 +314,18 @@ class _CreateEventsState extends State<CreateEvents> {
                     ),
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   CustomTextField(
                     textAlign: TextAlign.left,
                     letterSpacing: 1.0,
                     label: 'Title',
+                    maxLine: 1,
                     controller: _titleController,
                     focusNode: _titlefocusNode,
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   CustomTextField(
                     textAlign: TextAlign.left,
@@ -333,7 +336,7 @@ class _CreateEventsState extends State<CreateEvents> {
                     focusNode: _descriptionfocusNode,
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   Row(
                     children: [
@@ -394,7 +397,7 @@ class _CreateEventsState extends State<CreateEvents> {
                     ],
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   const Align(
                       alignment: Alignment.centerLeft,
@@ -403,7 +406,7 @@ class _CreateEventsState extends State<CreateEvents> {
                         style: TextStyle(fontSize: 18),
                       )),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   ToggleButtons(
                     selectedColor: Colors.grey[700],
@@ -473,14 +476,14 @@ class _CreateEventsState extends State<CreateEvents> {
                     ],
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   const Align(
                       alignment: Alignment.centerLeft,
                       child: Text('Event Availability:',
                           style: TextStyle(fontSize: 18))),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   ToggleButtons(
                     onPressed: (int newIndex) {
@@ -523,14 +526,14 @@ class _CreateEventsState extends State<CreateEvents> {
                     ],
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   const Align(
                       alignment: Alignment.centerLeft,
                       child: Text('Make the event private?',
                           style: TextStyle(fontSize: 18))),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   ToggleButtons(
                     onPressed: (int newIndex) {
@@ -573,14 +576,14 @@ class _CreateEventsState extends State<CreateEvents> {
                     ],
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   const Align(
                       alignment: Alignment.centerLeft,
                       child: Text('Paid or Free event?',
                           style: TextStyle(fontSize: 18))),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   ToggleButtons(
                     onPressed: (int newIndex) {
@@ -625,7 +628,7 @@ class _CreateEventsState extends State<CreateEvents> {
                     ],
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   eventType == 'registration'
                       ? CustomTextField(
@@ -647,7 +650,7 @@ class _CreateEventsState extends State<CreateEvents> {
                             )
                           : Container(),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -656,9 +659,14 @@ class _CreateEventsState extends State<CreateEvents> {
                       style: TextStyle(color: Colors.grey[800], fontSize: 30.0),
                     ),
                   ),
-                  Row(children: <Widget>[
-                    Expanded(
-                        child: TextField(
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  CustomTextField(
+                      controller: _fullAddressController,
+                      textCapitalization: TextCapitalization.words,
+                      textAlign: TextAlign.left,
+                      maxLine: 1,
                       onChanged: (value) {
                         if (value.isNotEmpty) {
                           if (_debounce?.isActive ?? false) {
@@ -675,19 +683,15 @@ class _CreateEventsState extends State<CreateEvents> {
                           });
                         }
                       },
-                      controller: _fullAddressController,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(hintText: 'Search'),
-                    )),
-                    IconButton(
-                        onPressed: () {
-                          _fullAddressController.text = '';
-                          predictions!.clear();
-                        },
-                        icon: const Icon(FeatherIcons.x))
-                  ]),
+                      suffixIcon: CustomIconButton(
+                          icon: Ionicons.close_outline,
+                          onPressed: () {
+                            _fullAddressController.text = '';
+                            predictions!.clear();
+                          }),
+                      letterSpacing: 1),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   ListView.builder(
                       shrinkWrap: true,
@@ -736,7 +740,7 @@ class _CreateEventsState extends State<CreateEvents> {
                         }),
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   Row(
                     children: [

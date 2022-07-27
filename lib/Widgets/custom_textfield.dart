@@ -12,6 +12,7 @@ class CustomTextField extends StatelessWidget {
       this.controller,
       this.focusNode,
       this.maxLine,
+      this.suffixIcon,
       required this.textAlign,
       required this.letterSpacing,
       this.textCapitalization = TextCapitalization.none,
@@ -28,15 +29,19 @@ class CustomTextField extends StatelessWidget {
   final TextAlign textAlign;
   final double letterSpacing;
   final TextCapitalization? textCapitalization;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      padding: suffixIcon == null
+          ? const EdgeInsets.fromLTRB(10, 0, 10, 0)
+          : const EdgeInsets.fromLTRB(10, 0, 0, 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: Colors.grey)),
       child: TextField(
+        onChanged: onChanged,
         textCapitalization: textCapitalization!,
         maxLines: maxLine,
         focusNode: focusNode,
@@ -45,6 +50,7 @@ class CustomTextField extends StatelessWidget {
         textAlign: textAlign,
         inputFormatters: inputFormatters,
         decoration: InputDecoration(
+          suffixIcon: suffixIcon,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           border: InputBorder.none,
           labelText: label,

@@ -324,6 +324,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                                 itemCount: profileData['user']['events'].length,
                                 itemBuilder: (context, index) {
                                   return CustomEventCard(
+                                    model: profileProvider,
                                       isOptionsButton: true,
                                       slug: profileData['user']['events']
                                           [index]!['slug'],

@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class CreateTask extends StatefulWidget {
-  CreateTask({Key? key}) : super(key: key);
+  const CreateTask({Key? key}) : super(key: key);
 
   @override
   State<CreateTask> createState() => _CreateTaskState();
@@ -65,7 +65,7 @@ class _CreateTaskState extends State<CreateTask> {
 
     taskTitle.clear();
     taskDescription.clear();
-    Navigator.pushNamed(context, '/home');
+    Navigator.pop(context);
     return;
   }
 

@@ -37,7 +37,7 @@ class _LoginState extends State<Login> {
     // print(bearerToken);
 
     if (bearerToken != '') {
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushNamed(context, '/home');
     }
   }
 

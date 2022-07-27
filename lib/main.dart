@@ -15,6 +15,7 @@ import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
 import 'package:eventora/Pages/saved_events_page.dart';
+import 'package:eventora/Pages/search_page.dart';
 import 'package:eventora/Pages/shared_events_page.dart';
 import 'package:eventora/Pages/Organizer/wall.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
@@ -55,6 +56,15 @@ class Routes {
       case '/home':
         return MaterialPageRoute(
             builder: (_) => const HomePage(), settings: routeSettings);
+      case '/search':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => SearchPage(
+                    title: args['title'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
       case '/signup':
         return MaterialPageRoute(
             builder: (_) => Signup(), settings: routeSettings);
@@ -88,7 +98,7 @@ class Routes {
       //tasks
       case '/create_task':
         return MaterialPageRoute(
-            builder: (_) => CreateTask(), settings: routeSettings);
+            builder: (_) => const CreateTask(), settings: routeSettings);
       case '/view_task':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
@@ -103,7 +113,7 @@ class Routes {
       //appointment
       case '/create_appointment':
         return MaterialPageRoute(
-            builder: (_) => CreateAppointment(), settings: routeSettings);
+            builder: (_) => const CreateAppointment(), settings: routeSettings);
       case '/view_appointment':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
