@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eventora/controllers/events_controller.dart';
+import 'package:eventora/controllers/user_preference_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,6 +20,7 @@ class CustomEventCard extends ConsumerStatefulWidget {
       required this.title,
       required this.description,
       required this.dateTime,
+      this.eventCategory = '',
       this.model,
       this.scheduleStart,
       this.scheduleEnd,
@@ -35,12 +37,29 @@ class CustomEventCard extends ConsumerStatefulWidget {
   late DateTime? scheduleStart;
   late DateTime? scheduleEnd;
   final ProviderBase<dynamic>? model;
+  final String? eventCategory;
 
   @override
   CustomEventCardState createState() => CustomEventCardState();
 }
 
 class CustomEventCardState extends ConsumerState<CustomEventCard> {
+  void updateUserPreference(String eventCat) async {
+    if (eventCat == '') {
+      return;
+    } else {
+      final response = await UserPreferenceController.store(eventCat);
+
+      print(response);
+    }
+    return;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -54,6 +73,8 @@ class CustomEventCardState extends ConsumerState<CustomEventCard> {
       margin: const EdgeInsets.all(10),
       child: InkWell(
         onTap: () {
+          updateUserPreference(widget.eventCategory!);
+
           Navigator.pushNamed(context, '/custom_event_full', arguments: {
             'slug': widget.slug!,
           });

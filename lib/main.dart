@@ -15,7 +15,7 @@ import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
 import 'package:eventora/Pages/saved_events_page.dart';
-import 'package:eventora/Pages/search_page.dart';
+import 'package:eventora/Pages/search_results_page.dart';
 import 'package:eventora/Pages/shared_events_page.dart';
 import 'package:eventora/Pages/Organizer/wall.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
@@ -59,7 +59,7 @@ class Routes {
       case '/search':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
-              builder: (_) => SearchPage(
+              builder: (_) => SearchResultPage(
                     title: args['title'],
                   ),
               settings: routeSettings);

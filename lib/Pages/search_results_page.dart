@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_event_card_new.dart';
-import 'package:eventora/controllers/feature_page_controller.dart';
+import 'package:eventora/controllers/events_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,20 +8,26 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
-class FeedPage extends ConsumerStatefulWidget {
-  FeedPage({Key? key}) : super(key: key);
+class SearchResultPage extends ConsumerStatefulWidget {
+  SearchResultPage({Key? key, this.title}) : super(key: key);
+
+  final String? title;
 
   @override
-  FeedPageState createState() => FeedPageState();
+  SearchResultPageState createState() => SearchResultPageState();
 }
 
-final feedProvider = FutureProvider.autoDispose((ref) {
-  return FeaturePageController.feed();
-});
+class SearchResultPageState extends ConsumerState<SearchResultPage> {
+  late AutoDisposeFutureProvider eventProvider;
 
-class FeedPageState extends ConsumerState<FeedPage> {
   late String? cloudFrontUri = '';
   late List<dynamic>? events = [];
+
+  void generateEventProvider() {
+    eventProvider = FutureProvider.autoDispose((ref) {
+      return EventController.search(widget.title!);
+    });
+  }
 
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
@@ -33,18 +37,17 @@ class FeedPageState extends ConsumerState<FeedPage> {
   @override
   void initState() {
     fetchCloudFrontUri();
+    generateEventProvider();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final feeds = ref.watch(feedProvider);
+    final results = ref.watch(eventProvider);
+
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Feed',
-        height: 135,
-        hideSearchBar: false,
-        hideBackButton: true,
+        title: 'Results',
       ),
       body: SafeArea(
         child: cloudFrontUri! == ''
@@ -55,16 +58,14 @@ class FeedPageState extends ConsumerState<FeedPage> {
                 ),
               )
             : RefreshIndicator(
-                onRefresh: () async => ref.refresh(feedProvider),
+                onRefresh: () async => ref.refresh(eventProvider),
                 child: Padding(
                     padding: const EdgeInsets.all(10),
-                    child: feeds.when(
-                        data: (feed) {
-                          feed['feed'].isEmpty
+                    child: results.when(
+                        data: (result) {
+                          result['events'].isEmpty
                               ? events = []
-                              : events = feed['feed'];
-
-                          print(events!.length);
+                              : events = result['events'];
 
                           return events!.isEmpty
                               ? Column(
@@ -73,7 +74,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
                                     const Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          'No new Feeds',
+                                          'Search Result Empty',
                                           style: TextStyle(
                                               fontSize: 23,
                                               color: Colors.black54),
@@ -81,7 +82,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
                                     const SizedBox(height: 10),
                                     IconButton(
                                       onPressed: () async =>
-                                          ref.refresh(feedProvider),
+                                          ref.refresh(eventProvider),
                                       icon: const Icon(
                                           Ionicons.refresh_circle_outline),
                                       color: Colors.black54,
@@ -98,6 +99,8 @@ class FeedPageState extends ConsumerState<FeedPage> {
                                           itemCount: events!.length,
                                           itemBuilder: (context, index) {
                                             return CustomEventCard(
+                                                eventCategory: events![index]
+                                                    ['event_category']['type'],
                                                 slug: events![index]['slug'],
                                                 bgColor: int.parse(
                                                     events![index]['bgcolor']),
