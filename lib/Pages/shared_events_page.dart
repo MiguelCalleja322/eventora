@@ -40,7 +40,7 @@ class _SharedEventsPageState extends State<SharedEventsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Shared Events',
       ),
       body: SafeArea(

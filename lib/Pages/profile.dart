@@ -38,6 +38,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   late String? cloudFrontUri = '';
   late String? message = '';
   late String? role = '';
+  late List<dynamic> events = [];
 
   void getRole() async {
     await dotenv.load(fileName: ".env");
@@ -70,6 +71,9 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     final profile = ref.watch(profileProvider);
     return profile.when(
         data: (profileData) {
+          role == 'organizer'
+              ? events = profileData['user']['events']
+              : events = profileData['user']['user_events'];
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.transparent,
@@ -80,21 +84,47 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                 child: Column(
                   children: [
                     Align(
-                      alignment: Alignment.center,
+                      alignment: Alignment.centerLeft,
                       child: Text(
-                        'Menu',
+                        'Events',
                         style: TextStyle(
                             color: Colors.grey[800],
-                            letterSpacing: 2.0,
+                            fontWeight: FontWeight.w500,
                             fontSize: 20.0),
                       ),
                     ),
                     SizedBox(
-                      height: 40,
+                      height: 20,
                       child: Divider(
                         color: Colors.grey[600],
                       ),
                     ),
+                    TextButton(
+                        style: TextButton.styleFrom(
+                            primary: Colors.grey[900],
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)))),
+                        onPressed: () {
+                          role == 'organizer'
+                              ? Navigator.pushNamed(context, '/create_events')
+                              : Navigator.pushNamed(
+                                  context, '/create_user_event');
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Ionicons.create_outline,
+                              color: Colors.grey[800],
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Create an Event',
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          ],
+                        )),
                     TextButton(
                         style: TextButton.styleFrom(
                             primary: Colors.grey[900],
@@ -147,6 +177,25 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                             ),
                           ],
                         )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Notes',
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20.0),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                      child: Divider(
+                        color: Colors.grey[600],
+                      ),
+                    ),
                     TextButton(
                         style: TextButton.styleFrom(
                             primary: Colors.grey[900],
@@ -305,45 +354,40 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 15.0),
-                        const SizedBox(height: 15.0),
-                        OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                                primary: Colors.grey[800],
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10))),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/create_events');
-                            },
-                            child: const Text('Create Event')),
-                        const SizedBox(height: 15.0),
-                        profileData['user']['events'].length != 0
+                        SizedBox(
+                          height: 20,
+                          child: Divider(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        events.isNotEmpty
                             ? ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: profileData['user']['events'].length,
+                                itemCount: events.length,
                                 itemBuilder: (context, index) {
-                                  return CustomEventCard(
-                                    model: profileProvider,
-                                      isOptionsButton: true,
-                                      slug: profileData['user']['events']
-                                          [index]!['slug'],
-                                      bgColor: int.parse(profileData['user']
-                                          ['events'][index]!['bgcolor']),
-                                      imageUrl: cloudFrontUri! +
-                                          profileData['user']['events']
-                                              [index]!['images'][0],
-                                      eventType: profileData['user']['events']
-                                          [index]!['event_type'],
-                                      title: profileData['user']['events']
-                                          [index]!['title'],
-                                      description: profileData['user']['events']
-                                          [index]!['description'],
-                                      dateTime: DateFormat('E, d MMM yyyy HH:mm')
-                                          .format(
-                                              DateTime.parse(profileData['user']['events'][index]!['schedule_start'])),
-                                      scheduleStart: DateTime.parse(profileData['user']['events'][index]!['schedule_start']),
-                                      scheduleEnd: DateTime.parse(profileData['user']['events'][index]!['schedule_end']));
+                                  return role == 'organizer'
+                                      ? CustomEventCard(
+                                          role: role,
+                                          model: profileProvider,
+                                          isOptionsButton: true,
+                                          slug: events[index]!['slug'],
+                                          bgColor: int.parse(profileData['user']
+                                              ['events'][index]!['bgcolor']),
+                                          imageUrl: cloudFrontUri! +
+                                              events[index]!['images'][0],
+                                          eventType: profileData['user']
+                                              ['events'][index]!['event_type'],
+                                          title: events[index]!['title'],
+                                          description: profileData['user']
+                                              ['events'][index]!['description'],
+                                          dateTime: DateFormat(
+                                                  'E, d MMM yyyy HH:mm')
+                                              .format(DateTime.parse(
+                                                  events[index]!['schedule_start'])),
+                                          scheduleStart: DateTime.parse(events[index]!['schedule_start']),
+                                          scheduleEnd: DateTime.parse(events[index]!['schedule_end']))
+                                      : CustomEventCard(role: role, model: profileProvider, imageUrl: cloudFrontUri! + events[index]!['images'][0], title: events[index]!['title'], description: events[index]!['description'], dateTime: DateFormat('E, d MMM yyyy HH:mm').format(DateTime.parse(events[index]!['schedule_start'])), scheduleStart: DateTime.parse(events[index]!['schedule_start']), scheduleEnd: DateTime.parse(events[index]!['schedule_end']));
                                 })
                             : Column(
                                 children: [

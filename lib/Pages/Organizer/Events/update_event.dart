@@ -113,7 +113,7 @@ class _UpdateEventState extends State<UpdateEvent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Update Event',
       ),
       body: SafeArea(

@@ -38,7 +38,7 @@ class CreateAndListNotesState extends ConsumerState<CreateAndListNotes> {
   Widget build(BuildContext context) {
     final noteData = ref.watch(notesProvider);
     return Scaffold(
-        appBar: CustomAppBar(title: 'List Notes'),
+        appBar: const CustomAppBar(title: 'List Notes'),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.popAndPushNamed(context, '/create_notes');

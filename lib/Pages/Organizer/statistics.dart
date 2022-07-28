@@ -62,7 +62,7 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
   Widget build(BuildContext context) {
     final statisticsData = ref.watch(statisticsProvider);
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Statistics',
         hideBackButton: true,
       ),

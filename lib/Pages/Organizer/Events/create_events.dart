@@ -153,7 +153,7 @@ class _CreateEventsState extends State<CreateEvents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
+        appBar: const CustomAppBar(
           title: 'Create Event',
           hideBackButton: false,
         ),
@@ -373,11 +373,9 @@ class _CreateEventsState extends State<CreateEvents> {
                           backgroundColor: Colors.grey[800],
                           borderRadius: BorderRadius.circular(10.0),
                           onPressed: () {
-                            DateTime minTime = DateTime.parse(scheduleStart);
                             DatePicker.showDateTimePicker(context,
                                 showTitleActions: true,
-                                minTime: DateTime(
-                                    minTime.year, minTime.month, minTime.day),
+                                minTime: DateTime.now(),
                                 maxTime: DateTime(2030, 6, 7),
                                 onConfirm: (date) {
                               var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
@@ -514,15 +512,25 @@ class _CreateEventsState extends State<CreateEvents> {
                       });
                     },
                     isSelected: isEventAvailable,
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text('Available'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text('Not Available'),
-                      ),
+                    children: <Widget>[
+                      SizedBox(
+                          width: (MediaQuery.of(context).size.width - 36) / 3,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Available",
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          )),
+                      SizedBox(
+                          width: (MediaQuery.of(context).size.width - 36) / 3,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Not Available",
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          )),
                     ],
                   ),
                   const SizedBox(
@@ -564,15 +572,25 @@ class _CreateEventsState extends State<CreateEvents> {
                       });
                     },
                     isSelected: isEventPrivate,
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text('Yes'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text('No'),
-                      ),
+                    children: <Widget>[
+                      SizedBox(
+                          width: (MediaQuery.of(context).size.width - 36) / 3,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Yes",
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          )),
+                      SizedBox(
+                          width: (MediaQuery.of(context).size.width - 36) / 3,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "No",
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          )),
                     ],
                   ),
                   const SizedBox(
@@ -616,15 +634,25 @@ class _CreateEventsState extends State<CreateEvents> {
                       });
                     },
                     isSelected: isSelected,
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text('Paid'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text('Free'),
-                      ),
+                    children: <Widget>[
+                      SizedBox(
+                          width: (MediaQuery.of(context).size.width - 36) / 3,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Paid",
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          )),
+                      SizedBox(
+                          width: (MediaQuery.of(context).size.width - 36) / 3,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Free",
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          )),
                     ],
                   ),
                   const SizedBox(

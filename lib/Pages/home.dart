@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                 child: IndexedStack(
                   index: _selectedIndex,
                   children: [
-                    role == 'user' ? FeedPage() : const EventCategory(),
+                    role == 'user' ? const FeedPage() : const EventCategory(),
 
                     role == 'user'
                         ? const FeaturePage()

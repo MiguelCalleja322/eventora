@@ -70,7 +70,7 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
     final featuredData = ref.watch(featuresProvider);
 
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Features',
         height: 70,
         hideBackButton: true,

@@ -99,7 +99,7 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Basic Information',
       ),
       body: SafeArea(

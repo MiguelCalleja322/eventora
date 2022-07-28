@@ -10,6 +10,7 @@ import 'package:eventora/Pages/Organizer/Events/create_events.dart';
 import 'package:eventora/Pages/Organizer/Events/update_event.dart';
 import 'package:eventora/Pages/Tasks/create_task.dart';
 import 'package:eventora/Pages/Tasks/view_task.dart';
+import 'package:eventora/Pages/User/create_user_events.dart';
 import 'package:eventora/Pages/User/feed_page.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
@@ -68,9 +69,12 @@ class Routes {
       case '/signup':
         return MaterialPageRoute(
             builder: (_) => Signup(), settings: routeSettings);
+      case '/create_user_event':
+        return MaterialPageRoute(
+            builder: (_) => CreateUserEvents(), settings: routeSettings);
       case '/feed_page':
         return MaterialPageRoute(
-            builder: (_) => FeedPage(), settings: routeSettings);
+            builder: (_) => const FeedPage(), settings: routeSettings);
       case '/feature_page':
         return MaterialPageRoute(
             builder: (_) => const FeaturePage(), settings: routeSettings);

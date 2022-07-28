@@ -89,7 +89,7 @@ class _CreateTaskState extends State<CreateTask> {
           color: Colors.white,
         ),
       ),
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Create Task',
       ),
       body: SafeArea(

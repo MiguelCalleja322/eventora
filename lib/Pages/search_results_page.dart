@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
 class SearchResultPage extends ConsumerStatefulWidget {
-  SearchResultPage({Key? key, this.title}) : super(key: key);
+  const SearchResultPage({Key? key, this.title}) : super(key: key);
 
   final String? title;
 
@@ -46,7 +46,7 @@ class SearchResultPageState extends ConsumerState<SearchResultPage> {
     final results = ref.watch(eventProvider);
 
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Results',
       ),
       body: SafeArea(

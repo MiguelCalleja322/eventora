@@ -28,7 +28,7 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   DateTime birthdate = DateTime.now();
   late int isAgeOver18 = 0;
-
+  late List<bool> userCategory = [false, false];
   String roleValue = 'user';
 
   final FocusNode _nameFocus = FocusNode();
@@ -73,7 +73,7 @@ class _SignupState extends State<Signup> {
     return screenLoading
         ? const LoadingPage()
         : Scaffold(
-            appBar: CustomAppBar(
+            appBar: const CustomAppBar(
               title: 'Signup',
             ),
             body: SafeArea(
@@ -183,45 +183,72 @@ class _SignupState extends State<Signup> {
                           },
                         ),
                         const SizedBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text('Are you a / an?'),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            DropdownButton<String>(
-                              value: roleValue,
-                              elevation: 16,
-                              style: const TextStyle(color: Color(0xFF114F5A)),
-                              underline: Container(
-                                height: 2,
-                                color: const Color(0xFF114F5A),
-                              ),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  roleValue = newValue!;
-                                });
-                              },
-                              items: <String>[
-                                'user',
-                                'organizer'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
-                          ],
+                        const Text('Are you a/an?'),
+                        const SizedBox(height: 15),
+                        Align(
+                          alignment: Alignment.center,
+                          child: ToggleButtons(
+                            onPressed: (int newIndex) {
+                              setState(() {
+                                for (int index = 0;
+                                    index < userCategory.length;
+                                    index++) {
+                                  if (index == newIndex) {
+                                    setState(() {
+                                      userCategory[index] = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      userCategory[index] = false;
+                                    });
+                                  }
+
+                                  if (newIndex == 0) {
+                                    setState(() {
+                                      roleValue = 'user';
+                                    });
+                                  } else {
+                                    setState(() {
+                                      roleValue = 'organizer';
+                                    });
+                                  }
+                                }
+                              });
+                            },
+                            isSelected: userCategory,
+                            children: <Widget>[
+                              SizedBox(
+                                  width:
+                                      (MediaQuery.of(context).size.width - 36) /
+                                          3,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "User",
+                                      style: TextStyle(color: Colors.grey[800]),
+                                    ),
+                                  )),
+                              SizedBox(
+                                  width:
+                                      (MediaQuery.of(context).size.width - 36) /
+                                          3,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Organizer",
+                                      style: TextStyle(color: Colors.grey[800]),
+                                    ),
+                                  )),
+                            ],
+                          ),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 15),
+                        const Text('Birthdate: '),
+                        const SizedBox(height: 15),
                         Row(
                           children: [
                             Expanded(
-                              flex: 1,
+                              flex: 2,
                               child: Align(
                                 alignment: Alignment.center,
                                 child: CustomButton(

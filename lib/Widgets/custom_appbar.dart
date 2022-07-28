@@ -1,11 +1,10 @@
 import 'package:eventora/Widgets/custom_icon_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ionicons/ionicons.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  CustomAppBar(
+  const CustomAppBar(
       {Key? key,
       this.height = 70,
       this.title,

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/feature_page_controller.dart';
@@ -11,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
 class FeedPage extends ConsumerStatefulWidget {
-  FeedPage({Key? key}) : super(key: key);
+  const FeedPage({Key? key}) : super(key: key);
 
   @override
   FeedPageState createState() => FeedPageState();
@@ -40,7 +38,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
   Widget build(BuildContext context) {
     final feeds = ref.watch(feedProvider);
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Feed',
         height: 135,
         hideSearchBar: false,
@@ -63,8 +61,6 @@ class FeedPageState extends ConsumerState<FeedPage> {
                           feed['feed'].isEmpty
                               ? events = []
                               : events = feed['feed'];
-
-                          print(events!.length);
 
                           return events!.isEmpty
                               ? Column(

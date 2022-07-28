@@ -13,13 +13,14 @@ import 'package:settings_ui/settings_ui.dart';
 class CustomEventCard extends ConsumerStatefulWidget {
   CustomEventCard(
       {Key? key,
-      required this.slug,
-      required this.bgColor,
-      required this.imageUrl,
-      required this.eventType,
-      required this.title,
-      required this.description,
-      required this.dateTime,
+      this.role = '',
+      this.slug = '',
+      this.bgColor = 0,
+      this.imageUrl = '',
+      this.eventType = '',
+      this.title = '',
+      this.description = '',
+      this.dateTime = '',
       this.eventCategory = '',
       this.model,
       this.scheduleStart,
@@ -27,6 +28,7 @@ class CustomEventCard extends ConsumerStatefulWidget {
       this.isOptionsButton = false})
       : super(key: key);
   final String? slug;
+  final String? role;
   final int? bgColor;
   final String? imageUrl;
   final String? eventType;
@@ -48,9 +50,7 @@ class CustomEventCardState extends ConsumerState<CustomEventCard> {
     if (eventCat == '') {
       return;
     } else {
-      final response = await UserPreferenceController.store(eventCat);
-
-      print(response);
+      await UserPreferenceController.store(eventCat);
     }
     return;
   }
@@ -73,11 +73,14 @@ class CustomEventCardState extends ConsumerState<CustomEventCard> {
       margin: const EdgeInsets.all(10),
       child: InkWell(
         onTap: () {
-          updateUserPreference(widget.eventCategory!);
-
-          Navigator.pushNamed(context, '/custom_event_full', arguments: {
-            'slug': widget.slug!,
-          });
+          if (widget.role == 'organizer') {
+            updateUserPreference(widget.eventCategory!);
+            Navigator.pushNamed(context, '/custom_event_full', arguments: {
+              'slug': widget.slug!,
+            });
+          } else {
+            return;
+          }
         },
         child: Column(
           children: [
@@ -237,12 +240,14 @@ class CustomEventCardState extends ConsumerState<CustomEventCard> {
                           : const SizedBox.shrink()
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                    child: Divider(
-                      color: Colors.grey[600],
-                    ),
-                  ),
+                  widget.role == 'organizer'
+                      ? SizedBox(
+                          height: 10,
+                          child: Divider(
+                            color: Colors.grey[600],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(

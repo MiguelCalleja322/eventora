@@ -90,7 +90,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
           color: Colors.white,
         ),
       ),
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Create Appointment',
       ),
       body: SafeArea(
