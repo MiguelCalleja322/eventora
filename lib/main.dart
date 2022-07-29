@@ -12,6 +12,7 @@ import 'package:eventora/Pages/Tasks/create_task.dart';
 import 'package:eventora/Pages/Tasks/view_task.dart';
 import 'package:eventora/Pages/User/create_user_events.dart';
 import 'package:eventora/Pages/User/feed_page.dart';
+import 'package:eventora/Pages/User/user_event_fullpage.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
@@ -71,7 +72,7 @@ class Routes {
             builder: (_) => Signup(), settings: routeSettings);
       case '/create_user_event':
         return MaterialPageRoute(
-            builder: (_) => CreateUserEvents(), settings: routeSettings);
+            builder: (_) => const CreateUserEvents(), settings: routeSettings);
       case '/feed_page':
         return MaterialPageRoute(
             builder: (_) => const FeedPage(), settings: routeSettings);
@@ -172,6 +173,16 @@ class Routes {
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
               builder: (_) => CustomEventFullPage(
+                    slug: args['slug'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+
+      case '/user_custom_event_full':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => UserEventFullPage(
                     slug: args['slug'],
                   ),
               settings: routeSettings);

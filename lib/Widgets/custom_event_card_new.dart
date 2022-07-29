@@ -79,7 +79,9 @@ class CustomEventCardState extends ConsumerState<CustomEventCard> {
               'slug': widget.slug!,
             });
           } else {
-            return;
+            Navigator.pushNamed(context, '/user_custom_event_full', arguments: {
+              'slug': widget.slug!,
+            });
           }
         },
         child: Column(

@@ -387,7 +387,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                                                   events[index]!['schedule_start'])),
                                           scheduleStart: DateTime.parse(events[index]!['schedule_start']),
                                           scheduleEnd: DateTime.parse(events[index]!['schedule_end']))
-                                      : CustomEventCard(role: role, model: profileProvider, imageUrl: cloudFrontUri! + events[index]!['images'][0], title: events[index]!['title'], description: events[index]!['description'], dateTime: DateFormat('E, d MMM yyyy HH:mm').format(DateTime.parse(events[index]!['schedule_start'])), scheduleStart: DateTime.parse(events[index]!['schedule_start']), scheduleEnd: DateTime.parse(events[index]!['schedule_end']));
+                                      : CustomEventCard(slug: events[index]!['slug'], role: role, model: profileProvider, imageUrl: cloudFrontUri! + events[index]!['images'][0], title: events[index]!['title'], description: events[index]!['description'], dateTime: DateFormat('E, d MMM yyyy HH:mm').format(DateTime.parse(events[index]!['schedule_start'])), scheduleStart: DateTime.parse(events[index]!['schedule_start']), scheduleEnd: DateTime.parse(events[index]!['schedule_end']));
                                 })
                             : Column(
                                 children: [

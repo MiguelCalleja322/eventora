@@ -10,7 +10,7 @@ class UserEventController {
 
   static Future show(String? slug) async {
     Map<String, dynamic> response =
-        await ApiService().request('user_event/$slug', 'POST', {}, true);
+        await ApiService().request('user_event/show/$slug', 'GET', {}, true);
 
     return response;
   }

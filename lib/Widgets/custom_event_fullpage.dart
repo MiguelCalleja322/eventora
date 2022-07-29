@@ -28,7 +28,6 @@ class CustomEventFullPageState extends ConsumerState<CustomEventFullPage> {
   late String? cloudFrontUri = '';
   late Map<String, dynamic>? event = {};
   late String? message = '';
-  late String testSlug = '';
   late AutoDisposeFutureProvider eventProvider;
   late int? isLiked = 0;
 
@@ -48,7 +47,6 @@ class CustomEventFullPageState extends ConsumerState<CustomEventFullPage> {
   @override
   void initState() {
     if (mounted) {
-      testSlug = widget.slug.toString();
       fetchCloudFrontUri();
       generateEventProvider();
     }
