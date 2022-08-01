@@ -1,9 +1,10 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, depend_on_referenced_packages, avoid_function_literals_in_foreach_calls
 
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:eventora/controllers/user_event_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
@@ -19,14 +20,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 
 class CreateUserEvents extends StatefulWidget {
-  CreateUserEvents({Key? key}) : super(key: key);
+  const CreateUserEvents({Key? key}) : super(key: key);
 
   @override
   State<CreateUserEvents> createState() => _CreateUserEventsState();
@@ -501,15 +502,9 @@ class _CreateUserEventsState extends State<CreateUserEvents> {
         }
       });
     } catch (e) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Unknown problem occured.',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast(
+        'Unknown problem occured.',
+      );
 
       return;
     }
@@ -559,43 +554,20 @@ class _CreateUserEventsState extends State<CreateUserEvents> {
     }
 
     if (dressCode.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Please at least 1 dress code',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast('Please at least 1 dress code');
 
       return;
     }
 
     if (scheduleStart.isEmpty && scheduleEnd.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Please provide start date or end date',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast(
+          'Please provide start date or end date');
 
       return;
     }
 
     if (imageFileList!.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Please pick at least one picture',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showOkayToast('Please pick at least one picture');
       return;
     }
 
@@ -623,26 +595,10 @@ class _CreateUserEventsState extends State<CreateUserEvents> {
     Map<String, dynamic>? response = await UserEventController.store(eventData);
 
     if (response!['message'] != null) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: response['message'],
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast(response['message']);
       return;
     } else {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Done',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.grey[700],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showOkayToast('Event Created');
 
       Navigator.pop(context);
     }

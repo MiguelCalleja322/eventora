@@ -3,9 +3,10 @@ import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/controllers/appointment_controller.dart';
 import 'package:eventora/controllers/note_controller.dart';
 import 'package:eventora/controllers/task_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -257,6 +258,13 @@ class _CalendarPageState extends State<CalendarPage> {
                                                     const EdgeInsets.all(15.0),
                                                 child: SettingsList(
                                                   shrinkWrap: true,
+                                                  lightTheme:
+                                                      const SettingsThemeData(
+                                                    settingsSectionBackground:
+                                                        Colors.white,
+                                                    settingsListBackground:
+                                                        Colors.white,
+                                                  ),
                                                   sections: [
                                                     SettingsSection(
                                                       tiles: <SettingsTile>[
@@ -268,9 +276,34 @@ class _CalendarPageState extends State<CalendarPage> {
                                                                 context);
                                                           },
                                                           leading: const Icon(
-                                                              Icons.delete),
+                                                              Ionicons
+                                                                  .trash_bin_outline),
                                                           title: const Text(
                                                               'Delete'),
+                                                        ),
+                                                        SettingsTile.navigation(
+                                                          onPressed: (context) {
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                '/update_calendar',
+                                                                arguments: {
+                                                                  'model': event
+                                                                      .model,
+                                                                  'id':
+                                                                      event.id,
+                                                                  'title': event
+                                                                      .title,
+                                                                  'description':
+                                                                      event
+                                                                          .description,
+                                                                  'schedule': event
+                                                                      .dateTime,
+                                                                });
+                                                          },
+                                                          leading: const Icon(
+                                                              Ionicons.refresh),
+                                                          title: const Text(
+                                                              'Update'),
                                                         ),
                                                       ],
                                                     ),
@@ -412,42 +445,21 @@ class _CalendarPageState extends State<CalendarPage> {
     DateFormat actualDateAndTimeOfAT = DateFormat('yyyy/MM/dd HH:mm');
 
     if (_titleController.text.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Title is required.',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast('Title is required.');
+
       return;
     }
 
     if (_descriptionController.text.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Description is required.',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast('Description is required.');
+
       return;
     }
 
     if (model == 'Task' || model == 'Appointment') {
       if (_dateController.text.isEmpty) {
-        Fluttertoast.cancel();
-        Fluttertoast.showToast(
-            msg: 'Date is required.',
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
+        CustomFlutterToast.showErrorToast('Date is required.');
+
         return;
       }
 
@@ -459,7 +471,7 @@ class _CalendarPageState extends State<CalendarPage> {
       };
 
       if (model == 'Task') {
-        response = await TaskController().store(modelData);
+        response = await TaskController.store(modelData);
 
         if (selectedEvents[date] != null) {
           selectedEvents[date]?.add(Calendar(
@@ -479,7 +491,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ];
         }
       } else {
-        response = await AppointmentController().store(modelData);
+        response = await AppointmentController.store(modelData);
 
         if (selectedEvents[date] != null) {
           selectedEvents[date]?.add(Calendar(
@@ -516,9 +528,9 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void delete(int id, model) async {
     if (model == 'Task') {
-      await TaskController().delete(id);
+      await TaskController.delete(id);
     } else {
-      await AppointmentController().delete(id);
+      await AppointmentController.delete(id);
     }
 
     setState(() {

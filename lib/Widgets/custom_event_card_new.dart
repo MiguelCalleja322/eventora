@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eventora/controllers/events_controller.dart';
 import 'package:eventora/controllers/user_preference_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -73,13 +74,13 @@ class CustomEventCardState extends ConsumerState<CustomEventCard> {
       margin: const EdgeInsets.all(10),
       child: InkWell(
         onTap: () {
-          if (widget.role == 'organizer') {
-            updateUserPreference(widget.eventCategory!);
-            Navigator.pushNamed(context, '/custom_event_full', arguments: {
+          if (widget.role == 'user') {
+            Navigator.pushNamed(context, '/user_custom_event_full', arguments: {
               'slug': widget.slug!,
             });
           } else {
-            Navigator.pushNamed(context, '/user_custom_event_full', arguments: {
+            updateUserPreference(widget.eventCategory!);
+            Navigator.pushNamed(context, '/custom_event_full', arguments: {
               'slug': widget.slug!,
             });
           }
@@ -332,40 +333,18 @@ class CustomEventCardState extends ConsumerState<CustomEventCard> {
   void markAsPrivate(String slug) async {
     Map<String, dynamic>? response =
         await EventController().markAsPrivate(slug);
-    Fluttertoast.cancel();
-    await Fluttertoast.showToast(
-        msg: response!['message'],
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
+    await CustomFlutterToast.showOkayToast(response!['message']);
   }
 
   void availability(String slug) async {
     Map<String, dynamic>? response = await EventController().availability(slug);
-    Fluttertoast.cancel();
-    await Fluttertoast.showToast(
-        msg: response!['message'],
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
+
+    await CustomFlutterToast.showOkayToast(response!['message']);
   }
 
   void delete(String slug) async {
     Map<String, dynamic>? response = await EventController().delete(slug);
-    Fluttertoast.cancel();
-    await Fluttertoast.showToast(
-        msg: response!['message'],
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
+
+    await CustomFlutterToast.showOkayToast(response!['message']);
   }
 }

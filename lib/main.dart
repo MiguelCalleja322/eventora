@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:eventora/Pages/Appointments/create_appointment.dart';
 import 'package:eventora/Pages/Appointments/view_appointment.dart';
 import 'package:eventora/Pages/Auth/otp.dart';
+import 'package:eventora/Pages/Auth/user_preference.dart';
 import 'package:eventora/Pages/Notes/create_notes.dart';
 import 'package:eventora/Pages/Notes/list_notes.dart';
 import 'package:eventora/Pages/Notes/view_note.dart';
@@ -20,9 +21,12 @@ import 'package:eventora/Pages/saved_events_page.dart';
 import 'package:eventora/Pages/search_results_page.dart';
 import 'package:eventora/Pages/shared_events_page.dart';
 import 'package:eventora/Pages/Organizer/wall.dart';
+import 'package:eventora/Widgets/custom_calendar_update.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
 import 'package:eventora/Widgets/custom_show_map.dart';
+import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
@@ -58,30 +62,20 @@ class Routes {
       case '/home':
         return MaterialPageRoute(
             builder: (_) => const HomePage(), settings: routeSettings);
-      case '/search':
-        if (args is Map<String, dynamic>) {
-          return MaterialPageRoute(
-              builder: (_) => SearchResultPage(
-                    title: args['title'],
-                  ),
-              settings: routeSettings);
-        }
-        return _errorRoute();
+
+      //Auth
       case '/signup':
         return MaterialPageRoute(
             builder: (_) => Signup(), settings: routeSettings);
-      case '/create_user_event':
-        return MaterialPageRoute(
-            builder: (_) => const CreateUserEvents(), settings: routeSettings);
-      case '/feed_page':
-        return MaterialPageRoute(
-            builder: (_) => const FeedPage(), settings: routeSettings);
-      case '/feature_page':
-        return MaterialPageRoute(
-            builder: (_) => const FeaturePage(), settings: routeSettings);
+
       case '/otp_page':
         return MaterialPageRoute(
             builder: (_) => const OTPPage(), settings: routeSettings);
+
+      case '/user_preference':
+        return MaterialPageRoute(
+            builder: (_) => UserPreferencePage(), settings: routeSettings);
+
       //notes
       case '/create_notes':
         return MaterialPageRoute(
@@ -100,6 +94,7 @@ class Routes {
               settings: routeSettings);
         }
         return _errorRoute();
+
       //tasks
       case '/create_task':
         return MaterialPageRoute(
@@ -115,6 +110,7 @@ class Routes {
               settings: routeSettings);
         }
         return _errorRoute();
+
       //appointment
       case '/create_appointment':
         return MaterialPageRoute(
@@ -130,7 +126,18 @@ class Routes {
               settings: routeSettings);
         }
         return _errorRoute();
+
       //events
+
+      case '/create_user_event':
+        return MaterialPageRoute(
+            builder: (_) => const CreateUserEvents(), settings: routeSettings);
+      case '/feed_page':
+        return MaterialPageRoute(
+            builder: (_) => const FeedPage(), settings: routeSettings);
+      case '/feature_page':
+        return MaterialPageRoute(
+            builder: (_) => const FeaturePage(), settings: routeSettings);
       case '/saved_events':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
@@ -166,9 +173,7 @@ class Routes {
               settings: routeSettings);
         }
         return _errorRoute();
-      case '/updateUserInfo':
-        return MaterialPageRoute(
-            builder: (_) => const UpdateUserInfo(), settings: routeSettings);
+
       case '/custom_event_full':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
@@ -179,6 +184,32 @@ class Routes {
         }
         return _errorRoute();
 
+      case '/show_map':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => ShowMap(
+                    latitude: args['latitude'],
+                    longitude: args['longitude'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+
+      //user
+      case '/search':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => SearchResultPage(
+                    title: args['title'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+
+      case '/updateUserInfo':
+        return MaterialPageRoute(
+            builder: (_) => const UpdateUserInfo(), settings: routeSettings);
+
       case '/user_custom_event_full':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
@@ -188,21 +219,12 @@ class Routes {
               settings: routeSettings);
         }
         return _errorRoute();
+
       case '/wall_page':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
               builder: (_) => WallPage(
                     type: args['type'],
-                  ),
-              settings: routeSettings);
-        }
-        return _errorRoute();
-      case '/show_map':
-        if (args is Map<String, dynamic>) {
-          return MaterialPageRoute(
-              builder: (_) => ShowMap(
-                    latitude: args['latitude'],
-                    longitude: args['longitude'],
                   ),
               settings: routeSettings);
         }
@@ -217,6 +239,22 @@ class Routes {
               settings: routeSettings);
         }
         return _errorRoute();
+
+      //misc
+
+      case '/update_calendar':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => CustomCalendarUpdatePage(
+                  description: args['description'],
+                  title: args['title'],
+                  dateTime: args['schedule'],
+                  id: args['id'],
+                  model: args['model']),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+
       case '/payment':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(

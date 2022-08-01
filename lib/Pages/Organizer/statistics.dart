@@ -109,6 +109,7 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
                                                 .size
                                                 .width)),
                                         child: CustomEventCard(
+                                            role: role!,
                                             slug: mostLiked![0].slug,
                                             bgColor: int.parse(
                                                 mostLiked![0].bgcolor),
@@ -149,6 +150,7 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
                                                 .size
                                                 .width)),
                                         child: CustomEventCard(
+                                            role: role!,
                                             slug: mostAttendees![0].slug,
                                             bgColor: int.parse(
                                                 mostAttendees![0].bgcolor),
@@ -190,6 +192,7 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
                                                 .size
                                                 .width)),
                                         child: CustomEventCard(
+                                            role: role!,
                                             slug: mostInteresting![0].slug,
                                             bgColor: int.parse(
                                                 mostInteresting![0].bgcolor),

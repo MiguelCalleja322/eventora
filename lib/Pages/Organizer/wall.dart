@@ -1,6 +1,7 @@
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/event_categories_controller.dart';
+import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,14 @@ class WallPageState extends ConsumerState<WallPage> {
   late String? cloudFrontUri = '';
   late bool? loading = false;
   late AutoDisposeFutureProvider eventProvider;
+  late String role = '';
+
+  void getRole() async {
+    await dotenv.load(fileName: ".env");
+    final String? roleKey = dotenv.env['ROLE_KEY'];
+    role = await StorageSevice().read(roleKey!) ?? '';
+  }
+
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
     cloudFrontUri = dotenv.env['CLOUDFRONT_URI'];
@@ -41,6 +50,7 @@ class WallPageState extends ConsumerState<WallPage> {
 
   @override
   void initState() {
+    getRole();
     fetchCloudFrontUri();
     generateEventProvider();
     super.initState();
@@ -85,6 +95,7 @@ class WallPageState extends ConsumerState<WallPage> {
                                       itemCount: events!.length,
                                       itemBuilder: (context, index) {
                                         return CustomEventCard(
+                                            role: role,
                                             slug: events![index]['slug'],
                                             bgColor: int.parse(
                                                 events![index]['bgcolor']),

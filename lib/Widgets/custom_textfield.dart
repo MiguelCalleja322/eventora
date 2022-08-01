@@ -13,8 +13,8 @@ class CustomTextField extends StatelessWidget {
       this.focusNode,
       this.maxLine,
       this.suffixIcon,
-      required this.textAlign,
-      required this.letterSpacing,
+      this.textAlign,
+      this.letterSpacing,
       this.textCapitalization = TextCapitalization.none,
       this.inputFormatters})
       : super(key: key);
@@ -26,8 +26,8 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final FocusNode? focusNode;
   final List<TextInputFormatter>? inputFormatters;
-  final TextAlign textAlign;
-  final double letterSpacing;
+  final TextAlign? textAlign;
+  final double? letterSpacing;
   final TextCapitalization? textCapitalization;
   final Widget? suffixIcon;
 
@@ -47,7 +47,7 @@ class CustomTextField extends StatelessWidget {
         focusNode: focusNode,
         obscureText: obscureText,
         controller: controller,
-        textAlign: textAlign,
+        textAlign: textAlign!,
         inputFormatters: inputFormatters,
         decoration: InputDecoration(
           suffixIcon: suffixIcon,
@@ -60,29 +60,5 @@ class CustomTextField extends StatelessWidget {
         ),
       ),
     );
-
-    // TextField(
-    //   focusNode: focusNode,
-    //   obscureText: obscureText,
-    //   controller: controller,
-    //   textAlign: textAlign,
-    //   inputFormatters: inputFormatters,
-    //   decoration: InputDecoration(
-    //       border: const OutlineInputBorder(
-    //           borderSide: BorderSide(
-    //         color: Color(0xFF114F5A),
-    //       )),
-    //       focusedBorder: const OutlineInputBorder(
-    //           borderSide: BorderSide(
-    //         width: 2,
-    //         color: Color(0xFF114F5A),
-    //       )),
-    //       labelText: label,
-    //       labelStyle: const TextStyle(
-    //         color: Color(0xFF114F5A),
-    //       )),
-    //   onChanged: onChanged,
-    //   style: TextStyle(letterSpacing: letterSpacing),
-    // );
   }
 }

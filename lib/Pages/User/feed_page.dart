@@ -1,6 +1,7 @@
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/feature_page_controller.dart';
+import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,13 @@ final feedProvider = FutureProvider.autoDispose((ref) {
 class FeedPageState extends ConsumerState<FeedPage> {
   late String? cloudFrontUri = '';
   late List<dynamic>? events = [];
+  // late String role = '';
+
+  // void getRole() async {
+  //   await dotenv.load(fileName: ".env");
+  //   final String? roleKey = dotenv.env['ROLE_KEY'];
+  //   role = await StorageSevice().read(roleKey!) ?? '';
+  // }
 
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
@@ -31,6 +39,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
   @override
   void initState() {
     fetchCloudFrontUri();
+    // getRole();
     super.initState();
   }
 

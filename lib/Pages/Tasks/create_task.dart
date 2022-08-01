@@ -1,9 +1,10 @@
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/task_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:intl/intl.dart';
 
 class CreateTask extends StatefulWidget {
@@ -32,15 +33,7 @@ class _CreateTaskState extends State<CreateTask> {
     }
 
     if (_dateController.text.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Date is required',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast('Date is required');
 
       return;
     }
@@ -51,17 +44,9 @@ class _CreateTaskState extends State<CreateTask> {
       'date_time': _dateController.text,
     };
 
-    Map<String, dynamic>? response = await TaskController().store(task);
+    Map<String, dynamic>? response = await TaskController.store(task);
 
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: response!['task'].toString(),
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
+    CustomFlutterToast.showOkayToast(response!['task'].toString());
 
     taskTitle.clear();
     taskDescription.clear();

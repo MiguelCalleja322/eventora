@@ -1,9 +1,9 @@
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/appointment_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class CreateAppointment extends StatefulWidget {
@@ -32,16 +32,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
     }
 
     if (_dateController.text.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Date is required',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
-
+      CustomFlutterToast.showErrorToast('Date is required');
       return;
     }
 
@@ -52,17 +43,9 @@ class _CreateAppointmentState extends State<CreateAppointment> {
     };
 
     Map<String, dynamic>? response =
-        await AppointmentController().store(appointment);
+        await AppointmentController.store(appointment);
 
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: response!['appointment'].toString(),
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
+    CustomFlutterToast.showOkayToast(response!['appointment'].toString());
 
     appointmentTitle.clear();
     appointmentDescription.clear();

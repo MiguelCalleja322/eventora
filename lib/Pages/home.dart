@@ -22,7 +22,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   bool loading = false;
-  String? role;
+  late String? role = '';
+  late String? bearerToken = '';
 
   void _getRole() async {
     setState(() {
@@ -45,10 +46,22 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _redirectIfUserNotLogged(context) async {
+    await dotenv.load(fileName: ".env");
+    final String storageKey = dotenv.env['STORAGE_KEY'] ?? '';
+
+    bearerToken = await StorageSevice().read(storageKey) ?? '';
+
+    if (bearerToken == '') {
+      Navigator.pushNamed(context, '/');
+    }
+  }
+
   @override
   void initState() {
     if (mounted) {
       _getRole();
+      _redirectIfUserNotLogged(context);
     }
 
     super.initState();
@@ -64,7 +77,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return loading == true
+    return bearerToken == ''
         ? const LoadingPage()
         : Scaffold(
             body: SafeArea(

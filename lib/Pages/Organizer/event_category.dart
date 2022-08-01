@@ -16,7 +16,7 @@ class _EventCategoryState extends State<EventCategory> {
   late List<dynamic>? eventCategories = [];
 
   void getEventCategories() async {
-    fetchedCategories = await EventCategoriesController().index();
+    fetchedCategories = await EventCategoriesController.index();
 
     if (fetchedCategories!.isNotEmpty) {
       setState(() {

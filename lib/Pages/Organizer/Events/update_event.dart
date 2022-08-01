@@ -4,6 +4,7 @@ import 'package:eventora/Widgets/custom_icon_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/events_controller.dart';
 import 'package:eventora/controllers/location_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -411,30 +412,12 @@ class _UpdateEventState extends State<UpdateEvent> {
     Map<String, dynamic>? response =
         await EventController().update(dataToUpdate);
 
-    if (response!['message'].isNotEmpty) {
-      Fluttertoast.cancel();
-      await Fluttertoast.showToast(
-          msg: response['message'],
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.grey[800],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
-
+    if (response!['message'] != null) {
+      CustomFlutterToast.showOkayToast(response['message']);
       Navigator.pop(context);
       return;
     } else {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: response['error'],
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
-
+      CustomFlutterToast.showErrorToast(response['error']);
       Navigator.pop(context);
       return;
     }

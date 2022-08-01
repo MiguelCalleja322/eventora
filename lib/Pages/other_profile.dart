@@ -1,10 +1,11 @@
 import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/Widgets/custom_profile.dart';
 import 'package:eventora/controllers/user_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
+import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ionicons/ionicons.dart';
 import '../controllers/events_controller.dart';
 
@@ -22,6 +23,13 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
   late String? message = '';
   late String? cloudFrontUri = '';
   late String? model = 'save_event';
+  late String role = '';
+
+  void getRole() async {
+    await dotenv.load(fileName: ".env");
+    final String? roleKey = dotenv.env['ROLE_KEY'];
+    role = await StorageSevice().read(roleKey!) ?? '';
+  }
 
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
@@ -42,6 +50,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
     if (mounted) {
       fetchUser(widget.username!);
       fetchCloudFrontUri();
+      getRole();
     }
     super.initState();
   }
@@ -187,6 +196,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                                 itemBuilder: (context, index) {
                                   return SizedBox(
                                       child: CustomEventCard(
+                                    role: role,
                                     slug: model == 'events'
                                         ? userProfile![model][index]['slug']
                                         : userProfile![model][index]['event']
@@ -244,75 +254,43 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
 
   void onPressedShareEvent(String? slug) async {
     Map<String, dynamic> eventSlug = {'slug': slug!};
-
     Map<String, dynamic> response =
         await EventController().shareEvent(eventSlug);
 
     if (response['events'].isNotEmpty) {
-      message = response['events'];
+      CustomFlutterToast.showOkayToast(response['events']!);
     } else {
-      message = 'Something went wrong...';
+      CustomFlutterToast.showErrorToast('Something went wrong...');
     }
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: message!,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[500],
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
+
     return;
   }
 
   void onPressedInterested(String? slug) async {
-    Color? toastColor = Colors.grey[700];
     Map<String, dynamic> eventSlug = {'slug': slug!};
 
     Map<String, dynamic> response =
         await EventController().interested(eventSlug);
 
     if (response['interested'] != null) {
-      message = response['interested'];
-      toastColor = Colors.grey[700];
+      CustomFlutterToast.showOkayToast(response['interested']!);
     } else {
-      message = 'Something went wrong...';
-      toastColor = Colors.red[500];
+      CustomFlutterToast.showErrorToast('Something went wrong...');
     }
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: message!,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: toastColor,
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
+    return;
   }
 
   void onPressedSave(String? slug) async {
-    Color? toastColor = Colors.grey[700];
     Map<String, dynamic> eventSlug = {'slug': slug!};
 
     Map<String, dynamic> response =
         await EventController().saveEvent(eventSlug);
 
     if (response['message'] != null) {
-      message = response['message'];
-      toastColor = Colors.red[700];
+      CustomFlutterToast.showErrorToast(response['message']!);
     } else {
-      message = response['events'];
-      toastColor = Colors.grey[700];
+      CustomFlutterToast.showOkayToast(response['events']!);
     }
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: message!,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: toastColor,
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
     return;
   }
 

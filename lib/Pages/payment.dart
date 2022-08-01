@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventora/controllers/payment_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -336,16 +337,8 @@ class _PaymentPageState extends State<PaymentPage> {
     _ccExpiryYearController.clear();
     _ccCVCController.clear();
 
-    Fluttertoast.cancel();
+    CustomFlutterToast.showOkayToast('Payment successful.');
 
-    Fluttertoast.showToast(
-        msg: 'Payment Successful',
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[500],
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
     return;
   }
 }

@@ -2,13 +2,14 @@
 
 import 'dart:io';
 import 'dart:math';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:eventora/utils/s3.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
@@ -36,7 +37,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   late bool loading = false;
   late String? newProfilePic = '';
   late String? cloudFrontUri = '';
-  late String? message = '';
+
   late String? role = '';
   late List<dynamic> events = [];
 
@@ -368,7 +369,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                                 itemBuilder: (context, index) {
                                   return role == 'organizer'
                                       ? CustomEventCard(
-                                          role: role,
+                                          role: role!,
                                           model: profileProvider,
                                           isOptionsButton: true,
                                           slug: events[index]!['slug'],
@@ -387,7 +388,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                                                   events[index]!['schedule_start'])),
                                           scheduleStart: DateTime.parse(events[index]!['schedule_start']),
                                           scheduleEnd: DateTime.parse(events[index]!['schedule_end']))
-                                      : CustomEventCard(slug: events[index]!['slug'], role: role, model: profileProvider, imageUrl: cloudFrontUri! + events[index]!['images'][0], title: events[index]!['title'], description: events[index]!['description'], dateTime: DateFormat('E, d MMM yyyy HH:mm').format(DateTime.parse(events[index]!['schedule_start'])), scheduleStart: DateTime.parse(events[index]!['schedule_start']), scheduleEnd: DateTime.parse(events[index]!['schedule_end']));
+                                      : CustomEventCard(slug: events[index]!['slug'], role: role!, model: profileProvider, imageUrl: cloudFrontUri! + events[index]!['images'][0], title: events[index]!['title'], description: events[index]!['description'], dateTime: DateFormat('E, d MMM yyyy HH:mm').format(DateTime.parse(events[index]!['schedule_start'])), scheduleStart: DateTime.parse(events[index]!['schedule_start']), scheduleEnd: DateTime.parse(events[index]!['schedule_end']));
                                 })
                             : Column(
                                 children: [
@@ -477,70 +478,38 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
         await EventController().shareEvent(eventSlug);
 
     if (response['events'].isNotEmpty) {
-      message = response['events'];
+      CustomFlutterToast.showOkayToast(response['events']);
     } else {
-      message = 'Something went wrong...';
+      CustomFlutterToast.showErrorToast('Something went wrong...');
     }
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: message!,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[500],
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
     return;
   }
 
   void onPressedInterested(String? slug) async {
-    Color? toastColor = Colors.grey[700];
     Map<String, dynamic> eventSlug = {'slug': slug!};
 
     Map<String, dynamic> response =
         await EventController().interested(eventSlug);
 
-    if (response['interested'] != null) {
-      message = response['interested'];
-      toastColor = Colors.grey[700];
+    if (response['interested'].isNotEmpty) {
+      CustomFlutterToast.showOkayToast(response['interested']);
     } else {
-      message = 'Something went wrong...';
-      toastColor = Colors.red[500];
+      CustomFlutterToast.showErrorToast('Something went wrong...');
     }
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: message!,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: toastColor,
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
+    return;
   }
 
   void onPressedSave(String? slug) async {
-    Color? toastColor = Colors.grey[700];
     Map<String, dynamic> eventSlug = {'slug': slug!};
-
     Map<String, dynamic> response =
         await EventController().saveEvent(eventSlug);
 
     if (response['message'] != null) {
-      message = response['message'];
-      toastColor = Colors.red[700];
+      CustomFlutterToast.showErrorToast(response['message']);
     } else {
-      message = response['events'];
-      toastColor = Colors.grey[700];
+      CustomFlutterToast.showOkayToast(response['events']);
     }
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: message!,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: toastColor,
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
+
     return;
   }
 

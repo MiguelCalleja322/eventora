@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:eventora/Widgets/custom_textformfield.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -169,16 +170,8 @@ class _LoginState extends State<Login> {
     if (widget._isAuthenticated!['is_verified'] == 0) {
       await Navigator.pushReplacementNamed(context, '/otp_page');
     } else {
-      if (widget._isAuthenticated!['message'] != null) {
-        Fluttertoast.cancel();
-        Fluttertoast.showToast(
-            msg: widget._isAuthenticated!['message'],
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
+      if (widget._isAuthenticated!['message'] == '') {
+        CustomFlutterToast.showErrorToast(widget._isAuthenticated!['message']);
       } else {
         await Navigator.pushReplacementNamed(context, '/home');
       }

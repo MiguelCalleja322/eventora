@@ -2,6 +2,8 @@
 
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_textformfield.dart';
+import 'package:eventora/controllers/event_categories_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -10,11 +12,8 @@ import 'package:ionicons/ionicons.dart';
 import '../../Widgets/custom_button.dart';
 import '../../Widgets/custom_loading.dart';
 import '../../Widgets/custom_textfield.dart';
-
 import '../../controllers/auth_controller.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-
 import '../../utils/email_validation.dart';
 
 class Signup extends StatefulWidget {
@@ -54,6 +53,12 @@ class _SignupState extends State<Signup> {
   late DateTime currentMaxDate = DateTime.now();
   late DateTime newMaxDate = DateTime(
       currentMaxDate.year - 18, currentMaxDate.month, currentMaxDate.day);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   void dispose() {
     _birthdateController.dispose();
@@ -183,7 +188,14 @@ class _SignupState extends State<Signup> {
                           },
                         ),
                         const SizedBox(height: 15),
-                        const Text('Are you a/an?'),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Select User Role: ',
+                            style: TextStyle(
+                                color: Colors.grey[800], fontSize: 30.0),
+                          ),
+                        ),
                         const SizedBox(height: 15),
                         Align(
                           alignment: Alignment.center,
@@ -243,7 +255,14 @@ class _SignupState extends State<Signup> {
                           ),
                         ),
                         const SizedBox(height: 15),
-                        const Text('Birthdate: '),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Birthdate: ',
+                            style: TextStyle(
+                                color: Colors.grey[800], fontSize: 30.0),
+                          ),
+                        ),
                         const SizedBox(height: 15),
                         Row(
                           children: [
@@ -341,55 +360,22 @@ class _SignupState extends State<Signup> {
       }
 
       if (isAgeOver18 < 18) {
-        Fluttertoast.cancel();
-        Fluttertoast.showToast(
-            msg: 'Age must be over 18',
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
+        CustomFlutterToast.showErrorToast('Age must be over 18');
         return;
       }
 
       if (_websiteController.text.isEmpty) {
-        Fluttertoast.cancel();
-        Fluttertoast.showToast(
-            msg: 'Website is required',
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
+        CustomFlutterToast.showErrorToast('Website is required');
         return;
       }
       // ignore: unnecessary_null_comparison
       if (roleValue == null) {
-        Fluttertoast.cancel();
-        Fluttertoast.showToast(
-            msg: 'You must have a role.',
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
+        CustomFlutterToast.showErrorToast('Role is required');
         return;
       }
 
       if (_passwordController.text != _passwordConfirmController.text) {
-        Fluttertoast.cancel();
-        Fluttertoast.showToast(
-            msg: 'Password did not match!',
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
-
+        CustomFlutterToast.showErrorToast('Password did not match.');
         return;
       }
 

@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:eventora/Widgets/custom_loading.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
+import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../controllers/auth_controller.dart';
 
 class OTPPage extends StatefulWidget {
@@ -21,11 +21,19 @@ class _OTPPageState extends State<OTPPage> {
   int _start = 0;
   final TextEditingController _otpController = TextEditingController();
   bool screenLoading = false;
+  late String role = '';
+
+  void getRole() async {
+    await dotenv.load(fileName: ".env");
+    final String? roleKey = dotenv.env['ROLE_KEY'];
+    role = await StorageSevice().read(roleKey!) ?? '';
+  }
 
   @override
   void initState() {
     super.initState();
     if (mounted) {
+      getRole();
       startTimer();
     }
   }
@@ -118,9 +126,8 @@ class _OTPPageState extends State<OTPPage> {
                                 startTimer();
                                 return;
                               } else {
-                                toast(
-                                    'Please wait for a minute to request for new OTP',
-                                    Colors.red[700]);
+                                CustomFlutterToast.showOkayToast(
+                                    'Please wait for a minute to request for new OTP');
                               }
                             },
                             child: Text(
@@ -139,7 +146,7 @@ class _OTPPageState extends State<OTPPage> {
 
   void requestNewOtp() async {
     await AuthController().requestNewOTP();
-    toast('New OTP was sent to your email.', Colors.grey[700]);
+    CustomFlutterToast.showOkayToast('New OTP was sent to your email.');
   }
 
   void verify(context) async {
@@ -154,12 +161,16 @@ class _OTPPageState extends State<OTPPage> {
     isVerified = await AuthController().verifyAccount(otp);
 
     if (isVerified['error_otp'] != null) {
-      toast(isVerified['error_otp'], Colors.red[500]);
+      CustomFlutterToast.showErrorToast(isVerified['error_otp']);
     }
 
     if (isVerified['is_verified'] == true) {
-      toast(isVerified['message'], Colors.grey[700]);
-      Navigator.pushReplacementNamed(context, '/home');
+      CustomFlutterToast.showOkayToast(isVerified['message']);
+      if (role == 'organizer') {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        Navigator.pushReplacementNamed(context, '/user_preference');
+      }
     }
 
     setState(() {
@@ -180,17 +191,5 @@ class _OTPPageState extends State<OTPPage> {
                 _start = _start - 1;
               }
             }));
-  }
-
-  void toast(String message, Color? color) async {
-    Fluttertoast.cancel();
-    await Fluttertoast.showToast(
-        msg: message,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: color,
-        textColor: Colors.white,
-        timeInSecForIosWeb: 2,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
   }
 }

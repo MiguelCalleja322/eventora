@@ -1,5 +1,6 @@
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/note_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -37,16 +38,7 @@ class _CreateNotesPageState extends State<CreateNotesPage> {
     Map<String, dynamic>? response = await NoteController().store(note);
 
     if (response!.isNotEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: response['message'],
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
-
+      CustomFlutterToast.showErrorToast(response['message']);
       noteTitle.clear();
       noteDescription.clear();
       Navigator.popAndPushNamed(context, '/list_notes');

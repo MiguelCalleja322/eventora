@@ -9,6 +9,7 @@ import 'package:eventora/Widgets/custom_icon_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/event_categories_controller.dart';
 import 'package:eventora/controllers/events_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:eventora/utils/s3.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -16,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:image_picker/image_picker.dart';
@@ -119,7 +119,7 @@ class _CreateEventsState extends State<CreateEvents> {
   }
 
   void getEventCategories() async {
-    fetchedCategories = await EventCategoriesController().index();
+    fetchedCategories = await EventCategoriesController.index();
     if (fetchedCategories!.isNotEmpty) {
       setState(() {
         _feesController.text = '0';
@@ -847,29 +847,15 @@ class _CreateEventsState extends State<CreateEvents> {
     }
 
     if (scheduleStart.isEmpty && scheduleEnd.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Please provide start date or end date',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast(
+          'Please provide start date or end date');
 
       return;
     }
 
     if (eventType.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Please provide the date or schedule',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast('Event type is required');
+
       return;
     }
 
@@ -886,15 +872,7 @@ class _CreateEventsState extends State<CreateEvents> {
     }
 
     if (imageFileList!.isEmpty) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Please pick at least one picture',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast('Picture is required.');
       return;
     }
 
@@ -930,26 +908,12 @@ class _CreateEventsState extends State<CreateEvents> {
     Map<String, dynamic>? response = await EventController().store(eventData);
 
     if (response!['message'] != null) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: response['message'],
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast(response['message']);
+
       return;
     } else {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Done',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.grey[700],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showOkayToast('Event Saved');
+
       setState(() {
         _titleController.clear();
         _descriptionController.clear();

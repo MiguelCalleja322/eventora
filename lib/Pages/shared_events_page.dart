@@ -1,5 +1,6 @@
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_event_card_new.dart';
+import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -16,6 +17,14 @@ class SharedEventsPage extends StatefulWidget {
 class _SharedEventsPageState extends State<SharedEventsPage> {
   late String? cloudFrontUri = '';
   late bool? loading = false;
+  late String role = '';
+
+  void getRole() async {
+    await dotenv.load(fileName: ".env");
+    final String? roleKey = dotenv.env['ROLE_KEY'];
+    role = await StorageSevice().read(roleKey!) ?? '';
+  }
+
   void fetchCloudFrontUri() async {
     setState(() {
       loading = true;
@@ -34,6 +43,7 @@ class _SharedEventsPageState extends State<SharedEventsPage> {
   @override
   void initState() {
     fetchCloudFrontUri();
+    getRole();
     super.initState();
   }
 
@@ -73,6 +83,7 @@ class _SharedEventsPageState extends State<SharedEventsPage> {
                               itemCount: widget.sharedEvents!.length,
                               itemBuilder: (context, index) {
                                 return CustomEventCard(
+                                    role: role,
                                     slug: widget.sharedEvents![index]['event']
                                         ['slug'],
                                     bgColor: int.parse(

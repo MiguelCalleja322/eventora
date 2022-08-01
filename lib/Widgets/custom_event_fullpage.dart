@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventora/controllers/events_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -783,30 +783,14 @@ class CustomEventFullPageState extends ConsumerState<CustomEventFullPage> {
         launchUrl(url);
       } else {
         if (!await launchUrl(Uri.parse(rawUrl))) {
-          Fluttertoast.cancel();
-          Fluttertoast.showToast(
-              msg: "Can't launch url.",
-              gravity: ToastGravity.BOTTOM,
-              backgroundColor: Colors.red[500],
-              textColor: Colors.white,
-              timeInSecForIosWeb: 3,
-              toastLength: Toast.LENGTH_LONG,
-              fontSize: 16.0);
+          CustomFlutterToast.showErrorToast("Can't launch url.");
         }
         return;
       }
     } else {
       String newUrl = 'https://$rawUrl';
       if (!await launchUrl(Uri.parse(newUrl))) {
-        Fluttertoast.cancel();
-        Fluttertoast.showToast(
-            msg: "Can't launch url.",
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
+        CustomFlutterToast.showErrorToast("Can't launch url.");
       }
       return;
     }
@@ -824,55 +808,29 @@ class CustomEventFullPageState extends ConsumerState<CustomEventFullPage> {
   }
 
   void onPressedInterested(String? slug) async {
-    Color? toastColor = Colors.grey[700];
     Map<String, dynamic> eventSlug = {'slug': slug!};
 
     Map<String, dynamic> response =
         await EventController().interested(eventSlug);
 
     if (response['interested'] != null) {
-      message = response['interested'];
-      toastColor = Colors.grey[700];
+      CustomFlutterToast.showOkayToast(response['interested']);
     } else {
-      message = 'Something went wrong...';
-      toastColor = Colors.red[500];
+      CustomFlutterToast.showErrorToast('Something went wrong...');
     }
-
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: message!,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: toastColor,
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
   }
 
   void onPressedSave(String? slug) async {
-    Color? toastColor = Colors.grey[700];
     Map<String, dynamic> eventSlug = {'slug': slug!};
-    String message = '';
     Map<String, dynamic> response =
         await EventController().saveEvent(eventSlug);
 
     if (response['message'] != null) {
-      message = response['message'];
-      toastColor = Colors.red[700];
+      CustomFlutterToast.showErrorToast(response['message']);
     } else {
-      message = response['events'];
-      toastColor = Colors.grey[700];
+      CustomFlutterToast.showOkayToast(response['events']);
     }
 
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-        msg: message,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: toastColor,
-        textColor: Colors.white,
-        timeInSecForIosWeb: 3,
-        toastLength: Toast.LENGTH_LONG,
-        fontSize: 16.0);
     return;
   }
 

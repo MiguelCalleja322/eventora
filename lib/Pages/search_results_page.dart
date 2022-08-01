@@ -1,6 +1,7 @@
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/events_controller.dart';
+import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,13 @@ class SearchResultPageState extends ConsumerState<SearchResultPage> {
 
   late String? cloudFrontUri = '';
   late List<dynamic>? events = [];
+  late String role = '';
+
+  void getRole() async {
+    await dotenv.load(fileName: ".env");
+    final String? roleKey = dotenv.env['ROLE_KEY'];
+    role = await StorageSevice().read(roleKey!) ?? '';
+  }
 
   void generateEventProvider() {
     eventProvider = FutureProvider.autoDispose((ref) {
@@ -36,6 +44,7 @@ class SearchResultPageState extends ConsumerState<SearchResultPage> {
 
   @override
   void initState() {
+    getRole();
     fetchCloudFrontUri();
     generateEventProvider();
     super.initState();
@@ -99,6 +108,7 @@ class SearchResultPageState extends ConsumerState<SearchResultPage> {
                                           itemCount: events!.length,
                                           itemBuilder: (context, index) {
                                             return CustomEventCard(
+                                                role: role,
                                                 eventCategory: events![index]
                                                     ['event_category']['type'],
                                                 slug: events![index]['slug'],

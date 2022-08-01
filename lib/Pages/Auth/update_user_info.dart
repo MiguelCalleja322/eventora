@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:eventora/controllers/auth_controller.dart';
+import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -406,27 +407,12 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
 
   void updateInfo() async {
     if (isAgeOver18 != 0 && isAgeOver18 < 18) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Age must be over 18',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast('Age must be over 18');
+      return;
     }
 
     if (_passwordController.text != _passwordConfirmationController.text) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-          msg: 'Password did not match!',
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red[500],
-          textColor: Colors.white,
-          timeInSecForIosWeb: 3,
-          toastLength: Toast.LENGTH_LONG,
-          fontSize: 16.0);
+      CustomFlutterToast.showErrorToast('Password did not match.');
       return;
     }
 
@@ -446,16 +432,9 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
     response = await AuthController().userUpdate(userInfo);
 
     if (response!.isNotEmpty) {
-      if (response!['message'] != null) {
-        Fluttertoast.cancel();
-        Fluttertoast.showToast(
-            msg: response!['message'].toString(),
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.grey[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
+      if (response!['message'].isNotEmpty) {
+        CustomFlutterToast.showOkayToast(response!['message'].toString());
+
         setState(() {
           _usernameController.clear();
           _emailController.clear();
@@ -469,15 +448,8 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
         return;
       }
 
-      if (response!['error'] != null) {
-        Fluttertoast.showToast(
-            msg: response!['error'],
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.grey[500],
-            textColor: Colors.white,
-            timeInSecForIosWeb: 3,
-            toastLength: Toast.LENGTH_LONG,
-            fontSize: 16.0);
+      if (response!['error'].isNotEmpty) {
+        CustomFlutterToast.showErrorToast(response!['error']);
         return;
       }
     }
