@@ -2,7 +2,6 @@
 
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_textformfield.dart';
-import 'package:eventora/controllers/event_categories_controller.dart';
 import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,7 +35,6 @@ class _SignupState extends State<Signup> {
   final FocusNode _mobileFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _passwordConfirmFocus = FocusNode();
-  final FocusNode _websiteFocus = FocusNode();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -118,11 +116,6 @@ class _SignupState extends State<Signup> {
                           letterSpacing: 1.0,
                           label: 'Website',
                           controller: _websiteController,
-                          focusNode: _websiteFocus,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp('[a-z A-Z]')),
-                          ],
                         ),
                         const SizedBox(height: 15),
                         Row(
@@ -363,11 +356,6 @@ class _SignupState extends State<Signup> {
         CustomFlutterToast.showErrorToast('Age must be over 18');
         return;
       }
-
-      if (_websiteController.text.isEmpty) {
-        CustomFlutterToast.showErrorToast('Website is required');
-        return;
-      }
       // ignore: unnecessary_null_comparison
       if (roleValue == null) {
         CustomFlutterToast.showErrorToast('Role is required');
@@ -385,7 +373,7 @@ class _SignupState extends State<Signup> {
         'password': _passwordController.text,
         'username': _usernameController.text,
         'website': _websiteController.text,
-        'mobile': '+974${_mobileController.text}',
+        'mobile': '+63${_mobileController.text}',
         'birthdate': _birthdateController.text,
         'type': roleValue,
       };

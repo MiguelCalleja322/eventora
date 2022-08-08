@@ -4,18 +4,16 @@ import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import '../../Widgets/custom_loading.dart';
 import '../../controllers/auth_controller.dart';
 import '../../utils/email_validation.dart';
 import '../../utils/secure_storage.dart';
 
 class Login extends StatefulWidget {
-  Login({
+  const Login({
     Key? key,
   }) : super(key: key);
-
-  late Map<String, dynamic>? _isAuthenticated = {};
 
   @override
   State<Login> createState() => _LoginState();
@@ -28,6 +26,7 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
   bool screenLoading = false;
   final _formKey = GlobalKey<FormState>();
+  late Map<String, dynamic>? isAuthenticated = {};
 
   void _redirectIfUserIsLogged(context) async {
     await dotenv.load(fileName: ".env");
@@ -161,22 +160,23 @@ class _LoginState extends State<Login> {
       'password': passwordController.text,
     };
 
-    widget._isAuthenticated = await AuthController().login(loginCredentials);
+    isAuthenticated = await AuthController().login(loginCredentials);
 
     setState(() {
       screenLoading = false;
     });
 
-    if (widget._isAuthenticated!['is_verified'] == 0) {
+    if (isAuthenticated!['is_verified'] == 0) {
       await Navigator.pushReplacementNamed(context, '/otp_page');
+      return;
     } else {
-      if (widget._isAuthenticated!['message'] == '') {
-        CustomFlutterToast.showErrorToast(widget._isAuthenticated!['message']);
+      if (isAuthenticated!['message'] == '') {
+        CustomFlutterToast.showErrorToast(isAuthenticated!['message']);
+        return;
       } else {
         await Navigator.pushReplacementNamed(context, '/home');
+        return;
       }
     }
-
-    return;
   }
 }

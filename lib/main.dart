@@ -24,9 +24,7 @@ import 'package:eventora/Pages/Organizer/wall.dart';
 import 'package:eventora/Widgets/custom_calendar_update.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
 import 'package:eventora/Widgets/custom_show_map.dart';
-import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
@@ -43,7 +41,7 @@ void main() async {
 
   runApp(ProviderScope(
       child: MaterialApp(
-          initialRoute: '/home',
+          // initialRoute: '/home',
           onGenerateRoute: Routes.generateRoutes,
           theme: ThemeData(
             useMaterial3: true,
@@ -58,7 +56,7 @@ class Routes {
     switch (routeSettings.name) {
       case '/':
         return MaterialPageRoute(
-            builder: (_) => Login(), settings: routeSettings);
+            builder: (_) => const Login(), settings: routeSettings);
       case '/home':
         return MaterialPageRoute(
             builder: (_) => const HomePage(), settings: routeSettings);
@@ -74,7 +72,8 @@ class Routes {
 
       case '/user_preference':
         return MaterialPageRoute(
-            builder: (_) => UserPreferencePage(), settings: routeSettings);
+            builder: (_) => const UserPreferencePage(),
+            settings: routeSettings);
 
       //notes
       case '/create_notes':

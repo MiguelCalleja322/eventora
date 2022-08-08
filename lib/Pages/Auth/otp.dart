@@ -17,8 +17,8 @@ class OTPPage extends StatefulWidget {
 
 class _OTPPageState extends State<OTPPage> {
   // ignore: unused_field
-  late Timer _timer;
-  int _start = 0;
+  late Timer timer;
+  int start = 0;
   final TextEditingController _otpController = TextEditingController();
   bool screenLoading = false;
   late String role = '';
@@ -40,7 +40,7 @@ class _OTPPageState extends State<OTPPage> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    timer.cancel();
     _otpController.dispose();
     super.dispose();
   }
@@ -122,7 +122,7 @@ class _OTPPageState extends State<OTPPage> {
                         ),
                         TextButton(
                             onPressed: () {
-                              if (_start == 0) {
+                              if (start == 0) {
                                 startTimer();
                                 return;
                               } else {
@@ -131,7 +131,7 @@ class _OTPPageState extends State<OTPPage> {
                               }
                             },
                             child: Text(
-                              'RESEND OTP in ($_start) secs',
+                              'RESEND OTP in $start secs',
                               style: const TextStyle(letterSpacing: 1.2),
                             ))
                         // Image.asset('')
@@ -146,7 +146,7 @@ class _OTPPageState extends State<OTPPage> {
 
   void requestNewOtp() async {
     await AuthController().requestNewOTP();
-    CustomFlutterToast.showOkayToast('New OTP was sent to your email.');
+    CustomFlutterToast.showOkayToast('New OTP was sent to your number.');
   }
 
   void verify(context) async {
@@ -180,15 +180,15 @@ class _OTPPageState extends State<OTPPage> {
 
   void startTimer() {
     requestNewOtp();
-    _start = 60;
+    start = 60;
     const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
+    timer = Timer.periodic(
         oneSec,
         (Timer timer) => setState(() {
-              if (_start == 0) {
+              if (start == 0) {
                 timer.cancel();
               } else {
-                _start = _start - 1;
+                start = start - 1;
               }
             }));
   }

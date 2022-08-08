@@ -1,10 +1,13 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
 import 'package:eventora/Widgets/custom_appbar.dart';
+import 'package:eventora/controllers/event_categories_controller.dart';
 import 'package:eventora/controllers/user_preference_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
 class UserPreferencePage extends StatefulWidget {
-  UserPreferencePage({Key? key}) : super(key: key);
+  const UserPreferencePage({Key? key}) : super(key: key);
 
   @override
   State<UserPreferencePage> createState() => _UserPreferencePageState();
@@ -12,19 +15,22 @@ class UserPreferencePage extends StatefulWidget {
 
 class _UserPreferencePageState extends State<UserPreferencePage> {
   late List<String>? userPreferredCategory = [];
+  late Map<String, dynamic>? fetchedCategories = {};
+  late List<dynamic>? eventCategories = [];
+  late List options = [];
 
-  late List options = [
-    {'title': 'Business', 'isActive': false},
-    {'title': 'Education', 'isActive': false},
-    {'title': 'Leisure', 'isActive': false},
-    {'title': 'Family', 'isActive': false},
-    {'title': 'Lifestyle', 'isActive': false},
-    {'title': 'Culture', 'isActive': false},
-    {'title': 'Arts', 'isActive': false},
-    {'title': 'Sports', 'isActive': false},
-    {'title': 'Virtual', 'isActive': false},
-    {'title': 'Fundraising', 'isActive': false},
-  ];
+  void getEventCategories() async {
+    fetchedCategories = await EventCategoriesController.index();
+    if (fetchedCategories!.isNotEmpty) {
+      setState(() {
+        eventCategories = fetchedCategories!['event_categories'] ?? [];
+      });
+    }
+
+    eventCategories!.forEach((category) {
+      options.add({'title': category['type'], 'isActive': false});
+    });
+  }
 
   customBoxDecoration(isActive) {
     return BoxDecoration(
@@ -58,6 +64,12 @@ class _UserPreferencePageState extends State<UserPreferencePage> {
     });
 
     Navigator.pushNamed(context, '/home');
+  }
+
+  @override
+  void initState() {
+    getEventCategories();
+    super.initState();
   }
 
   @override

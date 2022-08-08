@@ -12,7 +12,7 @@ class CustomErrorMessage extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           border: Border.all(
-              color: const Color.fromARGB(255, 132, 132, 132),
+              color: const Color.fromARGB(255, 216, 216, 216),
               width: 2.0,
               style: BorderStyle.solid)),
       child: SizedBox(
@@ -22,7 +22,8 @@ class CustomErrorMessage extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               message,
-              style: const TextStyle(fontSize: 20),
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 112, 112, 112), fontSize: 20),
             )),
       ),
     );

@@ -58,7 +58,6 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   void initState() {
     getRole();
     fetchCloudFrontUri();
-
     super.initState();
   }
 
@@ -70,6 +69,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(profileProvider);
+
     return profile.when(
         data: (profileData) {
           role == 'organizer'
@@ -142,7 +142,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         child: Row(
                           children: [
                             Icon(
-                              Ionicons.calendar_number_outline,
+                              Ionicons.share_outline,
                               color: Colors.grey[800],
                             ),
                             const SizedBox(width: 10),
@@ -184,7 +184,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Notes',
+                        'Others',
                         style: TextStyle(
                             color: Colors.grey[800],
                             fontWeight: FontWeight.w500,
@@ -219,6 +219,58 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                             const SizedBox(width: 10),
                             Text(
                               'Create Notes',
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          ],
+                        )),
+                    TextButton(
+                        style: TextButton.styleFrom(
+                            primary: Colors.grey[900],
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)))),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/create_appointment',
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Ionicons.calendar_number_outline,
+                              color: Colors.grey[800],
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Create Appointments',
+                              style: TextStyle(color: Colors.grey[800]),
+                            ),
+                          ],
+                        )),
+                    TextButton(
+                        style: TextButton.styleFrom(
+                            primary: Colors.grey[900],
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)))),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/create_task',
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Ionicons.list_outline,
+                              color: Colors.grey[800],
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Create Tasks',
                               style: TextStyle(color: Colors.grey[800]),
                             ),
                           ],

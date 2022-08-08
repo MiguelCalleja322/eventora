@@ -2,7 +2,6 @@ import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/controllers/note_controller.dart';
 import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../Widgets/custom_appbar.dart';
 

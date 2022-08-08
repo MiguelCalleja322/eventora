@@ -1,3 +1,4 @@
+import 'package:eventora/Widgets/custom_error_message.dart';
 import 'package:eventora/Widgets/custom_event_card_new.dart';
 import 'package:eventora/controllers/statistics_controller.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
   late Map<String, dynamic>? isFollowed = {};
   late String? role = '';
   late String? cloudFrontUri = '';
+  late bool loading = false;
 
   void fetchCloudFrontUri() async {
     await dotenv.load(fileName: ".env");
@@ -78,12 +80,20 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
                     padding: const EdgeInsets.all(15.0),
                     child: statisticsData.when(
                         data: (statistics) {
+                          setState(() {
+                            loading = true;
+                          });
+
                           mostLiked =
                               statistics!.statistics![0].mostLiked.events;
                           mostAttendees =
                               statistics.statistics![0].mostInteresting.events;
                           mostInteresting =
                               statistics.statistics![0].mostAttended.events;
+
+                          setState(() {
+                            loading = false;
+                          });
 
                           return SingleChildScrollView(
                             child: Column(
@@ -97,33 +107,38 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 15),
-                                mostLiked!.isEmpty
+                                loading == true
                                     ? SpinKitCircle(
                                         size: 50.0,
                                         color: Colors.grey[700],
                                       )
-                                    : ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxHeight: double.infinity,
-                                            maxWidth: (MediaQuery.of(context)
-                                                .size
-                                                .width)),
-                                        child: CustomEventCard(
-                                            role: role!,
-                                            slug: mostLiked![0].slug,
-                                            bgColor: int.parse(
-                                                mostLiked![0].bgcolor),
-                                            imageUrl: cloudFrontUri! +
-                                                mostLiked![0].images[0],
-                                            eventType: mostLiked![0].eventType,
-                                            title: mostLiked![0].title,
-                                            description:
-                                                mostLiked![0].description,
-                                            dateTime: DateFormat(
-                                                    'E, d MMM yyyy HH:mm')
-                                                .format(DateTime.parse(
-                                                    mostLiked![0]
-                                                        .scheduleStart)))),
+                                    : mostLiked!.isEmpty
+                                        ? CustomErrorMessage(
+                                            message: 'No Event to Display')
+                                        : ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                                maxHeight: double.infinity,
+                                                maxWidth:
+                                                    (MediaQuery.of(context)
+                                                        .size
+                                                        .width)),
+                                            child: CustomEventCard(
+                                                role: role!,
+                                                slug: mostLiked![0].slug,
+                                                bgColor: int.parse(
+                                                    mostLiked![0].bgcolor),
+                                                imageUrl: cloudFrontUri! +
+                                                    mostLiked![0].images[0],
+                                                eventType:
+                                                    mostLiked![0].eventType,
+                                                title: mostLiked![0].title,
+                                                description:
+                                                    mostLiked![0].description,
+                                                dateTime: DateFormat(
+                                                        'E, d MMM yyyy HH:mm')
+                                                    .format(DateTime.parse(
+                                                        mostLiked![0]
+                                                            .scheduleStart)))),
                                 const SizedBox(height: 15),
                                 SizedBox(
                                   height: 40,
@@ -138,34 +153,39 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
                                       letterSpacing: 2.0,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                mostAttendees!.isEmpty
+                                const SizedBox(height: 15),
+                                loading == true
                                     ? SpinKitCircle(
                                         size: 50.0,
                                         color: Colors.grey[700],
                                       )
-                                    : ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxHeight: double.infinity,
-                                            maxWidth: (MediaQuery.of(context)
-                                                .size
-                                                .width)),
-                                        child: CustomEventCard(
-                                            role: role!,
-                                            slug: mostAttendees![0].slug,
-                                            bgColor: int.parse(
-                                                mostAttendees![0].bgcolor),
-                                            imageUrl: cloudFrontUri! +
-                                                mostAttendees![0].images[0],
-                                            eventType:
-                                                mostAttendees![0].eventType,
-                                            title: mostAttendees![0].title,
-                                            description:
-                                                mostAttendees![0].description,
-                                            dateTime: DateFormat(
-                                                    'E, d MMM yyyy HH:mm')
-                                                .format(DateTime.parse(
-                                                    mostAttendees![0]
-                                                        .scheduleStart)))),
+                                    : mostAttendees!.isEmpty
+                                        ? CustomErrorMessage(
+                                            message: 'No Event to Display')
+                                        : ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                                maxHeight: double.infinity,
+                                                maxWidth:
+                                                    (MediaQuery.of(context)
+                                                        .size
+                                                        .width)),
+                                            child: CustomEventCard(
+                                                role: role!,
+                                                slug: mostAttendees![0].slug,
+                                                bgColor: int.parse(
+                                                    mostAttendees![0].bgcolor),
+                                                imageUrl: cloudFrontUri! +
+                                                    mostAttendees![0].images[0],
+                                                eventType:
+                                                    mostAttendees![0].eventType,
+                                                title: mostAttendees![0].title,
+                                                description: mostAttendees![0]
+                                                    .description,
+                                                dateTime: DateFormat(
+                                                        'E, d MMM yyyy HH:mm')
+                                                    .format(DateTime.parse(
+                                                        mostAttendees![0]
+                                                            .scheduleStart)))),
                                 const SizedBox(height: 15),
                                 SizedBox(
                                   height: 40,
@@ -180,34 +200,41 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
                                       letterSpacing: 2.0,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                mostInteresting!.isEmpty
+                                const SizedBox(height: 15),
+                                loading == true
                                     ? SpinKitCircle(
                                         size: 50.0,
                                         color: Colors.grey[700],
                                       )
-                                    : ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxHeight: double.infinity,
-                                            maxWidth: (MediaQuery.of(context)
-                                                .size
-                                                .width)),
-                                        child: CustomEventCard(
-                                            role: role!,
-                                            slug: mostInteresting![0].slug,
-                                            bgColor: int.parse(
-                                                mostInteresting![0].bgcolor),
-                                            imageUrl: cloudFrontUri! +
-                                                mostInteresting![0].images[0],
-                                            eventType:
-                                                mostInteresting![0].eventType,
-                                            title: mostInteresting![0].title,
-                                            description:
-                                                mostInteresting![0].description,
-                                            dateTime: DateFormat(
-                                                    'E, d MMM yyyy HH:mm')
-                                                .format(DateTime.parse(
+                                    : mostInteresting!.isEmpty
+                                        ? CustomErrorMessage(
+                                            message: 'No Event to Display')
+                                        : ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                                maxHeight: double.infinity,
+                                                maxWidth: (MediaQuery.of(context)
+                                                    .size
+                                                    .width)),
+                                            child: CustomEventCard(
+                                                role: role!,
+                                                slug: mostInteresting![0].slug,
+                                                bgColor: int.parse(
                                                     mostInteresting![0]
-                                                        .scheduleStart)))),
+                                                        .bgcolor),
+                                                imageUrl: cloudFrontUri! +
+                                                    mostInteresting![0]
+                                                        .images[0],
+                                                eventType: mostInteresting![0]
+                                                    .eventType,
+                                                title:
+                                                    mostInteresting![0].title,
+                                                description: mostInteresting![0]
+                                                    .description,
+                                                dateTime: DateFormat(
+                                                        'E, d MMM yyyy HH:mm')
+                                                    .format(DateTime.parse(
+                                                        mostInteresting![0]
+                                                            .scheduleStart)))),
                               ],
                             ),
                           );

@@ -81,14 +81,15 @@ class _CalendarPageState extends State<CalendarPage> {
                 size: 50.0,
                 color: Colors.grey[700],
               )
-            : RefreshIndicator(
-                onRefresh: () {
-                  selectedEvents = {};
-                  return getCalendarData();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: SingleChildScrollView(
+            : Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: RefreshIndicator(
+                    onRefresh: () {
+                      selectedEvents = {};
+                      return getCalendarData();
+                    },
                     child: Column(
                       children: [
                         TableCalendar(
@@ -149,61 +150,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                 size: 50.0,
                                 color: Colors.grey[700],
                               ))
-                            : Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: TextButton(
-                                        style: OutlinedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10))),
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, '/create_task');
-                                        },
-                                        child: Column(
-                                          children: [
-                                            Icon(Ionicons.list_outline,
-                                                color: Colors.grey[850]),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              'Tasks',
-                                              style: TextStyle(
-                                                  color: Colors.grey[850]),
-                                            ),
-                                          ],
-                                        )),
-                                  ),
-                                  Expanded(
-                                    child: TextButton(
-                                        style: OutlinedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10))),
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, '/create_appointment');
-                                        },
-                                        child: Column(children: [
-                                          Icon(Ionicons.calendar_number_outline,
-                                              color: Colors.grey[850]),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            'Appointments',
-                                            style: TextStyle(
-                                                color: Colors.grey[850]),
-                                          ),
-                                        ])),
-                                  ),
-                                ],
-                              ),
-                        const SizedBox(height: 15.0),
+                            : const SizedBox(height: 15.0),
                         ..._getEventsFromDay(_selectedDay).map(
                           (Calendar event) => Container(
                               margin: const EdgeInsets.all(5.0),
