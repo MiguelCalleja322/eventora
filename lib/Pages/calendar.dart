@@ -317,7 +317,7 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   Future<void> getCalendarData() async {
-    calendarData = await CalendarController().index() ?? {};
+    calendarData = await CalendarController.index() ?? {};
     listOfAppointments = calendarData!['appointments'] ?? [];
     listOfTasks = calendarData!['tasks'] ?? [];
     DateFormat actualDateAndTimeOfATFormat = DateFormat('yyyy-MM-dd HH:mm');

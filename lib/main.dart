@@ -24,20 +24,27 @@ import 'package:eventora/Pages/Organizer/wall.dart';
 import 'package:eventora/Widgets/custom_calendar_update.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
 import 'package:eventora/Widgets/custom_show_map.dart';
+import 'package:eventora/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
 import 'Pages/User/feature_page.dart';
 
-void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // ByteData data =
-  //     await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
-  // SecurityContext.defaultContext
-  //     .setTrustedCertificatesBytes(data.buffer.asUint8List());
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  return Future<void>.value();
+}
 
+Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(ProviderScope(
       child: MaterialApp(

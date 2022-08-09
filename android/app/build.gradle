@@ -51,6 +51,7 @@ android {
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName 'Alpha'
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -71,3 +72,5 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
+
+apply plugin: 'com.google.gms.google-services'

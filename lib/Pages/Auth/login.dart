@@ -2,6 +2,8 @@
 
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:eventora/utils/custom_flutter_toast.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -44,6 +46,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+
     // _redirectIfUserIsLogged();
   }
 
@@ -155,9 +158,10 @@ class _LoginState extends State<Login> {
       screenLoading = true;
     });
 
-    Map<String, String> loginCredentials = {
+    Map<String, String?> loginCredentials = {
       'email': emailController.text,
       'password': passwordController.text,
+      'firebase_token': await FirebaseMessaging.instance.getToken(),
     };
 
     isAuthenticated = await AuthController().login(loginCredentials);
