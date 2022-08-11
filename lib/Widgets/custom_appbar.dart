@@ -10,6 +10,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.title,
       this.customBackArrowFunc,
       this.hideSearchBar = true,
+      this.hideNotificationBell = true,
       this.hideBackButton = false})
       : super(key: key);
 
@@ -18,6 +19,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final VoidCallback? customBackArrowFunc;
   final bool? hideBackButton;
   final bool? hideSearchBar;
+  final bool? hideNotificationBell;
 
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
@@ -45,6 +47,25 @@ class _CustomAppBarState extends State<CustomAppBar> {
               style: TextStyle(color: Colors.grey[800], fontSize: 30.0),
             ),
             actions: [
+              widget.hideNotificationBell == true
+                  ? const SizedBox.shrink()
+                  : OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                              width: 0, color: Colors.transparent),
+                          primary: Colors.grey[700],
+                          backgroundColor: Colors.transparent,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)))),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/notifications');
+                      },
+                      child: const Icon(
+                        Ionicons.notifications_outline,
+                        size: 25,
+                      ),
+                    ),
               widget.hideBackButton! == true
                   ? const SizedBox.shrink()
                   : OutlinedButton(

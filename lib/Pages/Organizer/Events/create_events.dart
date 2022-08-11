@@ -907,6 +907,8 @@ class _CreateEventsState extends State<CreateEvents> {
 
     Map<String, dynamic>? response = await EventController().store(eventData);
 
+    print(response);
+
     if (response!['message'] != null) {
       CustomFlutterToast.showErrorToast(response['message']);
 

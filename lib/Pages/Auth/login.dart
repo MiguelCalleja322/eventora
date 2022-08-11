@@ -2,11 +2,9 @@
 
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:eventora/utils/custom_flutter_toast.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import '../../Widgets/custom_loading.dart';
 import '../../controllers/auth_controller.dart';
 import '../../utils/email_validation.dart';

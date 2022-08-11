@@ -38,6 +38,7 @@ class _EventCategoryState extends State<EventCategory> {
         title: 'Event Category',
         height: 70,
         hideBackButton: true,
+        hideNotificationBell: false,
       ),
       body: eventCategories!.isEmpty
           ? Center(

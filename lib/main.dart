@@ -15,6 +15,7 @@ import 'package:eventora/Pages/User/create_user_events.dart';
 import 'package:eventora/Pages/User/feed_page.dart';
 import 'package:eventora/Pages/User/user_event_fullpage.dart';
 import 'package:eventora/Pages/home.dart';
+import 'package:eventora/Pages/notification.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
 import 'package:eventora/Pages/saved_events_page.dart';
@@ -48,7 +49,7 @@ Future<void> main() async {
 
   runApp(ProviderScope(
       child: MaterialApp(
-          // initialRoute: '/home',
+          initialRoute: '/home',
           onGenerateRoute: Routes.generateRoutes,
           theme: ThemeData(
             useMaterial3: true,
@@ -67,7 +68,6 @@ class Routes {
       case '/home':
         return MaterialPageRoute(
             builder: (_) => const HomePage(), settings: routeSettings);
-
       //Auth
       case '/signup':
         return MaterialPageRoute(
@@ -81,7 +81,10 @@ class Routes {
         return MaterialPageRoute(
             builder: (_) => const UserPreferencePage(),
             settings: routeSettings);
-
+      //notificatiosn
+      case '/notifications':
+        return MaterialPageRoute(
+            builder: (_) => const NotificationsPage(), settings: routeSettings);
       //notes
       case '/create_notes':
         return MaterialPageRoute(

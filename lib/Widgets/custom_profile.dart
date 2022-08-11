@@ -99,7 +99,7 @@ class CustomProfile extends ConsumerWidget {
                 ),
                 const SizedBox(height: 15),
                 Text(
-                  name!,
+                  username!,
                   style: const TextStyle(
                     color: Color(0xff525b6f),
                     letterSpacing: 2.0,

@@ -51,6 +51,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
         height: 135,
         hideSearchBar: false,
         hideBackButton: true,
+        hideNotificationBell: false,
       ),
       body: SafeArea(
         child: cloudFrontUri! == ''

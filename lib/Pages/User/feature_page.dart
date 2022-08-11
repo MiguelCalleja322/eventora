@@ -102,7 +102,7 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                               'Featured Events',
                               style: TextStyle(
                                   fontSize: 20.0,
-                                  letterSpacing: 2.0,
+                                  letterSpacing: 1.0,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -163,7 +163,7 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                               'Upcoming Events',
                               style: TextStyle(
                                   fontSize: 20.0,
-                                  letterSpacing: 2.0,
+                                  letterSpacing: 1.0,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -222,7 +222,7 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                               'Organizers',
                               style: TextStyle(
                                   fontSize: 20.0,
-                                  letterSpacing: 2.0,
+                                  letterSpacing: 1.0,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -248,24 +248,37 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                                   itemCount: featuredOrganizers!.length,
                                   itemBuilder: (context, index, realIndex) {
                                     return CustomProfile(
-                                        image:
-                                            '$cloudFrontUri${featuredOrganizers![index].avatar}',
+                                        image: featuredOrganizers![
+                                                        index]
+                                                    .avatar !=
+                                                null
+                                            ? '$cloudFrontUri${featuredOrganizers![index].avatar}'
+                                            : 'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826',
                                         page: 'features',
-                                        isFollowed: featuredOrganizers![index]
-                                                .isFollowed
-                                                .isEmpty
-                                            ? 0
-                                            : featuredOrganizers![index]
-                                                .isFollowed[0]['is_followed'],
-                                        follow: () => follow(
-                                            featuredOrganizers![index]
-                                                .username),
+                                        isFollowed:
+                                            featuredOrganizers![
+                                                        index]
+                                                    .isFollowed
+                                                    .isEmpty
+                                                ? 0
+                                                : featuredOrganizers![
+                                                            index]
+                                                        .isFollowed[
+                                                    0]['is_followed'],
+                                        follow:
+                                            () =>
+                                                follow(
+                                                    featuredOrganizers![
+                                                            index]
+                                                        .username),
                                         name: featuredOrganizers![index].name,
                                         username:
                                             featuredOrganizers![index].username,
-                                        followers: featuredOrganizers![index]
+                                        followers: featuredOrganizers![
+                                                index]
                                             .followersCount,
-                                        followings: featuredOrganizers![index]
+                                        followings: featuredOrganizers![
+                                                index]
                                             .followingCount,
                                         events: featuredOrganizers![index]
                                             .eventsCount,

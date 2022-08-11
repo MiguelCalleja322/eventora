@@ -3,7 +3,7 @@ import 'package:eventora/services/api_services.dart';
 class EventController {
   Future store(Map<String, dynamic> eventData) async {
     Map<String, dynamic> response =
-        await ApiService().request('events', 'POST', eventData, true);
+        await ApiService().request('organizer/events', 'POST', eventData, true);
 
     return response;
   }
@@ -44,7 +44,8 @@ class EventController {
   }
 
   Future update(Map<String, dynamic> dataToUpdate) async {
-    return await ApiService().request('events', 'PUT', dataToUpdate, true);
+    return await ApiService()
+        .request('organizer/events', 'PUT', dataToUpdate, true);
   }
 
   Future like(Map<String, dynamic> slug) async {
