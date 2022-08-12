@@ -262,7 +262,7 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
       'username': username,
     };
 
-    isFollowed = await UserController().follow(followUser);
+    isFollowed = await UserController.follow(followUser);
   }
 
   void onPressedAttend() {}

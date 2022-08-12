@@ -39,7 +39,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
   }
 
   Future<void> fetchUser(String? username) async {
-    user = await UserController().show(username!);
+    user = await UserController.show(username!);
     setState(() {
       userProfile = user!['user'] ?? {};
     });

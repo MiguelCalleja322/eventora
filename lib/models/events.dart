@@ -24,20 +24,26 @@ class Event {
   String? registrationLink;
   List<dynamic>? features;
   String? scheduleEnd;
+  int? eventLikesCount;
+  int? attendeesCount;
+  int? interestsCount;
 
   Event({
     this.title,
     this.description,
     this.scheduleStart,
-    this.bgcolor,
-    this.images,
-    this.slug,
-    this.isAvailable,
-    this.fees,
-    this.eventType,
-    this.registrationLink,
-    this.features,
     this.scheduleEnd,
+    this.bgcolor,
+    this.fees,
+    this.images,
+    this.features,
+    this.slug,
+    this.registrationLink,
+    this.eventType,
+    this.isAvailable,
+    this.eventLikesCount,
+    this.attendeesCount,
+    this.interestsCount,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {

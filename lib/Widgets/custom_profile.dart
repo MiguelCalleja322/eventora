@@ -41,7 +41,7 @@ class CustomProfile extends ConsumerWidget {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(5.0)))),
       onPressed: () {
-        Navigator.pushNamed(context, '/otherProfile', arguments: {
+        Navigator.pushNamed(context, '/other_profile', arguments: {
           'username': username!,
         });
       },
@@ -55,7 +55,7 @@ class CustomProfile extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    page == 'otherProfile'
+                    page == 'other_profile'
                         ? Expanded(
                             child: Align(
                               alignment: Alignment.centerLeft,

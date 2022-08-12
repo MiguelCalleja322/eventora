@@ -1,7 +1,7 @@
 import 'package:eventora/models/user.dart';
 
 class Notifications {
-  final List<Notification>? notifications;
+  final List<dynamic>? notifications;
 
   Notifications({this.notifications});
 
@@ -14,24 +14,30 @@ class Notifications {
 }
 
 class Notification {
-  String eventSlug;
-  String label;
-  int isRead;
-  List<User> user;
+  String? eventSlug;
+  String? label;
+  String? createdAt;
+  int? isRead;
+  int? id;
+  User? user;
 
   Notification({
-    required this.eventSlug,
-    required this.label,
-    required this.isRead,
-    required this.user,
+    this.eventSlug,
+    this.label,
+    this.isRead,
+    this.user,
+    this.createdAt,
+    this.id,
   });
 
   factory Notification.fromJson(Map<String, dynamic> json) {
     return Notification(
       eventSlug: json['event_slug'],
+      createdAt: json['created_at'],
       label: json['label'],
-      isRead: json['isRead'],
-      user: json['user'],
+      id: json['id'],
+      isRead: json['is_read'],
+      user: User.fromJson(json['user']),
     );
   }
 }

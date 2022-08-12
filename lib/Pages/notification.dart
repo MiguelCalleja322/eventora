@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:eventora/models/notification.dart';
+import 'package:intl/intl.dart';
 
 class NotificationsPage extends ConsumerStatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -13,6 +15,10 @@ class NotificationsPage extends ConsumerStatefulWidget {
   NotificationsPageState createState() => NotificationsPageState();
 }
 
+final notificationsProvider = FutureProvider.autoDispose<Notifications?>((ref) {
+  return NotificationsController.index();
+});
+
 class NotificationsPageState extends ConsumerState<NotificationsPage> {
   late String? cloudFrontUri = '';
 
@@ -20,10 +26,6 @@ class NotificationsPageState extends ConsumerState<NotificationsPage> {
     await dotenv.load(fileName: '.env');
     cloudFrontUri = dotenv.env['CLOUDFRONT_URI'];
   }
-
-  final notificationsProvider = FutureProvider.autoDispose((ref) {
-    return NotificationsController.index();
-  });
 
   @override
   void initState() {
@@ -49,29 +51,48 @@ class NotificationsPageState extends ConsumerState<NotificationsPage> {
                         borderRadius: BorderRadius.circular(0.0),
                         border:
                             Border.all(width: 0.0, style: BorderStyle.none)),
-                    child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            primary: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                        onPressed: () {},
-                        child: notifications.when(
-                            data: (notification) {
-                              return const CustomNotificationCard();
-                            },
-                            error: (_, __) => const Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'No Notes Created',
-                                  style: TextStyle(
-                                      fontSize: 23, color: Colors.black54),
-                                )),
-                            loading: () => Center(
-                                  child: SpinKitCircle(
-                                    size: 50.0,
-                                    color: Colors.grey[700],
-                                  ),
-                                ))))),
+                    child: notifications.when(
+                        data: (notification) {
+                          return ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: notification!.notifications?.length,
+                              itemBuilder: (context, index) {
+                                String? avatar = notification
+                                    .notifications![index].user.avatar;
+                                return CustomNotificationCard(
+                                    id: notification.notifications![index].id,
+                                    username: notification
+                                        .notifications![index].user.username,
+                                    name: notification
+                                        .notifications![index].user.name,
+                                    avatar: avatar != null
+                                        ? '$cloudFrontUri$avatar'
+                                        : '',
+                                    eventSlug: notification
+                                        .notifications![index].eventSlug,
+                                    createdAt: DateFormat('E, d MMM yyyy HH:mm')
+                                        .format(DateTime.parse(notification
+                                            .notifications![index].createdAt)),
+                                    label: notification
+                                        .notifications![index].label,
+                                    isRead: notification
+                                        .notifications![index].isRead);
+                              });
+                        },
+                        error: (_, __) => const Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'No Notes Created',
+                              style: TextStyle(
+                                  fontSize: 23, color: Colors.black54),
+                            )),
+                        loading: () => Center(
+                              child: SpinKitCircle(
+                                size: 50.0,
+                                color: Colors.grey[700],
+                              ),
+                            )))),
           ),
         ),
       ),

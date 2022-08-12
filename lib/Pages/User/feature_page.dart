@@ -321,7 +321,7 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
       'username': username,
     };
 
-    isFollowed = await UserController().follow(followUser);
+    isFollowed = await UserController.follow(followUser);
 
     ref.refresh(featuresProvider);
   }

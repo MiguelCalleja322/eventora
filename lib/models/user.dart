@@ -1,12 +1,4 @@
-class Users {
-  final List<User>? users;
-
-  Users({this.users});
-
-  factory Users.fromJson(List<dynamic> json) {
-    return Users(users: json.map((user) => User.fromJson(user)).toList());
-  }
-}
+import 'package:eventora/models/role.dart';
 
 class User {
   String? name;
@@ -16,6 +8,9 @@ class User {
   String? email;
   String? website;
   String? birthdate;
+  int? followingCount;
+  int? followersCount;
+  Role? role;
 
   User({
     this.name,
@@ -25,17 +20,22 @@ class User {
     this.email,
     this.website,
     this.birthdate,
+    this.followingCount,
+    this.followersCount,
+    this.role,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      name: json['name'],
-      username: json['username'],
-      mobile: json['mobile'],
-      avatar: json['avatar'],
-      email: json['email'],
-      website: json['website'],
-      birthdate: json['birthdate'],
-    );
+        name: json['name'],
+        username: json['username'],
+        mobile: json['mobile'],
+        avatar: json['avatar'],
+        email: json['email'],
+        website: json['website'],
+        birthdate: json['birthdate'],
+        followingCount: json['following_count'],
+        followersCount: json['followers_count'],
+        role: json['role']);
   }
 }

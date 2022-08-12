@@ -239,7 +239,7 @@ class Routes {
         }
         return _errorRoute();
 
-      case '/otherProfile':
+      case '/other_profile':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(
               builder: (_) => OtherProfilePage(
