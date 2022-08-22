@@ -83,7 +83,7 @@ class NotificationsPageState extends ConsumerState<NotificationsPage> {
                         error: (_, __) => const Align(
                             alignment: Alignment.center,
                             child: Text(
-                              'No Notes Created',
+                              'No Notifications',
                               style: TextStyle(
                                   fontSize: 23, color: Colors.black54),
                             )),

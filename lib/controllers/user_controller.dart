@@ -1,3 +1,4 @@
+import 'package:eventora/models/user.dart';
 import 'package:eventora/services/api_services.dart';
 
 class UserController {
@@ -8,10 +9,13 @@ class UserController {
     return response;
   }
 
-  static Future show(String username) async {
+  static Future<User?> show(String username) async {
+    User? user;
     Map<String, dynamic> response =
         await ApiService().request('user/show/$username', 'GET', {}, true);
 
-    return response;
+    user = User.fromJson(response['user']);
+
+    return user;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:eventora/models/events.dart';
 import 'package:eventora/models/role.dart';
 
 class User {
@@ -11,6 +12,9 @@ class User {
   int? followingCount;
   int? followersCount;
   Role? role;
+  Events? events;
+  Events? sharedEvents;
+  Events? savedEvents;
 
   User({
     this.name,
@@ -23,19 +27,26 @@ class User {
     this.followingCount,
     this.followersCount,
     this.role,
+    this.events,
+    this.sharedEvents,
+    this.savedEvents,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        name: json['name'],
-        username: json['username'],
-        mobile: json['mobile'],
-        avatar: json['avatar'],
-        email: json['email'],
-        website: json['website'],
-        birthdate: json['birthdate'],
-        followingCount: json['following_count'],
-        followersCount: json['followers_count'],
-        role: json['role']);
+      name: json['name'],
+      username: json['username'],
+      mobile: json['mobile'],
+      avatar: json['avatar'],
+      email: json['email'],
+      website: json['website'],
+      birthdate: json['birthdate'],
+      followingCount: json['following_count'],
+      followersCount: json['followers_count'],
+      role: Role.fromJson(json['role']),
+      events: Events.fromJson(json['events']),
+      sharedEvents: Events.fromJson(json['share_event']),
+      savedEvents: Events.fromJson(json['save_event']),
+    );
   }
 }
