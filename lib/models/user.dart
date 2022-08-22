@@ -11,10 +11,9 @@ class User {
   String? birthdate;
   int? followingCount;
   int? followersCount;
+  int? eventsCount;
   Role? role;
   Events? events;
-  Events? sharedEvents;
-  Events? savedEvents;
 
   User({
     this.name,
@@ -26,27 +25,25 @@ class User {
     this.birthdate,
     this.followingCount,
     this.followersCount,
+    this.eventsCount,
     this.role,
     this.events,
-    this.sharedEvents,
-    this.savedEvents,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      name: json['name'],
-      username: json['username'],
-      mobile: json['mobile'],
-      avatar: json['avatar'],
-      email: json['email'],
-      website: json['website'],
-      birthdate: json['birthdate'],
-      followingCount: json['following_count'],
-      followersCount: json['followers_count'],
-      role: Role.fromJson(json['role']),
-      events: Events.fromJson(json['events']),
-      sharedEvents: Events.fromJson(json['share_event']),
-      savedEvents: Events.fromJson(json['save_event']),
+      name: json['name'] ?? '',
+      username: json['username'] ?? '',
+      mobile: json['mobile'] ?? '',
+      avatar: json['avatar'] ?? '',
+      email: json['email'] ?? '',
+      website: json['website'] ?? '',
+      birthdate: json['birthdate'] ?? '',
+      followingCount: json['following_count'] ?? 0,
+      followersCount: json['followers_count'] ?? 0,
+      eventsCount: json['events_count'] ?? 0,
+      role: Role.fromJson(json['role'] ?? {}),
+      events: Events.fromJson(json['events'] ?? []),
     );
   }
 }

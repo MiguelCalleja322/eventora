@@ -248,13 +248,10 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                                   itemCount: featuredOrganizers!.length,
                                   itemBuilder: (context, index, realIndex) {
                                     return CustomProfile(
-                                        image: featuredOrganizers![
-                                                        index]
-                                                    .avatar !=
+                                        image: featuredOrganizers![index].avatar !=
                                                 null
                                             ? '$cloudFrontUri${featuredOrganizers![index].avatar}'
                                             : 'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826',
-                                        page: 'features',
                                         isFollowed:
                                             featuredOrganizers![
                                                         index]
@@ -265,22 +262,19 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                                                             index]
                                                         .isFollowed[
                                                     0]['is_followed'],
-                                        follow:
-                                            () =>
-                                                follow(
-                                                    featuredOrganizers![
-                                                            index]
-                                                        .username),
+                                        follow: () => follow(featuredOrganizers![
+                                                index]
+                                            .username),
                                         name: featuredOrganizers![index].name,
-                                        username:
-                                            featuredOrganizers![index].username,
-                                        followers: featuredOrganizers![
+                                        username: featuredOrganizers![
+                                                index]
+                                            .username,
+                                        followersCount: featuredOrganizers![
                                                 index]
                                             .followersCount,
-                                        followings: featuredOrganizers![
-                                                index]
+                                        followingsCount: featuredOrganizers![index]
                                             .followingCount,
-                                        events: featuredOrganizers![index]
+                                        eventsCount: featuredOrganizers![index]
                                             .eventsCount,
                                         role: 'organizer');
                                   },

@@ -2,35 +2,38 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ionicons/ionicons.dart';
 
 class CustomProfile extends ConsumerWidget {
   CustomProfile({
     Key? key,
     this.image,
-    required this.name,
-    required this.username,
-    required this.followers,
-    required this.followings,
-    this.events,
-    required this.role,
+    this.name,
+    this.username,
+    this.followersCount,
+    this.followingsCount,
+    this.eventsCount,
+    this.role,
+    this.isBackButtonHidden = true,
+    this.isNavigateDisabled = false,
     required this.follow,
-    required this.isFollowed,
-    required this.page,
+    this.isFollowed,
     this.navigate,
     this.isFollowHidden = false,
   }) : super(key: key);
   late bool? isFollowHidden;
   late String? image = '';
   late String? name = '';
+  late bool? isBackButtonHidden;
   late String? username = '';
-  late int? followers = 0;
-  late int? followings = 0;
-  late int? events = 0;
+  late int? followersCount = 0;
+  late int? followingsCount = 0;
+  late int? eventsCount = 0;
   late String? role = '';
   late VoidCallback follow;
   late int? isFollowed = 0;
-  late String page = '';
   late VoidCallback? navigate;
+  late bool? isNavigateDisabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,9 +44,13 @@ class CustomProfile extends ConsumerWidget {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(5.0)))),
       onPressed: () {
-        Navigator.pushNamed(context, '/other_profile', arguments: {
-          'username': username!,
-        });
+        if (isNavigateDisabled == false) {
+          Navigator.pushNamed(context, '/other_profile', arguments: {
+            'username': username!,
+          });
+        } else {
+          return;
+        }
       },
       child: DecoratedBox(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
@@ -55,33 +62,30 @@ class CustomProfile extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    page == 'other_profile'
-                        ? Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                  onPressed: navigate,
-                                  child: Icon(
-                                    Icons.chevron_left_sharp,
-                                    color: Colors.grey[700],
-                                  )),
+                    isBackButtonHidden == false
+                        ? Align(
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Icon(
+                                Ionicons.chevron_back_sharp,
+                                size: 20,
+                              ),
                             ),
                           )
                         : const SizedBox(),
                     isFollowHidden == false
-                        ? Expanded(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: follow,
-                                child: Text(
-                                  isFollowed! == 1 ? 'Unfollow' : 'Follow',
-                                  style: const TextStyle(
-                                      color: Color(0xff525b6f),
-                                      letterSpacing: 1.0,
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.w500),
-                                ),
+                        ? Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: follow,
+                              child: Text(
+                                isFollowed! == 1 ? 'Unfollow' : 'Follow',
+                                style: const TextStyle(
+                                    color: Color(0xff525b6f),
+                                    letterSpacing: 1.0,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
                           )
@@ -123,7 +127,7 @@ class CustomProfile extends ConsumerWidget {
                                 fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            followers!.toString(),
+                            followersCount!.toString(),
                             style: const TextStyle(
                                 color: Color(0xff525b6f),
                                 letterSpacing: 1.0,
@@ -145,7 +149,7 @@ class CustomProfile extends ConsumerWidget {
                                 fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            followings!.toString(),
+                            followingsCount!.toString(),
                             style: const TextStyle(
                                 color: Color(0xff525b6f),
                                 letterSpacing: 1.0,
@@ -168,7 +172,7 @@ class CustomProfile extends ConsumerWidget {
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
-                                  events!.toString(),
+                                  eventsCount!.toString(),
                                   style: const TextStyle(
                                       color: Color(0xff525b6f),
                                       letterSpacing: 1.0,
