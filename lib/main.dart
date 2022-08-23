@@ -49,7 +49,7 @@ Future<void> main() async {
 
   runApp(ProviderScope(
       child: MaterialApp(
-          initialRoute: '/home',
+          // initialRoute: '/home',
           onGenerateRoute: Routes.generateRoutes,
           theme: ThemeData(
             useMaterial3: true,

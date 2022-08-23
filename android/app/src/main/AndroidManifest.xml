@@ -39,5 +39,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+            
+        <!-- <service android:name=".service.MyFirebaseMessagingService"> -->
+        <service android:name="com.google.firebase.messaging.FirebaseMessagingService"></service>
     </application>
 </manifest>
