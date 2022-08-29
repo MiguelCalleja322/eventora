@@ -14,11 +14,11 @@ class Notifier {
     await Permission.notification.request();
     var iOSPlatformChannelSpecifics =
         const IOSNotificationDetails(sound: 'notif_sound.caf');
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-        '1', 'alterr',
-        sound: RawResourceAndroidNotificationSound('notif_sound'),
-        importance: Importance.max,
-        priority: Priority.high);
+    var androidPlatformChannelSpecifics =
+        const AndroidNotificationDetails('1', 'eventora',
+            // sound: RawResourceAndroidNotificationSound('notifsound'),
+            importance: Importance.max,
+            priority: Priority.high);
     var initializationSettingsIOS = const IOSInitializationSettings();
     var initializationSettingsAndroid =
         const AndroidInitializationSettings('app_icon');

@@ -247,11 +247,12 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                               child: CarouselSlider.builder(
                                   itemCount: featuredOrganizers!.length,
                                   itemBuilder: (context, index, realIndex) {
+                                    print(featuredOrganizers![index].avatar);
                                     return CustomProfile(
-                                        image: featuredOrganizers![index].avatar !=
+                                        image: featuredOrganizers![index].avatar ==
                                                 null
-                                            ? '$cloudFrontUri${featuredOrganizers![index].avatar}'
-                                            : 'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826',
+                                            ? 'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826'
+                                            : '$cloudFrontUri${featuredOrganizers![index].avatar}',
                                         isFollowed:
                                             featuredOrganizers![
                                                         index]

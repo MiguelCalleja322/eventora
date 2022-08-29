@@ -38,6 +38,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   return Future<void>.value();
 }
 
+final fcmProvider =
+    Provider<FirebaseMessaging>((ref) => FirebaseMessaging.instance);
+
 Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,7 +52,8 @@ Future<void> main() async {
 
   runApp(ProviderScope(
       child: MaterialApp(
-          // initialRoute: '/home',
+          // initialRoute: '/home','
+          debugShowCheckedModeBanner: false,
           onGenerateRoute: Routes.generateRoutes,
           theme: ThemeData(
             useMaterial3: true,

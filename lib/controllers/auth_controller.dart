@@ -1,8 +1,14 @@
 import 'package:eventora/services/api_services.dart';
 import 'package:eventora/utils/secure_storage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../services/notifier.dart';
+
 class AuthController {
+  final notifier = Notifier();
+  late String newToken;
+
   Future login(Map<String, String?> loginData) async {
     await dotenv.load(fileName: ".env");
     final String? storageKey = dotenv.env['STORAGE_KEY'];
@@ -10,10 +16,13 @@ class AuthController {
 
     Map<String, dynamic> response =
         await ApiService().request('login', 'POST', loginData, false);
+    print(loginData['firebase_token']);
 
     if (response['access_token'] != null && response['role'] != null) {
+      await notifier.initializeNotifications();
       await StorageSevice().write(storageKey!, response['access_token']);
       await StorageSevice().write(roleKey!, response['role']);
+      initFCM();
     }
     return response;
   }
@@ -64,6 +73,47 @@ class AuthController {
     await ApiService().request('user/logout', 'POST', {}, true);
     await StorageSevice().delete(roleKey!);
     await StorageSevice().delete(storageKey!);
+  }
+
+  void setToken(String? token) {
+    print('FCM Token: $token');
+    if (token != null) {
+      newToken = token;
+      ApiService()
+          .request('auth/fcm_token', 'PUT', {'firebase_token': token}, false);
+    }
+  }
+
+  void initFCM() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    await messaging.setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
+
+    messaging.onTokenRefresh.listen(setToken);
+
+    RemoteMessage? initialMessage = await messaging.getInitialMessage();
+    if (initialMessage != null) {
+      print('initialMessage');
+      // goToContentFromNotification(initialMessage);
+    }
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message != null) {
+        notifier.notify(message.notification!.title!,
+            message.notification!.body!, message.data);
+      }
+    });
   }
   // Future<bool> checkServer(String? apiUrl) async {
   //   Uri uri = Uri.parse('${apiUrl}ping');

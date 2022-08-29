@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ionicons/ionicons.dart';
@@ -95,10 +96,18 @@ class CustomProfile extends ConsumerWidget {
                 const SizedBox(height: 15),
                 Align(
                   alignment: Alignment.center,
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(image ??
-                        'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826'),
-                    radius: 50.0,
+                  child: CachedNetworkImage(
+                    imageUrl: image ??
+                        'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?t=st=1655378183~exp=1655378783~hmac=16554c48c3b8164f45fa8b0b0fc0f1af8059cb57600e773e4f66c6c9492c6a00&w=826',
+                    imageBuilder: (_, provider) {
+                      return CircleAvatar(
+                        backgroundImage: provider,
+                        radius: 50,
+                      );
+                    },
+                    errorWidget: (_, errorMessage, widget) {
+                      return Text(errorMessage);
+                    },
                   ),
                 ),
                 const SizedBox(height: 15),
