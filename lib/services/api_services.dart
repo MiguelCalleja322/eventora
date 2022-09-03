@@ -1,7 +1,10 @@
 import 'package:eventora/utils/secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
+
+import '../globals/strings.dart';
 
 class ApiService {
   Future<dynamic> request(
@@ -11,9 +14,7 @@ class ApiService {
     bool? withToken,
   ) async {
     await dotenv.load(fileName: ".env");
-    String? baseUrl = dotenv.env['APP_URL'];
-    final String? storageKey = dotenv.env['STORAGE_KEY'];
-
+    String? baseUrl = dotenv.env['APP_URL_TEST'];
     final Uri completeUri = Uri.parse('$baseUrl/$url');
 
     String? token;
@@ -26,7 +27,8 @@ class ApiService {
     };
 
     if (withToken == true) {
-      token = await StorageSevice().read(storageKey!);
+      token = await StorageSevice().read(storageKey);
+      print('tuken: $token');
       headers['Authorization'] = 'Bearer $token';
     }
 

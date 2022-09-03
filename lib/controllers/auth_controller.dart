@@ -1,43 +1,54 @@
+import 'dart:convert';
+
 import 'package:eventora/services/api_services.dart';
 import 'package:eventora/utils/secure_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:eventora/globals/strings.dart';
 import '../services/notifier.dart';
 
 class AuthController {
   final notifier = Notifier();
   late String newToken;
 
-  Future login(Map<String, String?> loginData) async {
-    await dotenv.load(fileName: ".env");
-    final String? storageKey = dotenv.env['STORAGE_KEY'];
-    final String? roleKey = dotenv.env['ROLE_KEY'];
+  Future<int> authUser() async {
+    final Map<String, dynamic> response =
+        await ApiService().request('auth_user', 'GET', {}, true);
 
+    if (response.containsKey('message')) {
+      return 401;
+    }
+    await notifier.initializeNotifications();
+    await StorageSevice().write(storageKey, response['access_token']);
+    response.remove('access_token');
+    await StorageSevice().write(userInfoKey, jsonEncode(response));
+    initFCM();
+    return 200;
+  }
+
+  Future login(Map<String, String?> loginData) async {
     Map<String, dynamic> response =
         await ApiService().request('login', 'POST', loginData, false);
     print(loginData['firebase_token']);
 
     if (response['access_token'] != null && response['role'] != null) {
       await notifier.initializeNotifications();
-      await StorageSevice().write(storageKey!, response['access_token']);
-      await StorageSevice().write(roleKey!, response['role']);
+      await StorageSevice().write(storageKey, response['access_token']);
+      await StorageSevice().write(userInfoKey, jsonEncode(response));
       initFCM();
     }
     return response;
   }
 
   Future signup(Map<String, String?> signupData) async {
-    await dotenv.load(fileName: ".env");
-    final String? storageKey = dotenv.env['STORAGE_KEY'];
-    final String? roleKey = dotenv.env['ROLE_KEY'];
-
     Map<String, dynamic> response =
         await ApiService().request('signup', 'POST', signupData, false);
 
     if (response['access_token'] != null && response['role'] != null) {
-      await StorageSevice().write(storageKey!, response['access_token']);
-      await StorageSevice().write(roleKey!, response['role']);
+      await notifier.initializeNotifications();
+      await StorageSevice().write(storageKey, response['access_token']);
+      await StorageSevice().write(userInfoKey, jsonEncode(response));
+      initFCM();
     }
     return response;
   }
@@ -67,9 +78,9 @@ class AuthController {
 
   Future logout() async {
     await dotenv.load(fileName: ".env");
+
     final String? storageKey = dotenv.env['STORAGE_KEY'];
     final String? roleKey = dotenv.env['ROLE_KEY'];
-
     await ApiService().request('user/logout', 'POST', {}, true);
     await StorageSevice().delete(roleKey!);
     await StorageSevice().delete(storageKey!);
