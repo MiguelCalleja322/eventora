@@ -15,6 +15,7 @@ class ApiService {
   ) async {
     await dotenv.load(fileName: ".env");
     String? baseUrl = dotenv.env['APP_URL_TEST'];
+    String? storageKey = dotenv.env['STORAGE_KEY'];
     final Uri completeUri = Uri.parse('$baseUrl/$url');
 
     String? token;
@@ -27,8 +28,8 @@ class ApiService {
     };
 
     if (withToken == true) {
-      token = await StorageSevice().read(storageKey);
-      print('tuken: $token');
+      token = await StorageSevice().read(storageKey!);
+
       headers['Authorization'] = 'Bearer $token';
     }
 

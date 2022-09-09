@@ -10,8 +10,12 @@ import 'package:eventora/Pages/Notes/view_note.dart';
 import 'package:eventora/Pages/Auth/update_user_info.dart';
 import 'package:eventora/Pages/Organizer/Events/create_events.dart';
 import 'package:eventora/Pages/Organizer/Events/update_event.dart';
+import 'package:eventora/Pages/PasswordReset/reset_password_page.dart';
+import 'package:eventora/Pages/PasswordReset/reset_password_request_page.dart';
+import 'package:eventora/Pages/PasswordReset/reset_password_verification_page.dart';
 import 'package:eventora/Pages/Tasks/create_task.dart';
 import 'package:eventora/Pages/Tasks/view_task.dart';
+import 'package:eventora/Pages/comment_page.dart';
 import 'package:eventora/Pages/User/create_user_events.dart';
 import 'package:eventora/Pages/User/feed_page.dart';
 import 'package:eventora/Pages/User/user_event_fullpage.dart';
@@ -25,6 +29,7 @@ import 'package:eventora/Pages/search_results_page.dart';
 import 'package:eventora/Pages/shared_events_page.dart';
 import 'package:eventora/Pages/Organizer/wall.dart';
 import 'package:eventora/Widgets/custom_calendar_update.dart';
+import 'package:eventora/Widgets/custom_comment_card.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
 import 'package:eventora/Widgets/custom_show_map.dart';
 import 'package:eventora/controllers/auth_controller.dart';
@@ -59,7 +64,7 @@ Future<void> main() async {
 
   runApp(ProviderScope(
       child: MaterialApp(
-          // initialRoute: '/home','
+          initialRoute: '/comment',
           debugShowCheckedModeBanner: false,
           onGenerateRoute: Routes.generateRoutes,
           theme: ThemeData(
@@ -290,6 +295,36 @@ class Routes {
                     venue: args['venue'],
                     slug: args['slug'],
                     images: args['images'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+
+      //reset password
+      case '/reset_password_request':
+        return MaterialPageRoute(
+            builder: (_) => const ResetPasswordRequestPage(),
+            settings: routeSettings);
+
+      case '/reset_password_verification':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => ResetPasswordVerificationPage(
+                    mobile: args['mobile'],
+                  ),
+              settings: routeSettings);
+        }
+        return _errorRoute();
+
+      case '/reset_password':
+        return MaterialPageRoute(
+            builder: (_) => const ResetPasswordPage(), settings: routeSettings);
+
+      case '/comment':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => CommentPage(
+                    slug: args['slug'],
                   ),
               settings: routeSettings);
         }

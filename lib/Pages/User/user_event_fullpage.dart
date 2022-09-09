@@ -33,10 +33,8 @@ class UserEventFullPageState extends ConsumerState<UserEventFullPage> {
 
   @override
   void initState() {
-    if (mounted) {
-      fetchCloudFrontUri();
-      generateEventProvider();
-    }
+    fetchCloudFrontUri();
+    generateEventProvider();
     super.initState();
   }
 

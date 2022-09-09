@@ -273,7 +273,10 @@ class CustomEventFullPageState extends ConsumerState<CustomEventFullPage> {
                                           shape: const RoundedRectangleBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(5.0)))),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.pushNamed(context, '/comment',
+                                            arguments: {'slug': widget.slug});
+                                      },
                                       child: const Icon(
                                         FeatherIcons.messageCircle,
                                         size: 30,

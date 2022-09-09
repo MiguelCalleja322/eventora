@@ -64,11 +64,10 @@ class OtherProfilePageState extends ConsumerState<OtherProfilePage> {
 
   @override
   void initState() {
-    if (mounted) {
-      fetchUser(widget.username!);
-      fetchCloudFrontUri();
-      getRole();
-    }
+    fetchUser(widget.username!);
+    fetchCloudFrontUri();
+    getRole();
+
     super.initState();
   }
 

@@ -133,6 +133,12 @@ class _LoginState extends State<Login> {
                                 Navigator.pushNamed(context, '/signup'),
                             child: const Text('Click Here to Signup'),
                           ),
+                          const SizedBox(height: 15),
+                          TextButton(
+                            onPressed: () => Navigator.pushNamed(
+                                context, '/reset_password_request'),
+                            child: const Text('Forgot Password'),
+                          ),
                         ],
                       ),
                     ),
