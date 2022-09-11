@@ -64,7 +64,7 @@ Future<void> main() async {
 
   runApp(ProviderScope(
       child: MaterialApp(
-          initialRoute: '/comment',
+          initialRoute: '/',
           debugShowCheckedModeBanner: false,
           onGenerateRoute: Routes.generateRoutes,
           theme: ThemeData(
@@ -339,9 +339,9 @@ class Routes {
   static Route<dynamic> _errorRoute() {
     return MaterialPageRoute<dynamic>(builder: (_) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Error'),
-        ),
+        // appBar: AppBar(
+        //   title: const Text('Error'),
+        // ),
         body: const Center(
           child: Text('Error'),
         ),

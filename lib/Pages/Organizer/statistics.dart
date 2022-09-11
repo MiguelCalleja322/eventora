@@ -85,11 +85,11 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
                           });
 
                           mostLiked =
-                              statistics!.statistics![0].mostLiked.events;
+                              statistics?.statistics![0].mostLiked.events;
                           mostAttendees =
-                              statistics.statistics![0].mostInteresting.events;
+                              statistics?.statistics![0].mostInteresting.events;
                           mostInteresting =
-                              statistics.statistics![0].mostAttended.events;
+                              statistics?.statistics![0].mostAttended.events;
 
                           setState(() {
                             loading = false;

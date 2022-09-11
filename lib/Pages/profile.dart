@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_const, depend_on_referenced_packages
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:eventora/utils/custom_flutter_toast.dart';
@@ -17,6 +18,7 @@ import '../Widgets/custom_event_card_new.dart';
 import '../controllers/auth_controller.dart';
 import 'package:path/path.dart' as path;
 import '../controllers/events_controller.dart';
+import '../models/user.dart';
 import '../utils/secure_storage.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -42,9 +44,11 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   late List<dynamic> events = [];
 
   void getRole() async {
-    await dotenv.load(fileName: ".env");
-    final String? roleKey = dotenv.env['ROLE_KEY'];
-    role = await StorageSevice().read(roleKey!) ?? '';
+    String? userDetailsMap =
+        await StorageSevice().read(StorageSevice.userInfoKey);
+    final Map<String, dynamic> userDetails = jsonDecode(userDetailsMap!);
+    print(userDetails);
+    role = userDetails['role'];
   }
 
   void fetchCloudFrontUri() async {
@@ -69,12 +73,12 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(profileProvider);
-
+    print(role);
     return profile.when(
         data: (profileData) {
-          role == 'organizer'
-              ? events = profileData['user']['events']
-              : events = profileData['user']['user_events'];
+          events = role == 'organizer'
+              ? profileData['user']['events']
+              : profileData['user']['user_events'];
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.transparent,

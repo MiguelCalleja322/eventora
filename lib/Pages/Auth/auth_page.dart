@@ -39,7 +39,6 @@ class AuthPage extends ConsumerWidget {
               if (val == 200) {
                 return HomePage();
               }
-              ref.refresh(authProvider);
               return const Login();
             },
             error: (err, stacl) => Text(err.toString()),

@@ -12,7 +12,7 @@ class User {
   int? followingCount;
   int? followersCount;
   int? eventsCount;
-  Role? role;
+  String? role;
   Events? events;
 
   User({
@@ -42,7 +42,7 @@ class User {
       followingCount: json['following_count'] ?? 0,
       followersCount: json['followers_count'] ?? 0,
       eventsCount: json['events_count'] ?? 0,
-      role: Role.fromJson(json['role'] ?? {}),
+      role: json['role'],
       events: Events.fromJson(json['events'] ?? []),
     );
   }

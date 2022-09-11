@@ -25,7 +25,8 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 final userDetailsProvider = FutureProvider<User>((ref) async {
-  String? userDetailsMap = await StorageSevice().read(userInfoKey);
+  String? userDetailsMap =
+      await StorageSevice().read(StorageSevice.userInfoKey);
   final Map<String, dynamic> userDetails = jsonDecode(userDetailsMap!);
   print(userDetails);
   return User.fromJson(userDetails);
@@ -57,30 +58,32 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    AsyncValue<User> user = ref.read(userDetailsProvider);
+    AsyncValue<User> user = ref.watch(userDetailsProvider);
     return Scaffold(
       body: SafeArea(
         child: user.when(
-            data: (User user) => Center(
-                    child: IndexedStack(
-                  index: _selectedIndex,
-                  children: [
-                    user.role!.type == 'user'
-                        ? const FeedPage()
-                        : const EventCategory(),
+            data: (User user) {
+              return Center(
+                  child: IndexedStack(
+                index: _selectedIndex,
+                children: [
+                  user.role! == 'user'
+                      ? const FeedPage()
+                      : const EventCategory(),
 
-                    user.role!.type == 'user'
-                        ? const FeaturePage()
-                        : const StatisticsPage(),
+                  user.role! == 'user'
+                      ? const FeaturePage()
+                      : const StatisticsPage(),
 
-                    const ProfilePage(),
+                  const ProfilePage(),
 
-                    const CalendarPage(),
+                  const CalendarPage(),
 
-                    // Index = 2
-                    const SettingsPage(),
-                  ],
-                )),
+                  // Index = 2
+                  const SettingsPage(),
+                ],
+              ));
+            },
             error: (err, stack) => Text('hey'),
             loading: () => Text('loading...')),
       ),
