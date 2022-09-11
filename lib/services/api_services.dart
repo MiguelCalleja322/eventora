@@ -29,7 +29,7 @@ class ApiService {
 
     if (withToken == true) {
       token = await StorageSevice().read(StorageSevice.storageKey);
-      print(token);
+      print('token:$token');
       headers['Authorization'] = 'Bearer $token';
     }
 

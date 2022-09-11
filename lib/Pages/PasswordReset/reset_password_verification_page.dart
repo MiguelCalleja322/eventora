@@ -95,7 +95,8 @@ class _ResetPasswordVerificationPageState
     if (response['access_token'] != null) {
       await dotenv.load(fileName: ".env");
       final String? storageKey = dotenv.env['STORAGE_KEY'];
-      await StorageSevice().write(storageKey, response['access_token']);
+      await StorageSevice()
+          .write(StorageSevice.storageKey, response['access_token']);
       CustomFlutterToast.showErrorToast(response['message']);
 
       Navigator.pushNamed(context, '/reset_password');

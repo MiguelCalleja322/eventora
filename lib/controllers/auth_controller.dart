@@ -19,10 +19,11 @@ class AuthController {
       return 401;
     }
     await notifier.initializeNotifications();
+    // await StorageSevice()
+    //     .write(StorageSevice.storageKey, response['access_token']);
+
     await StorageSevice()
-        .write(StorageSevice.storageKey, response['access_token']);
-    response.remove('access_token');
-    await StorageSevice().write(StorageSevice.storageKey, jsonEncode(response));
+        .write(StorageSevice.userInfoKey, jsonEncode(response));
     initFCM();
     return 200;
   }
@@ -37,7 +38,7 @@ class AuthController {
       await StorageSevice()
           .write(StorageSevice.storageKey, response['access_token']);
       await StorageSevice()
-          .write(StorageSevice.storageKey, jsonEncode(response));
+          .write(StorageSevice.userInfoKey, jsonEncode(response));
       initFCM();
     }
     return response;
@@ -49,8 +50,10 @@ class AuthController {
 
     if (response['access_token'] != null && response['role'] != null) {
       await notifier.initializeNotifications();
-      await StorageSevice().write(storageKey, response['access_token']);
-      await StorageSevice().write(userInfoKey, jsonEncode(response));
+      await StorageSevice()
+          .write(StorageSevice.storageKey, response['access_token']);
+      await StorageSevice()
+          .write(StorageSevice.userInfoKey, jsonEncode(response));
       initFCM();
     }
     return response;
