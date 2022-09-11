@@ -247,7 +247,6 @@ class FeaturePageState extends ConsumerState<FeaturePage> {
                               child: CarouselSlider.builder(
                                   itemCount: featuredOrganizers!.length,
                                   itemBuilder: (context, index, realIndex) {
-                                    print(featuredOrganizers![index].avatar);
                                     return CustomProfile(
                                         image: featuredOrganizers![index].avatar ==
                                                 null

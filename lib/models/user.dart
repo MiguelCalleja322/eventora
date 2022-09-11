@@ -1,5 +1,4 @@
 import 'package:eventora/models/events.dart';
-import 'package:eventora/models/role.dart';
 
 class User {
   String? name;

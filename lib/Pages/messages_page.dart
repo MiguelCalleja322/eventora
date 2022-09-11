@@ -1,10 +1,6 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 import '../utils/helpers.dart';
 
 class MessagesPage extends StatefulWidget {
@@ -22,7 +18,7 @@ class _MessagesPageState extends State<MessagesPage> {
         child: Scrollbar(
           // controller: scrollController,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child:
                 // SmartRefresher(
                 //   controller: _refreshController,
@@ -111,24 +107,26 @@ class ChatBubble extends StatelessWidget {
 
     BorderRadius? borderRadius = isMe
         ? BorderRadius.only(
-            bottomLeft: Radius.circular(25),
-            bottomRight:
-                nextSenderIsMe ? Radius.circular(3) : Radius.circular(25),
-            topLeft: Radius.circular(25),
-            topRight:
-                previousSenderIsMe ? Radius.circular(3) : Radius.circular(25),
+            bottomLeft: const Radius.circular(25),
+            bottomRight: nextSenderIsMe
+                ? const Radius.circular(3)
+                : const Radius.circular(25),
+            topLeft: const Radius.circular(25),
+            topRight: previousSenderIsMe
+                ? const Radius.circular(3)
+                : const Radius.circular(25),
           )
         : BorderRadius.only(
             bottomLeft: lastMessage
-                ? Radius.circular(25)
+                ? const Radius.circular(25)
                 : nextSenderIsMe == false
-                    ? Radius.circular(3)
-                    : Radius.circular(25),
-            bottomRight: Radius.circular(25),
-            topRight: Radius.circular(25),
+                    ? const Radius.circular(3)
+                    : const Radius.circular(25),
+            bottomRight: const Radius.circular(25),
+            topRight: const Radius.circular(25),
             topLeft: previousSenderIsMe == false
-                ? Radius.circular(3)
-                : Radius.circular(25),
+                ? const Radius.circular(3)
+                : const Radius.circular(25),
           );
     return AbsorbPointer(
       absorbing: isDeleted || message['pending'] == true,
@@ -183,7 +181,7 @@ class ChatBubble extends StatelessWidget {
                                 borderRadius: borderRadius),
                             onTap: () => {},
                             child: Container(
-                              constraints: BoxConstraints(maxWidth: 260),
+                              constraints: const BoxConstraints(maxWidth: 260),
                               padding: message['type'] == 'text'
                                   ? isEmoji
                                       ? const EdgeInsets.all(0)
@@ -327,13 +325,13 @@ class ChatBubble extends StatelessWidget {
               children: [
                 message['preview'] != null
                     ? Image.file(message['preview'])
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                 message['thumbnail'] is String
                     ? CachedNetworkImage(
                         imageUrl: message['thumbnail'],
-                        fadeInDuration: Duration(seconds: 0),
-                        placeholderFadeInDuration: Duration(seconds: 0),
-                        fadeOutDuration: Duration(seconds: 0),
+                        fadeInDuration: const Duration(seconds: 0),
+                        placeholderFadeInDuration: const Duration(seconds: 0),
+                        fadeOutDuration: const Duration(seconds: 0),
                         placeholder: (context, url) => Container(
                           decoration: BoxDecoration(
                               image: DecorationImage(
@@ -341,9 +339,10 @@ class ChatBubble extends StatelessWidget {
                                       message['thumbnail']))),
                           child: CachedNetworkImage(
                             imageUrl: message['thumbnail'],
-                            fadeInDuration: Duration(seconds: 0),
-                            placeholderFadeInDuration: Duration(seconds: 0),
-                            fadeOutDuration: Duration(seconds: 0),
+                            fadeInDuration: const Duration(seconds: 0),
+                            placeholderFadeInDuration:
+                                const Duration(seconds: 0),
+                            fadeOutDuration: const Duration(seconds: 0),
                             fit: BoxFit.cover,
                             width: double.infinity,
                           ),
@@ -353,7 +352,7 @@ class ChatBubble extends StatelessWidget {
                           return Container(
                             color: Colors.grey[300],
                             alignment: Alignment.center,
-                            child: Text(
+                            child: const Text(
                               'Failed to load content.',
                               style: TextStyle(
                                   fontSize: 15, color: Colors.black54),
@@ -361,7 +360,7 @@ class ChatBubble extends StatelessWidget {
                           );
                         },
                       )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
               ],
             )
           : Container();

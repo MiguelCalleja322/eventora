@@ -1,19 +1,14 @@
 import 'dart:convert';
-
 import 'package:eventora/Pages/Organizer/statistics.dart';
 import 'package:eventora/Pages/User/feature_page.dart';
 import 'package:eventora/Pages/Organizer/event_category.dart';
 import 'package:eventora/Pages/User/feed_page.dart';
 import 'package:eventora/Pages/profile.dart';
 import 'package:eventora/Pages/settings.dart';
-import 'package:eventora/globals/strings.dart';
 import 'package:eventora/models/user.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:ionicons/ionicons.dart';
-
 import '../utils/secure_storage.dart';
 import 'calendar.dart';
 
@@ -28,7 +23,6 @@ final userDetailsProvider = FutureProvider<User>((ref) async {
   String? userDetailsMap =
       await StorageSevice().read(StorageSevice.userInfoKey);
   final Map<String, dynamic> userDetails = jsonDecode(userDetailsMap!);
-  print(userDetails);
   return User.fromJson(userDetails);
 });
 
@@ -84,8 +78,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ],
               ));
             },
-            error: (err, stack) => Text('hey'),
-            loading: () => Text('loading...')),
+            error: (err, stack) => const Text('Error'),
+            loading: () => const Text('Loading...')),
       ),
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: true,
@@ -104,31 +98,15 @@ class _HomePageState extends ConsumerState<HomePage> {
             icon: Icon(Ionicons.home_outline),
             label: 'Home',
           ),
-          user.when(
-            data: (user) {
-              late BottomNavigationBarItem bottomItem;
-              if (user.role! == 'user') {
-                bottomItem = const BottomNavigationBarItem(
+          user.value!.role! == 'user'
+              ? const BottomNavigationBarItem(
                   icon: Icon(Ionicons.trending_up),
                   label: 'Features',
-                );
-              } else {
-                bottomItem = const BottomNavigationBarItem(
+                )
+              : const BottomNavigationBarItem(
                   icon: Icon(Ionicons.stats_chart_outline),
                   label: 'Statistics',
-                );
-              }
-              return bottomItem;
-            },
-            error: (err, stack) => const BottomNavigationBarItem(
-              icon: Icon(Ionicons.stats_chart_outline),
-              label: 'Statistics',
-            ),
-            loading: () => const BottomNavigationBarItem(
-              icon: Icon(Ionicons.stats_chart_outline),
-              label: 'Statistics',
-            ),
-          ),
+                ),
           const BottomNavigationBarItem(
             icon: Icon(Ionicons.person_outline),
             label: 'Profile',

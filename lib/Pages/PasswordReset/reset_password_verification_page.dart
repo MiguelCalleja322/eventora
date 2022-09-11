@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_button.dart';
 import 'package:eventora/Widgets/custom_textfield.dart';
@@ -6,7 +8,6 @@ import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:eventora/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ResetPasswordVerificationPage extends StatefulWidget {
   ResetPasswordVerificationPage({Key? key, required this.mobile})
@@ -93,8 +94,6 @@ class _ResetPasswordVerificationPageState
     }
 
     if (response['access_token'] != null) {
-      await dotenv.load(fileName: ".env");
-      final String? storageKey = dotenv.env['STORAGE_KEY'];
       await StorageSevice()
           .write(StorageSevice.storageKey, response['access_token']);
       CustomFlutterToast.showErrorToast(response['message']);

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_comment_card.dart';
 import 'package:eventora/Widgets/custom_icon_button.dart';

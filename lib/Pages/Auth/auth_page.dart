@@ -1,8 +1,6 @@
 import 'package:eventora/Pages/Auth/login.dart';
 import 'package:eventora/Pages/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/auth_controller.dart';
@@ -29,15 +27,16 @@ final authProvider = FutureProvider<int>((ref) async {
 final authStateProvider = StateProvider((ref) {});
 
 class AuthPage extends ConsumerWidget {
+  const AuthPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue<int> authVal = ref.watch(authProvider);
     return Scaffold(
         body: authVal.when(
             data: (int val) {
-              print(val);
               if (val == 200) {
-                return HomePage();
+                return const HomePage();
               }
               return const Login();
             },

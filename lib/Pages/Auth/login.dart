@@ -4,11 +4,9 @@ import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../Widgets/custom_loading.dart';
 import '../../controllers/auth_controller.dart';
 import '../../utils/email_validation.dart';
-import '../../utils/secure_storage.dart';
 
 class Login extends StatefulWidget {
   const Login({
@@ -27,26 +25,6 @@ class _LoginState extends State<Login> {
   bool screenLoading = false;
   final _formKey = GlobalKey<FormState>();
   late Map<String, dynamic>? isAuthenticated = {};
-
-  void _redirectIfUserIsLogged(context) async {
-    await dotenv.load(fileName: ".env");
-    final String storageKey = dotenv.env['STORAGE_KEY'] ?? '';
-
-    String? bearerToken = await StorageSevice().read(storageKey) ?? '';
-
-    // print(bearerToken);
-
-    if (bearerToken != '') {
-      Navigator.pushNamed(context, '/home');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // _redirectIfUserIsLogged();
-  }
 
   @override
   void dispose() {

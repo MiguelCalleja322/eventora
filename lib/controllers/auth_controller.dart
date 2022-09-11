@@ -4,7 +4,6 @@ import 'package:eventora/services/api_services.dart';
 import 'package:eventora/utils/secure_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:eventora/globals/strings.dart';
 import '../services/notifier.dart';
 
 class AuthController {
@@ -31,7 +30,6 @@ class AuthController {
   Future login(Map<String, String?> loginData) async {
     Map<String, dynamic> response =
         await ApiService().request('login', 'POST', loginData, false);
-    print(loginData['firebase_token']);
 
     if (response['access_token'] != null && response['role'] != null) {
       await notifier.initializeNotifications();
@@ -72,7 +70,7 @@ class AuthController {
   Future getProfile() async {
     Map<String, dynamic> response =
         await ApiService().request('user/getProfile', 'GET', {}, true);
-    print('profile: ${response}');
+
     return response;
   }
 
@@ -94,7 +92,6 @@ class AuthController {
   }
 
   void setToken(String? token) {
-    print('FCM Token: $token');
     if (token != null) {
       newToken = token;
       ApiService()
@@ -122,7 +119,6 @@ class AuthController {
 
     RemoteMessage? initialMessage = await messaging.getInitialMessage();
     if (initialMessage != null) {
-      print('initialMessage');
       // goToContentFromNotification(initialMessage);
     }
 

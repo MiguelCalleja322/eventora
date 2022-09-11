@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
@@ -18,7 +17,6 @@ import '../Widgets/custom_event_card_new.dart';
 import '../controllers/auth_controller.dart';
 import 'package:path/path.dart' as path;
 import '../controllers/events_controller.dart';
-import '../models/user.dart';
 import '../utils/secure_storage.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -47,7 +45,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     String? userDetailsMap =
         await StorageSevice().read(StorageSevice.userInfoKey);
     final Map<String, dynamic> userDetails = jsonDecode(userDetailsMap!);
-    print(userDetails);
+
     role = userDetails['role'];
   }
 
@@ -73,7 +71,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(profileProvider);
-    print(role);
+
     return profile.when(
         data: (profileData) {
           events = role == 'organizer'

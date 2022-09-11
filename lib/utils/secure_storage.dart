@@ -11,13 +11,12 @@ class StorageSevice {
     // Obtain shared preferences.
     final prefs = await SharedPreferences.getInstance();
 
-    print('write:$key');
     prefs.setString(key, value);
   }
 
   Future<String?> read(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    print('read:$key');
+
     return prefs.getString(
       key,
     );

@@ -1,11 +1,9 @@
 import 'package:eventora/Widgets/custom_appbar.dart';
 import 'package:eventora/Widgets/custom_button.dart';
-import 'package:eventora/Widgets/custom_textfield.dart';
 import 'package:eventora/Widgets/custom_textformfield.dart';
 import 'package:eventora/controllers/reset_password_controller.dart';
 import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 class ResetPasswordPage extends StatefulWidget {

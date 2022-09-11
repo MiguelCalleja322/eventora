@@ -5,7 +5,6 @@ import 'package:eventora/controllers/reset_password_controller.dart';
 import 'package:eventora/utils/custom_flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/route_manager.dart';
 
 class ResetPasswordRequestPage extends StatefulWidget {
   const ResetPasswordRequestPage({Key? key}) : super(key: key);
@@ -29,8 +28,7 @@ class _ResetPasswordRequestPageState extends State<ResetPasswordRequestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(
-        title: 'Reset Password Request',
-        hideBackButton: true,
+        title: 'Reset Password',
       ),
       body: SafeArea(
         child: Padding(
@@ -88,7 +86,7 @@ class _ResetPasswordRequestPageState extends State<ResetPasswordRequestPage> {
     } else {
       CustomFlutterToast.showOkayToast(response['password_request']);
       Navigator.pushNamed(context, '/reset_password_verification', arguments: {
-        'mobile': '+63${mobileController.text}',
+        'mobile': '+974${mobileController.text}',
       });
     }
   }

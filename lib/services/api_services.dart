@@ -1,10 +1,7 @@
 import 'package:eventora/utils/secure_storage.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
-
-import '../globals/strings.dart';
 
 class ApiService {
   Future<dynamic> request(
@@ -29,7 +26,7 @@ class ApiService {
 
     if (withToken == true) {
       token = await StorageSevice().read(StorageSevice.storageKey);
-      print('token:$token');
+
       headers['Authorization'] = 'Bearer $token';
     }
 

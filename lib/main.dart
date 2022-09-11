@@ -20,7 +20,6 @@ import 'package:eventora/Pages/User/create_user_events.dart';
 import 'package:eventora/Pages/User/feed_page.dart';
 import 'package:eventora/Pages/User/user_event_fullpage.dart';
 import 'package:eventora/Pages/home.dart';
-import 'package:eventora/Pages/messages_page.dart';
 import 'package:eventora/Pages/notification.dart';
 import 'package:eventora/Pages/other_profile.dart';
 import 'package:eventora/Pages/payment.dart';
@@ -29,22 +28,15 @@ import 'package:eventora/Pages/search_results_page.dart';
 import 'package:eventora/Pages/shared_events_page.dart';
 import 'package:eventora/Pages/Organizer/wall.dart';
 import 'package:eventora/Widgets/custom_calendar_update.dart';
-import 'package:eventora/Widgets/custom_comment_card.dart';
 import 'package:eventora/Widgets/custom_event_fullpage.dart';
 import 'package:eventora/Widgets/custom_show_map.dart';
-import 'package:eventora/controllers/auth_controller.dart';
 import 'package:eventora/firebase_options.dart';
-import 'package:eventora/services/api_services.dart';
-import 'package:eventora/services/notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'Pages/Auth/login.dart';
 import 'Pages/Auth/signup.dart';
 import 'Pages/User/feature_page.dart';
-import 'utils/secure_storage.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   return Future<void>.value();
@@ -83,7 +75,7 @@ class Routes {
       //       builder: (_) => const Login(), settings: routeSettings);
       case '/':
         return MaterialPageRoute(
-            builder: (_) => AuthPage(), settings: routeSettings);
+            builder: (_) => const AuthPage(), settings: routeSettings);
 
       case '/home':
         return MaterialPageRoute(
@@ -338,11 +330,8 @@ class Routes {
 
   static Route<dynamic> _errorRoute() {
     return MaterialPageRoute<dynamic>(builder: (_) {
-      return Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('Error'),
-        // ),
-        body: const Center(
+      return const Scaffold(
+        body: Center(
           child: Text('Error'),
         ),
       );

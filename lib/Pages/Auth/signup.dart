@@ -373,7 +373,7 @@ class _SignupState extends State<Signup> {
         'password': _passwordController.text,
         'username': _usernameController.text,
         'website': _websiteController.text,
-        'mobile': '+63${_mobileController.text}',
+        'mobile': '+974${_mobileController.text}',
         'birthdate': _birthdateController.text,
         'type': roleValue,
       };
