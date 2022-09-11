@@ -104,15 +104,30 @@ class _HomePageState extends ConsumerState<HomePage> {
             icon: Icon(Ionicons.home_outline),
             label: 'Home',
           ),
-          // user.value!.role!.type == 'user'
-          //     ? const BottomNavigationBarItem(
-          //         icon: Icon(Ionicons.trending_up),
-          //         label: 'Features',
-          //       )
-          //     :
-          const BottomNavigationBarItem(
-            icon: Icon(Ionicons.stats_chart_outline),
-            label: 'Statistics',
+          user.when(
+            data: (user) {
+              late BottomNavigationBarItem bottomItem;
+              if (user.role! == 'user') {
+                bottomItem = const BottomNavigationBarItem(
+                  icon: Icon(Ionicons.trending_up),
+                  label: 'Features',
+                );
+              } else {
+                bottomItem = const BottomNavigationBarItem(
+                  icon: Icon(Ionicons.stats_chart_outline),
+                  label: 'Statistics',
+                );
+              }
+              return bottomItem;
+            },
+            error: (err, stack) => const BottomNavigationBarItem(
+              icon: Icon(Ionicons.stats_chart_outline),
+              label: 'Statistics',
+            ),
+            loading: () => const BottomNavigationBarItem(
+              icon: Icon(Ionicons.stats_chart_outline),
+              label: 'Statistics',
+            ),
           ),
           const BottomNavigationBarItem(
             icon: Icon(Ionicons.person_outline),
