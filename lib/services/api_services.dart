@@ -11,7 +11,7 @@ class ApiService {
     bool? withToken,
   ) async {
     await dotenv.load(fileName: ".env");
-    String? baseUrl = dotenv.env['APP_URL_PROD'];
+    String? baseUrl = dotenv.env['APP_URL_TEST'];
     // String? storageKey = dotenv.env['STORAGE_KEY'];
     final Uri completeUri = Uri.parse('$baseUrl/$url');
 

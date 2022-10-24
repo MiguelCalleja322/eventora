@@ -74,9 +74,21 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
 
     return profile.when(
         data: (profileData) {
-          events = role == 'organizer'
-              ? profileData['user']['events']
-              : profileData['user']['user_events'];
+          print(profileData['user']);
+          if (role == 'organizer') {
+            if (profileData['user']['events'] == null) {
+              events = [];
+            } else {
+              events = profileData['user']['events'];
+            }
+          } else {
+            if (profileData['user']['user_events'] == null) {
+              events = [];
+            } else {
+              events = profileData['user']['user_events'];
+            }
+          }
+
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.transparent,

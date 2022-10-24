@@ -84,12 +84,18 @@ class StatisticsPageState extends ConsumerState<StatisticsPage> {
                             loading = true;
                           });
 
-                          mostLiked =
-                              statistics?.statistics![0].mostLiked.events;
-                          mostAttendees =
-                              statistics?.statistics![0].mostInteresting.events;
-                          mostInteresting =
-                              statistics?.statistics![0].mostAttended.events;
+                          if (statistics?.statistics![0] == null) {
+                            mostLiked = [];
+                            mostAttendees = [];
+                            mostInteresting = [];
+                          } else {
+                            mostLiked =
+                                statistics?.statistics![0].mostLiked.events;
+                            mostAttendees = statistics
+                                ?.statistics![0].mostInteresting.events;
+                            mostInteresting =
+                                statistics?.statistics![0].mostAttended.events;
+                          }
 
                           setState(() {
                             loading = false;
