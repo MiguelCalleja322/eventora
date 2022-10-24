@@ -75,6 +75,8 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     return profile.when(
         data: (profileData) {
           print(profileData['user']);
+
+          print('hello');
           if (role == 'organizer') {
             if (profileData['user']['events'] == null) {
               events = [];
